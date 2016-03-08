@@ -29,6 +29,8 @@ public class Application implements IApplication {
    */
   public static String WORKSPACE_DIRECTORY = "./workspace/quotes";
   
+  private static String AUTHOR_EMAIL = "fabien.franchini@heig-vd.ch";
+  
   private static final Logger LOG = Logger.getLogger(Application.class.getName());
   
   public static void main(String[] args) {
@@ -148,7 +150,7 @@ public class Application implements IApplication {
   
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+      return AUTHOR_EMAIL;
   }
 
   @Override
