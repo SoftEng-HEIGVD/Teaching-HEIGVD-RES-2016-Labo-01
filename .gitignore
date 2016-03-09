@@ -1,8 +1,9 @@
 /Lab01App-build/Lab01App-build.iml
 /Lab01App-build/Lab01App-code/Lab01App-code.iml
 test-results.json
+/Lab01App-build/Lab01App-test/workspace
 workspace/
-/Lab01App-build/Lab01App-test/Lab01App-tests.iml
+/Lab01App-build/Lab01App-test/*
 /.idea/*
 *.class
 
