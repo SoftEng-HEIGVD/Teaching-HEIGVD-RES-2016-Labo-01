@@ -28,8 +28,7 @@ public class Utils {
                 splitted[0] += s; //readd the separator at the end of the line
                 return splitted;
             }
-        String[] ret = {"", lines}; //return an empty line if there's no separator
-        return ret;
+        return new String[]{"", lines};
     }
 
 }
