@@ -20,7 +20,21 @@ public class Utils {
    * contain any line separator, then the first element is an empty string.
    */
   public static String[] getNextLine(String lines) {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    // find the index of the separator (if there is one)
+    int index = -1;
+    String[] separators = {"\r\n", "\r", "\n"}; // test the longest first
+    for(String separator : separators) {
+      if((index = lines.indexOf(separator)) != -1) {
+        index += separator.length(); // we want to keep the separator
+        break;
+      } 
+    }
+
+    // generate the resulting array
+    String[] result = new String[2];
+    result[0] = index == -1 ? "" : lines.substring(0, index);
+    result[1] = index == -1 ? lines : lines.substring(index);
+    return result;
   }
 
 }
