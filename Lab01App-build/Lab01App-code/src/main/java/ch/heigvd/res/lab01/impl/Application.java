@@ -155,6 +155,6 @@ public class Application implements IApplication {
   public void processQuoteFiles() throws IOException {
     IFileExplorer explorer = new DFSFileExplorer();
     explorer.explore(new File(WORKSPACE_DIRECTORY), new CompleteFileTransformer());    
-  }
+  } 
 
 }
