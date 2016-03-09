@@ -1,6 +1,9 @@
+/Lab01App-build/Lab01App-build.iml
+/Lab01App-build/Lab01App-code/Lab01App-code.iml
 test-results.json
 workspace/
-
+/Lab01App-build/Lab01App-test/Lab01App-tests.iml
+/.idea/*
 *.class
 
 # Mobile Tools for Java (J2ME)
@@ -107,3 +110,8 @@ fabric.properties
 
 # Code Recommenders
 .recommenders/
+.idea/modules.xml
+*.iml
+*.iml
+Lab01App-build/Lab01App-build.iml
+.idea/modules.xml
