@@ -25,7 +25,7 @@ public class Utils {
       int pos = 0;
       int tempPos;
       if(lines.contains("\r\n")){
-          while((tempPos = lines.indexOf("\r\n", pos)) != -1){
+          while((tempPos = lines.indexOf("\r\n", pos + 1)) != -1){
               ret.add(lines.substring(pos, tempPos));
               pos = tempPos;
           }
