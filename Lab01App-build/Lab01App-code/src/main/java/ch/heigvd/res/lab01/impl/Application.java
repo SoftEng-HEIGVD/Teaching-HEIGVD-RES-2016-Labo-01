@@ -9,10 +9,14 @@ import ch.heigvd.res.lab01.quotes.QuoteClient;
 import ch.heigvd.res.lab01.quotes.Quote;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -27,8 +31,8 @@ public class Application implements IApplication {
    * This constant defines where the quotes will be stored. The path is relative
    * to where the Java application is invoked.
    */
-  public static String WORKSPACE_DIRECTORY = "./workspace/quotes";
-  
+  public static String WORKSPACE_DIRECTORY = "workspace/quotes";
+    
   private static final Logger LOG = Logger.getLogger(Application.class.getName());
   
   public static void main(String[] args) {
@@ -96,6 +100,7 @@ public class Application implements IApplication {
       for (String tag : quote.getTags()) {
         LOG.info("> " + tag);
       }
+      storeQuote(quote, i + ".utf-8");
     }
   }
   
@@ -125,7 +130,16 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    // Create path to directory from tags
+    String path = "";
+    for(String tag : quote.getTags())
+        path += tag + "/";
+    // Create directories
+    new File(WORKSPACE_DIRECTORY + "/" + path).mkdirs();
+    // Create and write file
+    FileWriter fw = new FileWriter(WORKSPACE_DIRECTORY + "/" + path + filename);
+    fw.write(quote.getQuote());
+    fw.close();
   }
   
   /**
