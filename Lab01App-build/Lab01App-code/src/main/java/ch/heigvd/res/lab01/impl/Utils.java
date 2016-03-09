@@ -25,7 +25,19 @@ public class Utils {
       int pos = 0;
       int tempPos;
       if(lines.contains("\r\n")){
-          while((tempPos = lines.indexOf("\r\n", pos + 1)) != -1){
+          while((tempPos = lines.indexOf("\r\n", pos) + 2) != -1){
+              ret.add(lines.substring(pos, tempPos));
+              pos = tempPos;
+          }
+      }
+      else if(lines.contains("\n")){
+          while((tempPos = lines.indexOf("\n", pos) + 1) != -1){
+              ret.add(lines.substring(pos, tempPos));
+              pos = tempPos;
+          }
+      }
+      else if(lines.contains("\r")){
+          while((tempPos = lines.indexOf("\r", pos) + 1) != -1){
               ret.add(lines.substring(pos, tempPos));
               pos = tempPos;
           }

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.io.IOUtils;
 
 /**
  * This abstract class implements the IFileVisitor interface and has the responsibility
@@ -59,9 +60,7 @@ public abstract class FileTransformer implements IFileVisitor {
        * writer has been decorated by the concrete subclass!). You need to write a loop to read the
        * characters and write them to the writer.
        */
-      char[] cb = {};
-      reader.read(cb);
-      writer.write(cb);
+      writer.write(IOUtils.toCharArray(reader));
       
       reader.close();
       writer.flush();
