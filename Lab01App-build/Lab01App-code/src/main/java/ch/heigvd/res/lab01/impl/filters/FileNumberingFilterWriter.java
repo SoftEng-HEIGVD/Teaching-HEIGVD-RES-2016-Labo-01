@@ -1,5 +1,6 @@
 package ch.heigvd.res.lab01.impl.filters;
 
+import ch.heigvd.res.lab01.impl.Utils;
 import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -19,7 +20,8 @@ import java.util.logging.Logger;
 public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
-  int lineNumber = 1;
+  
+  private int lineNumber = 1;
 
   public FileNumberingFilterWriter(Writer out) {
     super(out);
@@ -27,17 +29,26 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    out.write(lineNumber++ + "\t" + str);
+    String[] lines = Utils.getNextLine(str.substring(off, off + len));
+    for(String line : lines){
+        out.write(lineNumber + "\t" + line);
+        lineNumber++;
+    }
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    out.write(lineNumber++ + "\t" + Arrays.toString(cbuf));
+    String[] lines = Utils.getNextLine(Arrays.toString(cbuf).substring(off, off + len));
+    for(String line : lines){
+        out.write(lineNumber + "\t" + line);
+        lineNumber++;
+    }
   }
 
   @Override
   public void write(int c) throws IOException {
-      out.write(lineNumber++ + "\t" + c);
+    out.write(lineNumber + "\t" + c);
+    lineNumber++;
   }
 
 }
