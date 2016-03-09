@@ -8,7 +8,6 @@ import ch.heigvd.res.lab01.interfaces.IFileVisitor;
 import ch.heigvd.res.lab01.quotes.Quote;
 import ch.heigvd.res.lab01.quotes.QuoteClient;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.output.ByteArrayOutputStream;
 
 import java.io.*;
 import java.util.logging.Level;
@@ -79,7 +78,6 @@ public class Application implements IApplication {
 
   @Override
   public void fetchAndStoreQuotes(int numberOfQuotes) throws IOException {
-    clearOutputDirectory();
     QuoteClient client = new QuoteClient();
     for (int i = 0; i < numberOfQuotes; i++) {
       Quote quote = client.fetchQuote();
@@ -138,9 +136,6 @@ public class Application implements IApplication {
       }
     }
 
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    baos.write(quote.getQuote().getBytes());
-
     // Create the file with filename in the directory created. We then write the quote in it.
     Writer writer = new OutputStreamWriter(new FileOutputStream(fileDirPath + File.separator + filename), "UTF-8");
     writer.write(quote.getQuote());
@@ -162,7 +157,7 @@ public class Application implements IApplication {
          * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
          */
         try {
-          writer.write(WORKSPACE_DIRECTORY + File.separator + file.getName());
+          writer.write(WORKSPACE_DIRECTORY + File.separator + file.getName() + "\n");
         } catch (IOException e) {
           LOG.log(Level.SEVERE, "could not write to file {0}", file.getName());
         }
