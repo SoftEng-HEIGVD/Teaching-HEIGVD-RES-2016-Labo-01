@@ -31,7 +31,7 @@ public class Application implements IApplication {
    * This constant defines where the quotes will be stored. The path is relative
    * to where the Java application is invoked.
    */
-  public static String WORKSPACE_DIRECTORY = "workspace/quotes";
+  public static String WORKSPACE_DIRECTORY = "./workspace/quotes";
     
   private static final Logger LOG = Logger.getLogger(Application.class.getName());
   
@@ -100,7 +100,7 @@ public class Application implements IApplication {
       for (String tag : quote.getTags()) {
         LOG.info("> " + tag);
       }
-      storeQuote(quote, i + ".utf-8");
+      storeQuote(quote, "quote-" + i + ".utf8");
     }
   }
   
@@ -133,13 +133,21 @@ public class Application implements IApplication {
     // Create path to directory from tags
     String path = "";
     for(String tag : quote.getTags())
-        path += tag + "/";
-    // Create directories
-    new File(WORKSPACE_DIRECTORY + "/" + path).mkdirs();
-    // Create and write file
-    FileWriter fw = new FileWriter(WORKSPACE_DIRECTORY + "/" + path + filename);
-    fw.write(quote.getQuote());
+        path += "/" + tag;
+    
+    // Create directory
+    new File(WORKSPACE_DIRECTORY + path).mkdirs();
+    
+    // Create and write file input
+    FileWriter fw = new FileWriter(WORKSPACE_DIRECTORY + path + "/" + filename);
+    fw.write(quote.toString());
     fw.close();
+    
+    // Create and write file output
+    fw = new FileWriter(WORKSPACE_DIRECTORY + path + "/" + filename + ".out");
+    fw.write(quote.toString());
+    fw.close();
+    
   }
   
   /**

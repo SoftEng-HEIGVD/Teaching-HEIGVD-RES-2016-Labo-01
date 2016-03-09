@@ -48,7 +48,6 @@ public class ApplicationTest {
   @Test
   public void theApplicationShouldGenerateTheCorrectNumberOfQuoteFiles() {
     String[] extensions = {"utf8"};
-    //assertEquals("abcdefg " + new File(Application.WORKSPACE_DIRECTORY).getAbsolutePath(), "1");
     Collection<File> files = FileUtils.listFiles(new File(Application.WORKSPACE_DIRECTORY), extensions, true);
     assertEquals(NUMBER_OF_QUOTES, files.size());
   }
