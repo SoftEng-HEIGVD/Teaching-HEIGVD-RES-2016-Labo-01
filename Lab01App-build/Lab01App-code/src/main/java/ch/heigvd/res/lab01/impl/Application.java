@@ -140,7 +140,7 @@ public class Application implements IApplication {
     
     // Create and write file input
     FileWriter fw = new FileWriter(WORKSPACE_DIRECTORY + path + "/" + filename);
-    fw.write(quote.toString());
+    fw.write(quote.getQuote());
     fw.close();
     
     // Create and write file output
@@ -164,13 +164,18 @@ public class Application implements IApplication {
          * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
          * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
          */
+        try{
+            writer.write(file.getPath());
+        } catch(IOException e){
+            LOG.log(Level.SEVERE, e.getMessage(), e);
+        }
       }
     });
   }
   
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    return "antoine.drabble@heig-vd.ch";
   }
 
   @Override

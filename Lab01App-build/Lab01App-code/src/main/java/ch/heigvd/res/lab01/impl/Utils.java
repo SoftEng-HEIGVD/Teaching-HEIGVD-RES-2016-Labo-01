@@ -1,5 +1,6 @@
 package ch.heigvd.res.lab01.impl;
 
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 /**
@@ -20,7 +21,16 @@ public class Utils {
    * contain any line separator, then the first element is an empty string.
    */
   public static String[] getNextLine(String lines) {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+      ArrayList<String> ret = new ArrayList();
+      int pos = 0;
+      int tempPos;
+      if(lines.contains("\r\n")){
+          while((tempPos = lines.indexOf("\r\n", pos)) != -1){
+              ret.add(lines.substring(pos, tempPos));
+              pos = tempPos;
+          }
+      }
+      return (String[])ret.toArray();
   }
 
 }
