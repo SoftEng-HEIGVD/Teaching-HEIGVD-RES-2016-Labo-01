@@ -139,7 +139,6 @@ public class ApplicationTest {
         sb.append("\n");
         sb.append(fileD2);
         sb.append("\n");
-
         // Bug fix in the original unit test by teacher
         String fileSeparator = File.separator;
         if (fileSeparator.equals("\\")) {
@@ -148,6 +147,7 @@ public class ApplicationTest {
         Pattern p = Pattern.compile(fileSeparator);
         Matcher m = p.matcher(output);
         String outputWithUnixSeparator = m.replaceAll("/");
+        System.out.println(sb.toString());
 
         String reference = sb.toString();
         boolean applicationReturnsValidPlatformSpecificFilePaths = (reference.equals(output));
