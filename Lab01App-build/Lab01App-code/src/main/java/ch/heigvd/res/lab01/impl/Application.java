@@ -134,6 +134,8 @@ public class Application implements IApplication {
         PrintWriter out = new PrintWriter(quoteFile);
         out.write(quote.getQuote());
         out.close();
+        out = new PrintWriter(filePath + "/" + filename + ".utf8.out");
+        out.write("");
         LOG.info("CREATED FILE: " + quoteFile.getAbsolutePath());
     }
 
