@@ -107,3 +107,7 @@ fabric.properties
 
 # Code Recommenders
 .recommenders/
+
+#Perso
+.idea
+*.iml
