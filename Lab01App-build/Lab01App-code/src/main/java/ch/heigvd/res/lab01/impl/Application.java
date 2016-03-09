@@ -86,12 +86,7 @@ public class Application implements IApplication {
     QuoteClient client = new QuoteClient();
     for (int i = 0; i < numberOfQuotes; i++) {
       Quote quote = client.fetchQuote();
-      /* There is a missing piece here!
-       * As you can see, this method handles the first part of the lab. It uses the web service
-       * client to fetch quotes. We have removed a single line from this method. It is a call to
-       * one method provided by this class, which is responsible for storing the content of the
-       * quote in a text file (and for generating the directories based on the tags).
-       */
+      storeQuote(quote, "quote-" + i + ".utf8");
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
       for (String tag : quote.getTags()) {
         LOG.info("> " + tag);
@@ -125,7 +120,24 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+
+    // Generate the path from the tags of the quote.
+    String path = WORKSPACE_DIRECTORY;
+    for (String tag : quote.getTags()) {
+      path += File.separator + tag;
+    }
+
+    // Create the destination folder, if needed.
+    new File(path).mkdirs();
+
+    // Create an output stream, which will write message in the desired file.
+    FileOutputStream os = new FileOutputStream(path + "/" + filename);
+
+    // Wrap an OutputStreamWriter around the FileOutputStream
+    // to use a custom encoding format.
+    OutputStreamWriter writer = new OutputStreamWriter(os, "UTF-8");
+    writer.write(quote.getQuote());
+    writer.flush();
   }
   
   /**
