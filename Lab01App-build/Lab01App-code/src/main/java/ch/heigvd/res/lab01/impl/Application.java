@@ -7,8 +7,10 @@ import ch.heigvd.res.lab01.interfaces.IFileExplorer;
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
 import ch.heigvd.res.lab01.quotes.QuoteClient;
 import ch.heigvd.res.lab01.quotes.Quote;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
@@ -92,8 +94,10 @@ public class Application implements IApplication {
        * one method provided by this class, which is responsible for storing the content of the
        * quote in a text file (and for generating the directories based on the tags).
        */
+
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
       for (String tag : quote.getTags()) {
+        storeQuote(quote, "quote-" + i + ".utf8" );
         LOG.info("> " + tag);
       }
     }
@@ -125,8 +129,34 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
+      
+        String filePath = WORKSPACE_DIRECTORY + "\\";
+        FileOutputStream fos;
+        BufferedWriter writer;
+        
+        
+        for (String tag : quote.getTags()) {
+            filePath += tag + "\\";
+        }
+        
+        File file = new File(filePath + filename);
+        
+        if (file.getParentFile() != null) {
+            file.getParentFile().mkdirs();
+        }
+         
+        fos = new FileOutputStream(file);
+        writer = new BufferedWriter(new OutputStreamWriter(fos, "utf-8"));
+        
+        writer.write(quote.getQuote());
+        writer.close();
+        fos.close();
+        
+         //file.createNewFile();
+        // FileWriter fileWrite = new FileWriter(file,true);
+        // fileWrite.write(quote.getQuote());
+        // fileWrite.close(); 
+  }      
   
   /**
    * This method uses a IFileExplorer to explore the file system and prints the name of each
@@ -148,7 +178,7 @@ public class Application implements IApplication {
   
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+      return "marco.monzione@heig-vd.ch";
   }
 
   @Override
