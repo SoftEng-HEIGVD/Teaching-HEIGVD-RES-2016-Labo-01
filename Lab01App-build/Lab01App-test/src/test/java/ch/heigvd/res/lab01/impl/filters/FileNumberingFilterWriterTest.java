@@ -100,6 +100,17 @@ public class FileNumberingFilterWriterTest {
     writer.write(line);
     Assert.assertEquals(expected, stringWriter.toString());
   }
+  
+  @Test
+  public void itShouldWorkOnMacOS9WithReturnAtTheEnd() throws IOException {
+    String line = "This is line 1\rThis is line 2\rThis is line 3\r";
+    String expected = "1\tThis is line 1\r2\tThis is line 2\r3\tThis is line 3\r4\t";
+    StringWriter stringWriter = new StringWriter();
+    FileNumberingFilterWriter writer = new FileNumberingFilterWriter(stringWriter);
+    writer.write(line);
+    writer.close();
+    Assert.assertEquals(expected, stringWriter.toString());
+  }
 
   @Test
   public void itShouldWorkOnWindows() throws IOException {

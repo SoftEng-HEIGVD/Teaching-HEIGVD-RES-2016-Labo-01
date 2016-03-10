@@ -132,8 +132,9 @@ public class Application implements IApplication {
   void storeQuote(Quote quote, String filename) throws IOException {
     // Create path to directory from tags
     String path = "";
-    for(String tag : quote.getTags())
+    for(String tag : quote.getTags()){
         path += "/" + tag;
+    }
     
     // Create directory
     new File(WORKSPACE_DIRECTORY + path).mkdirs();
@@ -142,12 +143,6 @@ public class Application implements IApplication {
     FileWriter fw = new FileWriter(WORKSPACE_DIRECTORY + path + "/" + filename);
     fw.write(quote.getQuote());
     fw.close();
-    
-    // Create and write file output
-    fw = new FileWriter(WORKSPACE_DIRECTORY + path + "/" + filename + ".out");
-    fw.write(quote.toString());
-    fw.close();
-    
   }
   
   /**
