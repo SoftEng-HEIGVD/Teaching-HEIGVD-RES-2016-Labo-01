@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.logging.Logger;
 import ch.heigvd.res.lab01.impl.Utils;
-import java.lang.StringBuilder;
 
 /**
  * This class transforms the streams of character sent to the decorated writer.
@@ -22,9 +21,9 @@ public class FileNumberingFilterWriter extends FilterWriter {
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
   
   // attributes
-  private int counter = 1;
-  private int last = 0; // last character written
-  private StringBuilder buffer = new StringBuilder();
+  private int counter = 1;          // line counter
+  private boolean numbered = false; // is the line already "numbered" ?
+  private boolean carriage = false; // is the last char written a '\r' ?
 
   public FileNumberingFilterWriter(Writer out) {
     super(out);
@@ -32,37 +31,63 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    buffer.append(str.substring(off, off + len));
-    doEffectiveWrite();
+    // we split the string and send part to the effectiveWrite method
+    String[] parts = Utils.getNextLine(str.substring(off, off + len));
+    while(!parts[0].isEmpty()) {
+      effectiveWrite(parts[0], true);
+      parts = Utils.getNextLine(parts[1]);
+    }
+    effectiveWrite(parts[1], false);
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    buffer.append(cbuf, off, len);
-    doEffectiveWrite();
+    write(new String(cbuf), off, len); // delegate
   }
 
   @Override
   public void write(int c) throws IOException {
-    buffer.append(c);
-    doEffectiveWrite();
+    write(new char[]{(char)c}, 0, 1); // delegate
   }
 
-  protected void doEffectiveWrite() throws IOException {
-    if(last != 0)
-      buffer.insert(0, last);
-    String buf = buffer.toString();
-    last = buf.charAt(buf.length() - 1);
+  /**
+   * This method apply the filter and do the effective write
+   * @param str string to be written
+   * @param hasEOL is the string finished by an "end of line"
+   */
+  private void effectiveWrite(String str, boolean hasEOL) throws IOException {
+    // we have to manage the "double EOL" ("\r\n") passed with write(int)
+    if(carriage && str.equals("\n")) {
+      numbered = true;
+      carriage = false;
+    }
+    else if(str.equals("\r"))
+      carriage = true;
 
-    String[] split = Utils.getNextLine(buf);
-    if(!split[0].isEmpty()) {
-      String numbered = (counter++) + "\t" + split[0];
-      super.write(numbered, 0, numbered.length());
-      split = Utils.getNextLine(split[1]);
+    // if the string is empty and not already numbered, we "number" it
+    if(str.isEmpty()) {
+      if(!hasEOL && !numbered && !carriage) {
+        String tmp = (counter++) + "\t";
+        super.write(tmp, 0, tmp.length());
+        numbered = true;
+      }
     }
 
-    String numbered = (counter++) + "\t" + split[1];
-    super.write(numbered, 0, numbered.length());
+    // otherwise the string is not empty
+    else {
+      // if it is numbered, we simply write the string
+      if(numbered) {
+        super.write(str, 0, str.length());
+        if(hasEOL)
+          numbered = false;
+      }
+      // else we write a numbered string
+      else {
+        String tmp = (counter++) + "\t" + str;
+        super.write(tmp, 0, tmp.length());
+        if(!hasEOL)
+          numbered = true;
+      }
+    }
   }
-
 }

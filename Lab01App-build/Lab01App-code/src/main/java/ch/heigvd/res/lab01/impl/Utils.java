@@ -20,14 +20,13 @@ public class Utils {
    * contain any line separator, then the first element is an empty string.
    */
   public static String[] getNextLine(String lines) {
-    // find the index of the separator (if there is one)
+    // find the index of the _first_ separator (if there is one)
     int index = -1;
-    String[] separators = {"\r\n", "\r", "\n"}; // test the longest first
+    String[] separators = {"\r", "\r\n", "\n"}; // the order is important
     for(String separator : separators) {
-      if((index = lines.indexOf(separator)) != -1) {
-        index += separator.length(); // we want to keep the separator
-        break;
-      } 
+      int tmp = lines.indexOf(separator);
+      if(tmp != -1 && (index == -1 || tmp <= index))
+        index = tmp + separator.length(); // we want to keep the separator
     }
 
     // generate the resulting array
