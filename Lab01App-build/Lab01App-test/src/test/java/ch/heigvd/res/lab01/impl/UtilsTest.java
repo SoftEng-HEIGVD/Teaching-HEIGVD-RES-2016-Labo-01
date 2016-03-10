@@ -50,7 +50,7 @@ public class UtilsTest {
     String line = "this is a line without a new line character at the end";
     String[] r = Utils.getNextLine(line);
     String[] e = {"", line};
-    assertArrayEquals(e, r);
+    assertArrayEquals("0: " + e[0] + " // 1: " + e[1] ,e, r);
   }
 
 }
