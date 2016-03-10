@@ -20,11 +20,11 @@ public class DFSFileExplorer implements IFileExplorer {
 
     @Override
     public void explore(File rootDirectory, IFileVisitor visitor) {
-        exploreNode(rootDirectory.getPath(), visitor);
+        exploreNode(rootDirectory, visitor);
     }
 
-    public void exploreNode(String nodeName, IFileVisitor visitor) {
-        File node = new File(nodeName);
+    private void exploreNode(File node, IFileVisitor visitor) {
+        // File node = new File(nodeName);
 
         visitor.visit(node);
         if (node.isDirectory()) {
@@ -33,7 +33,7 @@ public class DFSFileExplorer implements IFileExplorer {
             }
 
             for (File child : node.listFiles((FileFilter) DirectoryFileFilter.DIRECTORY)) {
-                exploreNode(child.getPath(), visitor);
+                exploreNode(child, visitor);
             }
         }
     }
