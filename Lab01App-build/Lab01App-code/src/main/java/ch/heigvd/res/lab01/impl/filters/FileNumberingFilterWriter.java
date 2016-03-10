@@ -29,36 +29,26 @@ public class FileNumberingFilterWriter extends FilterWriter {
     super(out);
   }
 
-  @Override
-  public void write(String str, int off, int len) throws IOException {
-    String[] lines = Utils.getNextLine(str.substring(off, off + len));
-    // For the first write we always put the line number
-    if(lineNumber == 1){
-        out.write("1\t");
-        lineNumber++;
+    @Override
+    public void write(String str, int off, int len) throws IOException {
+        String[] lines = Utils.getNextLine(str.substring(off, off + len));
+        // For the first write we always put the line number
+        if(lineNumber == 1){
+            out.write("1\t");
+            lineNumber++;
+        }
+        while(!lines[0].isEmpty()){
+            out.write(lines[0]);
+            out.write(lineNumber++ + "\t");
+            lines = Utils.getNextLine(lines[1]);
+        }
+        out.write(lines[1]);
     }
-    while(!lines[0].isEmpty()){
-        out.write(lines[0]);
-        out.write(lineNumber++ + "\t");
-        lines = Utils.getNextLine(lines[1]);
-    }
-    out.write(lines[1]);
-  }
 
-  @Override
-  public void write(char[] cbuf, int off, int len) throws IOException {
-    String[] lines = Utils.getNextLine(Arrays.toString(cbuf).substring(off, off + len));
-    if(lineNumber == 1){
-        out.write("1\t");
-        lineNumber++;
+    @Override
+    public void write(char[] cbuf, int off, int len) throws IOException {
+        write(new String(cbuf), off, len);
     }
-    while(!lines[0].isEmpty()){
-        out.write(lines[0]);
-        out.write(lineNumber++ + "\t");
-        lines = Utils.getNextLine(lines[1]);
-    }
-    out.write(lines[1]);
-  }
 
     @Override
     public void write(int c) throws IOException {

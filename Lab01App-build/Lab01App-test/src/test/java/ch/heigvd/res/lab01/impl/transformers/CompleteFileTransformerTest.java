@@ -1,9 +1,14 @@
 package ch.heigvd.res.lab01.impl.transformers;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Scanner;
 import org.apache.commons.io.FileUtils;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
@@ -34,6 +39,9 @@ public class CompleteFileTransformerTest {
     writer.close();
     
     transformer.visit(inputFile);
+    Scanner scanner = new Scanner( outputFile );
+    System.out.print(scanner.useDelimiter("\\A").next());
+    scanner.close();
     assertTrue( FileUtils.contentEquals(expectedFile, outputFile) );
     FileUtils.deleteDirectory(new File("./tmp"));
   }
