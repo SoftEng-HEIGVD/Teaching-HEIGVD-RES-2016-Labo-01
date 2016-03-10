@@ -26,10 +26,10 @@ public class UpperCaseFilterWriter extends FilterWriter {
 
   @Override
   public void write(int c) throws IOException { //DRAFT
-      char[] ch = new char[1];
-      ch[0] = (char) c;
+      byte[] ch = new byte[1];
+      ch[0] = (byte) c;
       
-      write(new String(ch), 0, 1);
+      write(new String(ch, 0, 1, "utf-8"), 0, 1);
   }
 
 }
