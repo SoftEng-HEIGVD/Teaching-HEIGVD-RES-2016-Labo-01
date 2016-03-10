@@ -131,7 +131,7 @@ public class Application implements IApplication {
     new File(path).mkdirs();
 
     // Create an output stream, which will write message in the desired file.
-    FileOutputStream os = new FileOutputStream(path + "/" + filename);
+    FileOutputStream os = new FileOutputStream(path + File.separator + filename);
 
     // Wrap an OutputStreamWriter around the FileOutputStream
     // to use a custom encoding format.
