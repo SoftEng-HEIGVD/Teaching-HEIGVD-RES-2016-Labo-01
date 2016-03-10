@@ -37,19 +37,19 @@ public class Utils {
               }
               else {
                   result[0] = lines.substring(0, i + 1);
-                  result[1] = lines.substring(i);
+                  result[1] = lines.substring(i + 1);
               }
               
           }
           else {
               result[0] = lines.substring(0, i + 1);
-              result[1] = lines.substring(i);
+              result[1] = lines.substring(i + 1);
           }
           
       }
       else {
           result[0] = lines.substring(0, i + 2);
-          result[1] = lines.substring(i + 1); //A vérifier...
+          result[1] = lines.substring(i + 2);
       }
       
       return result;
