@@ -1,3 +1,13 @@
+/*
+ -----------------------------------------------------------------------------------
+ Cours       : RES
+ Laboratoire : Labo-01
+ Fichier     : Application.java
+ Auteur(s)   : Guillaume Serneels
+ Date        : 09.03.2016
+ But         : 
+ -----------------------------------------------------------------------------------
+*/
 package ch.heigvd.res.lab01.impl;
 
 import ch.heigvd.res.lab01.impl.explorers.DFSFileExplorer;
@@ -92,6 +102,7 @@ public class Application implements IApplication {
        * one method provided by this class, which is responsible for storing the content of the
        * quote in a text file (and for generating the directories based on the tags).
        */
+      this.storeQuote(quote, "quote-" + i + ".utf8" );
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
       for (String tag : quote.getTags()) {
         LOG.info("> " + tag);
@@ -125,7 +136,38 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+        //Get complete path
+      String fullName = "";
+      for(String tag : quote.getTags())
+          fullName+= "/" + tag;
+      fullName += filename;
+      
+      try{
+          
+            //Create the file
+        File f = new File(fullName);
+        f.mkdirs();
+            //Create the stream
+        OutputStreamWriter outWriter = new 
+        OutputStreamWriter(new FileOutputStream(f), "utf-8");
+        
+        //write the quote to the file
+        outWriter.write(quote.getQuote());
+       
+        
+      }catch(Exception e){
+          e.printStackTrace();
+      }
+      
+      
+      
+      
+      
+      
+      /*
+      FileOutputStream fos = null;
+      fos = new FileOutputStream();*/
+   // throw new UnsupportedOperationException("The student has not implemented this method yet.");
   }
   
   /**
@@ -148,7 +190,8 @@ public class Application implements IApplication {
   
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    //throw new UnsupportedOperationException("The student has not implemented this method yet.");
+      return "guillaume.serneels@heig-vd.ch";
   }
 
   @Override
