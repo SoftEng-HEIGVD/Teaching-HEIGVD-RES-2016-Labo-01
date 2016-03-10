@@ -59,7 +59,7 @@ public abstract class FileTransformer implements IFileVisitor {
              * loop to read the
              * characters and write them to the writer.
              */
-            char[] buf = new char[1204];
+            char[] buf = new char[1024];
             int count;
             while((count = reader.read(buf)) != -1) {
                 writer.write(buf, 0, count);
