@@ -3,6 +3,7 @@ package ch.heigvd.res.lab01.impl.explorers;
 import ch.heigvd.res.lab01.interfaces.IFileExplorer;
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
 import java.io.File;
+import java.util.Arrays;
 import sun.misc.VM;
 
 /**
@@ -15,17 +16,30 @@ import sun.misc.VM;
  */
 public class DFSFileExplorer implements IFileExplorer {
 
-  @Override
-  public void explore(File rootDirectory, IFileVisitor vistor) {
-    vistor.visit(rootDirectory);
-    if(!rootDirectory.exists())
-        return;
-    for(File f : rootDirectory.listFiles()){
-        if(f.isDirectory())
-            this.explore(f, vistor);
-        else
-            vistor.visit(f);
-    }
+    @Override
+    public void explore(File rootDirectory, IFileVisitor vistor) {
+        // Visit the root directory
+        vistor.visit(rootDirectory);
+
+        // Return if root directory doesn't exists
+        if(!rootDirectory.exists())
+            return;
+
+        // Get files/directories inside this directory and sort it
+        File[] files = rootDirectory.listFiles();
+        Arrays.sort(files);
+
+        // Write files
+        for(File f : files){
+            if(!f.isDirectory())
+                vistor.visit(f);
+        }
+
+        // DFS explore directories
+        for(File f : files){
+            if(f.isDirectory())
+                this.explore(f, vistor);
+        }
   }
 
 }
