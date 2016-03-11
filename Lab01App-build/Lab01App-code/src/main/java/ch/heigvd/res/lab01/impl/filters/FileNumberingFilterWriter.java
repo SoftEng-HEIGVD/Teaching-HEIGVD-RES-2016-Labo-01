@@ -18,24 +18,69 @@ import java.util.logging.Logger;
 public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
-
+  private char counter;
   public FileNumberingFilterWriter(Writer out) {
     super(out);
+    counter = '0';
   }
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    //throw new UnsupportedOperationException("The student has not implemented this method yet
+     str = str.substring(off, off+len);
+     String output = "";
+     if(!str.equals("")){
+         if(counter == '0'){
+            counter++;
+            output = counter+"\t";
+         }
+         int start = 0;
+         int index_n = str.indexOf("\n");
+         int index_r = str.indexOf("\r");
+         if(index_n == -1 && index_r == -1){
+            output += str;
+            out.write(output);
+            return;
+         }
+         while(index_n != -1 || index_r != -1){
+           counter++;
+           int index = Math.max(index_n, index_r);
+           output += str.substring(start, index+1)+counter+"\t";
+           start = index+1;
+           index_n = str.indexOf("\n", index_n+1);
+           index_r = str.indexOf("\r", index_r+1);
+         }
+         output += str.substring(start, str.length());
+      out.write(output);
+     }
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    //throw new UnsupportedOperationException("The student has not implemented this method yet.");
+     out.write(cbuf, off, len);
   }
 
   @Override
   public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    //throw new UnsupportedOperationException("The student has not implemented this method yet.");
+     if(counter == '0'){
+        counter++;
+        
+        out.write(counter);
+        out.write("\t");
+        out.write(c);
+        return;
+     }
+     out.write(c);
+     if(c == '\n'){
+        counter++;
+        out.write(counter);
+        out.write("\t");
+        
+        return;
+     }
+     
   }
 
 }
