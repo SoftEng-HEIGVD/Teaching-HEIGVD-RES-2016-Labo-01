@@ -18,15 +18,17 @@ public class DFSFileExplorer implements IFileExplorer {
 
     @Override
     public void explore(File file, IFileVisitor visitor) {
-            visitor.visit(file);
+        //First we visit the file
+        visitor.visit(file);
+        //We want to visit the files before the directories
         if (file.isDirectory()) {
             File[] files = file.listFiles();
             for (File f : files) {
-                if(f.isFile())
+                if (f.isFile())
                     explore(f, visitor);
             }
             for (File f : files) {
-                if(f.isDirectory()) {
+                if (f.isDirectory()) {
                     explore(f, visitor);
                 }
             }
