@@ -19,9 +19,11 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
   private char counter;
+  private boolean r_found;
   public FileNumberingFilterWriter(Writer out) {
     super(out);
     counter = '0';
+    r_found = false;
   }
 
   @Override
@@ -58,7 +60,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
     //throw new UnsupportedOperationException("The student has not implemented this method yet.");
-     out.write(cbuf, off, len);
+     write(new String(cbuf), off, len);
   }
 
   @Override
@@ -72,12 +74,22 @@ public class FileNumberingFilterWriter extends FilterWriter {
         out.write(c);
         return;
      }
+     if(r_found && c != '\n'){
+        counter++;
+        out.write(counter);
+        out.write("\t");
+        r_found = false;
+     }
      out.write(c);
      if(c == '\n'){
         counter++;
         out.write(counter);
         out.write("\t");
-        
+        r_found = false;
+        return;
+     }
+     if(c == '\r'){
+        r_found = true;
         return;
      }
      
