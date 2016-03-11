@@ -7,15 +7,17 @@ import ch.heigvd.res.lab01.interfaces.IFileExplorer;
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
 import ch.heigvd.res.lab01.quotes.QuoteClient;
 import ch.heigvd.res.lab01.quotes.Quote;
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.io.FileUtils;
 
 /**
  *
@@ -122,9 +124,51 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    // We use a StringBuilder to create the path to the file to store
+    StringBuilder sb = new StringBuilder(filename);
+    for(String s: quote.getTags()) {
+      sb.append(File.separator);
+      sb.append(s);
+    }
+
+    // we create the directories to the file
+    createDirectories(sb.toString());
+
+    // Create the filename
+    int fileCount = new File(sb.toString()).list(new FilenameFilter() {
+      @Override
+      public boolean accept(File file, String s) {
+        return s.endsWith("utf8");
+      }
+    }).length;
+
+    sb.append(File.separator);
+    sb.append("quote-");
+    sb.append(fileCount);
+    sb.append(".utf8");
+
+    // we write to the file
+    OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(sb.toString()));
+    writer.write(quote.getQuote());
   }
-  
+
+  /**
+   * From a given path, creates a directory on disk
+   * This is a no-op if the directory already exists
+   *
+   * @param path: path to which to create the directory
+     */
+  private void createDirectories(String path) {
+    File f = new File(path);
+    if(f.exists()) {
+      return;
+    }
+
+    if(!f.mkdirs()) {
+      throw new RuntimeException("Could not create directory: " + path);
+    }
+  }
+
   /**
    * This method uses a IFileExplorer to explore the file system and prints the name of each
    * encountered file and directory.
@@ -134,11 +178,13 @@ public class Application implements IApplication {
     explorer.explore(new File(WORKSPACE_DIRECTORY), new IFileVisitor() {
       @Override
       public void visit(File file) {
-        /*
-         * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
-         * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
-         * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
-         */
+        try {
+          writer.write(file.getPath() + "\n");
+        } catch(IOException e) {
+          // The behavior here is not clear on what to do on error.
+          // we decided to crash the program
+          throw new RuntimeException("Error writing to the flux");
+        }
       }
     });
   }
