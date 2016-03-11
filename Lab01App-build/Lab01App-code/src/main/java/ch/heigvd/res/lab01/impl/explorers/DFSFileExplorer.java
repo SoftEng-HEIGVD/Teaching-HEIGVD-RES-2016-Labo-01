@@ -17,6 +17,8 @@ public class DFSFileExplorer implements IFileExplorer {
   @Override
   public void explore(File rootDirectory, IFileVisitor visitor) {
 
+    visitor.visit(rootDirectory);
+
     // All the files in the directory
     File[] files = rootDirectory.listFiles();
 
@@ -25,10 +27,8 @@ public class DFSFileExplorer implements IFileExplorer {
       return;
     }
 
-    // Visits each file.
+    // Explore each file.
     for (File f : files) {
-      visitor.visit(f);
-
       if (f.isDirectory()) {
         explore(f, visitor);
       }

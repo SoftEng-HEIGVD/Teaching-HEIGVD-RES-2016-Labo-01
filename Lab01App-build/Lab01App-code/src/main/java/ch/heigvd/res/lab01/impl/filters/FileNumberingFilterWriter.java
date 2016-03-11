@@ -11,7 +11,7 @@ import java.util.logging.Logger;
  * It then sends the line number and a tab character, before resuming the write
  * process.
  *
- * Hello\n\World -> 1\Hello\n2\tWorld
+ * Hello\n\World -> 1\tHello\n2\tWorld
  *
  * @author Olivier Liechti
  */
@@ -25,17 +25,33 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    str = transform(str);
+    out.write(str, off, len);
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    write(new String(cbuf), off, len);
   }
 
   @Override
   public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    out.write((char)c);
   }
 
+  private String transform(String s) {
+    s = "1\t" + s;
+
+    int lineNum = 1;
+    int index;
+
+    do {
+      index = s.indexOf('\n');
+      if (index != -1) {
+        s = '\n' + (++lineNum) + '\t' + s.substring(index + 1);
+      }
+    } while (index != -1);
+
+    return s;
+  }
 }
