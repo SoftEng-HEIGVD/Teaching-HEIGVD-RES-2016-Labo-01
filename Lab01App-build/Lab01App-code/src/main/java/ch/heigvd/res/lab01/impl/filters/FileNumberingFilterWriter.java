@@ -19,23 +19,62 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
 
+  private long nextLine = 1;
+  
   public FileNumberingFilterWriter(Writer out) {
     super(out);
   }
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+      if(!str.isEmpty()){
+          StringBuilder sb = new StringBuilder(str);
+          String newLine1 = "\n";
+          String newLine2 = "\r";
+          String newLine3 = "\r\n";
+          
+          sb.replace(0, 1, nextLine + "\t");
+          nextLine++;
+          
+          int i = 0;
+          if((i = sb.indexOf(newLine3)) != -1){
+               sb.replace(i, newLine3.length() , nextLine + "\t");
+               nextLine++;
+               while((i = sb.indexOf(newLine3)) != -1){
+                   sb.replace(i, newLine3.length() , nextLine + "\t");
+                   nextLine++;
+               }
+          }
+          else if((i = sb.indexOf(newLine2)) != -1){
+              sb.replace(i, newLine2.length() , nextLine + "\t");
+               nextLine++;
+               while((i = sb.indexOf(newLine2)) != -1){
+                   sb.replace(i, newLine2.length() , nextLine + "\t");
+                   nextLine++;
+               }
+          }
+          else if((i = sb.indexOf(newLine1)) != -1){
+              sb.replace(i, newLine1.length() , nextLine + "\t");
+               nextLine++;
+               while((i = sb.indexOf(newLine1)) != -1){
+                   sb.replace(i, newLine1.length() , nextLine + "\t");
+                   nextLine++;
+               }
+          }
+          super.write(sb.toString(), off, len);
+          
+      }
+      super.write(str, off, len);
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+      write(cbuf.toString(), off, len);
   }
 
   @Override
   public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+      super.write(c);
   }
 
 }
