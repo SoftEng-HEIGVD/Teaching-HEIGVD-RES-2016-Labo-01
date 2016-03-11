@@ -81,6 +81,10 @@ public class FileNumberingFilterWriter extends FilterWriter {
                 lineNumber++;
                 super.write('\t');
             } else {
+                super.write('\r');
+                super.write(Character.forDigit(lineNumber, 10));
+                lineNumber++;
+                super.write('\t');
                 super.write(c);
             }
             waitingForN = false;

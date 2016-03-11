@@ -137,7 +137,6 @@ public class Application implements IApplication {
         out = new PrintWriter(filePath + "/" + filename + ".utf8.out");
         out.write("");
         out.close();
-        LOG.info("CREATED FILE: " + quoteFile.getAbsolutePath());
     }
 
     /**
@@ -155,8 +154,7 @@ public class Application implements IApplication {
          * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
          */
                 try {
-                    System.out.println(file.getPath().replace('\\', '/'));
-                    writer.write(file.getPath().replace('\\', '/'));
+                    writer.write(file.getPath().replace('\\', '/') + '\n');
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
