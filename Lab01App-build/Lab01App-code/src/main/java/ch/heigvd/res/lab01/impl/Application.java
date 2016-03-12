@@ -89,7 +89,7 @@ public class Application implements IApplication {
        */
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
       // Creation of the file based on the quote's tags
-      storeQuote(quote, "quotes-" + quote.getValue().getId() + ".utf8");
+      storeQuote(quote, "quote-" + quote.getValue().getId() + ".utf8");
       for (String tag : quote.getTags()) {
         LOG.info("> " + tag);
       }
@@ -159,7 +159,7 @@ public class Application implements IApplication {
         try {
           writer.write(WORKSPACE_DIRECTORY + File.separator + file.getName() + "\n");
         } catch (IOException e) {
-          LOG.log(Level.SEVERE, "could not write to file {0}", file.getName());
+          LOG.log(Level.SEVERE, "could not write the filename to the writer");
         }
       }
     });
@@ -167,7 +167,7 @@ public class Application implements IApplication {
 
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    return "basile.vu@heig-vd.ch";
   }
 
   @Override
