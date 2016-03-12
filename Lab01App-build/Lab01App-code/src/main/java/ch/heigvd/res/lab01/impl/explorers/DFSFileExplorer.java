@@ -39,6 +39,7 @@ public class DFSFileExplorer implements IFileExplorer {
         }
     }
     
+    // a filefiter who returns only files
     private FileFilter onlyFilesFilter = new FileFilter() {
         @Override
         public boolean accept(File file) {
@@ -46,6 +47,7 @@ public class DFSFileExplorer implements IFileExplorer {
         }
     };
     
+    // a filefiter who returns only directories
     private FileFilter onlyDirectoriesFilter = new FileFilter() {
         @Override
         public boolean accept(File file) {

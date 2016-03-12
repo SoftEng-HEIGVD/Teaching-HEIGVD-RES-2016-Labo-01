@@ -7,6 +7,7 @@ import ch.heigvd.res.lab01.interfaces.IFileExplorer;
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
 import ch.heigvd.res.lab01.quotes.QuoteClient;
 import ch.heigvd.res.lab01.quotes.Quote;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -86,13 +87,8 @@ public class Application implements IApplication {
         for (int i = 0; i < numberOfQuotes; i++) {
             Quote quote = client.fetchQuote();
 
-            /* There is a missing piece here!
-            * As you can see, this method handles the first part of the lab. It uses the web service
-            * client to fetch quotes. We have removed a single line from this method. It is a call to
-            * one method provided by this class, which is responsible for storing the content of the
-            * quote in a text file (and for generating the directories based on the tags).
-             */
-            storeQuote(quote, "quotes-" + (i + 1) + ".utf8");
+            // store the quote with a correct filename
+            storeQuote(quote, "quote-" + quote.getValue().getId() + ".utf8");
 
             LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
             for (String tag : quote.getTags()) {
@@ -133,8 +129,8 @@ public class Application implements IApplication {
         // construct file path
         String path = WORKSPACE_DIRECTORY;
         for (String tag : quote.getTags())
-            path += "/" + tag;
-        path += "/" + filename;
+            path += File.separator + tag;
+        path += File.separator + filename;
         
         // create folder and file
         File f = new File(path);
@@ -142,11 +138,11 @@ public class Application implements IApplication {
         f.createNewFile();
 
         // write content
-        FileOutputStream stream = new FileOutputStream(path);
-        OutputStreamWriter writer = new OutputStreamWriter(stream);
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path)));
         writer.write(quote.getQuote());
+        
+        // close streams
         writer.close();
-        //throw new UnsupportedOperationException("The student has not implemented this method yet.");
     }
 
     /**
@@ -158,17 +154,15 @@ public class Application implements IApplication {
         explorer.explore(new File(WORKSPACE_DIRECTORY), new IFileVisitor() {
             @Override
             public void visit(File file) {
-                /*
-                 * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
-                 * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
-                 * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
-                 */
+                
+                // write current filepath to writer
                 try {
-                    writer.write(file.getPath() + '\n');
+                    writer.write(file.getPath() + System.lineSeparator());
                 }
-                catch (IOException e) {
-                    
-                }                    
+                catch (IOException ex) {
+                    LOG.log(Level.SEVERE, "Could not write quote. {0}", ex.getMessage());
+                    ex.printStackTrace();
+                }            
             }
         });
     }

@@ -19,8 +19,14 @@ import java.util.logging.Logger;
 public class FileNumberingFilterWriter extends FilterWriter {
 
     private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
+    
+    // the current line numbre
     private int lineNumber = 1;
+    
+    // indicates if first line number has already been written
     private boolean firstLineNumberWritten = false;
+    
+    // indicates if the last written char was a line separator
     private boolean previousCharWasLineSeparator = false;
     
     public FileNumberingFilterWriter(Writer out) {
@@ -32,8 +38,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
         
         // handle first line
         if (!firstLineNumberWritten) {
-            String line = lineNumber++ + "\t";
-            super.write(line, 0, line.length());
+            writeLineNumber();
             firstLineNumberWritten = true;
         }
         
@@ -45,8 +50,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
             super.write(lines[0], 0, lines[0].length());
             
             // write next line number
-            String line = lineNumber++ + "\t";
-            super.write(line, 0, line.length());
+            writeLineNumber();
             
             // search for more lines
             str = lines[1];
@@ -67,8 +71,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
         
         // handle first line number
         if (!firstLineNumberWritten) {
-            String line = lineNumber++ + "\t";
-            super.write(line, 0, line.length());
+            writeLineNumber();
             firstLineNumberWritten = true;
         }
         
@@ -83,13 +86,18 @@ public class FileNumberingFilterWriter extends FilterWriter {
         else {
             // if previous char was a line separator, insert line number
             if (previousCharWasLineSeparator) {
-                String line = lineNumber++ + "\t";
-                super.write(line, 0, line.length());
+                writeLineNumber();
                 previousCharWasLineSeparator = false;
             }
             
             // write it
             super.write(c);
         }
+    }
+    
+    // writes and increments current line number
+    private void writeLineNumber() throws IOException {
+        String line = lineNumber++ + "\t";
+        super.write(line, 0, line.length());
     }
 }
