@@ -19,7 +19,6 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
   private int lineNum = 0;
-  private boolean wroteN = false;
   private boolean wroteR = false;
 
   public FileNumberingFilterWriter(Writer out) {
@@ -42,25 +41,22 @@ public class FileNumberingFilterWriter extends FilterWriter {
   public void write(int c) throws IOException {
     char toWrite = (char)c;
 
+    // Always write line number + tab if beginning
     if (lineNum == 0) {
       wrLN();
     }
 
+    // Always write line number + tab after \n
     if (toWrite == '\n') {
-      // ignore new line (\n was written before)
-      if (wroteN) {
-        return;
-      }
-      // after a \n, there is always a number + tab
-      wroteN = true;
       out.write(c);
       wrLN();
     }
 
     else if (toWrite == '\r') {
-      // ignore new line (\n or \r was written before)
-      if (wroteN || wroteR) {
-        return;
+      // here, \r is a new line since \r was written before -> write a new line with its number
+      if (wroteR) {
+        out.write(c);
+        wrLN();
       }
       out.write(c);
       wroteR = true;
@@ -71,9 +67,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
       if (wroteR) {
         wrLN();
       }
-
       out.write(toWrite);
-      wroteN = false;
     }
   }
 
@@ -83,7 +77,6 @@ public class FileNumberingFilterWriter extends FilterWriter {
    */
   private void wrLN() throws IOException {
     out.write(String.valueOf(++lineNum) + "\t");
-    wroteN = false;
     wroteR = false;
   }
 }

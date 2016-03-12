@@ -37,7 +37,12 @@ public class Utils {
     return new String[] {"", lines};
   }
 
-  // TODO doc
+  /**
+   * Splits a string at a given position and returns the two parts in an array.
+   * @param s The string to split
+   * @param index The position where to split
+   * @return The array with the two parts
+   */
   private static String[] splitAt(String s, int index) {
     return new String[] {s.substring(0, index), s.substring(index)};
   }
