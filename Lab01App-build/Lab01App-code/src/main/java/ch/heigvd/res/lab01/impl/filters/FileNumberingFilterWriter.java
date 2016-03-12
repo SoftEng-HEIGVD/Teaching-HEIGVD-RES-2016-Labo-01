@@ -6,10 +6,9 @@ import java.io.Writer;
 import java.util.logging.Logger;
 
 /**
- * This class transforms the streams of character sent to the decorated writer.
- * When filter encounters a line separator, it sends it to the decorated writer.
- * It then sends the line number and a tab character, before resuming the write
- * process.
+ * This class transforms the streams of character sent to the decorated writer. When
+ * filter encounters a line separator, it sends it to the decorated writer. It then
+ * sends the line number and a tab character, before resuming the write process.
  *
  * Hello\n\World -> 1\Hello\n2\tWorld
  *
@@ -17,64 +16,62 @@ import java.util.logging.Logger;
  */
 public class FileNumberingFilterWriter extends FilterWriter {
 
-  private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
+    private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
 
-  private long nextLine = 1;
-  
-  public FileNumberingFilterWriter(Writer out) {
-    super(out);
-  }
+    private long nextLine = 1;
+    private boolean wasReturn = false;
+    private boolean wasEndOfLine = false;
 
-  @Override
-  public void write(String str, int off, int len) throws IOException {
-      if(!str.isEmpty()){
-          StringBuilder sb = new StringBuilder(str);
-          String newLine1 = "\n";
-          String newLine2 = "\r";
-          String newLine3 = "\r\n";
-          
-          sb.replace(0, 1, nextLine + "\t");
-          nextLine++;
-          
-          int i = 0;
-          if((i = sb.indexOf(newLine3)) != -1){
-               sb.replace(i, newLine3.length() , nextLine + "\t");
-               nextLine++;
-               while((i = sb.indexOf(newLine3)) != -1){
-                   sb.replace(i, newLine3.length() , nextLine + "\t");
-                   nextLine++;
-               }
-          }
-          else if((i = sb.indexOf(newLine2)) != -1){
-              sb.replace(i, newLine2.length() , nextLine + "\t");
-               nextLine++;
-               while((i = sb.indexOf(newLine2)) != -1){
-                   sb.replace(i, newLine2.length() , nextLine + "\t");
-                   nextLine++;
-               }
-          }
-          else if((i = sb.indexOf(newLine1)) != -1){
-              sb.replace(i, newLine1.length() , nextLine + "\t");
-               nextLine++;
-               while((i = sb.indexOf(newLine1)) != -1){
-                   sb.replace(i, newLine1.length() , nextLine + "\t");
-                   nextLine++;
-               }
-          }
-          super.write(sb.toString(), off, len);
-          
-      }
-      super.write(str, off, len);
-  }
+    public FileNumberingFilterWriter(Writer out) {
+        super(out);
+    }
 
-  @Override
-  public void write(char[] cbuf, int off, int len) throws IOException {
-      write(cbuf.toString(), off, len);
-  }
+    @Override
+    public void write(String str, int off, int len) throws IOException {
+        for (int i = 0; i < len; i++) {
+            write(str.charAt(off + i));
+        }
 
-  @Override
-  public void write(int c) throws IOException {
-      super.write(c);
-  }
+    }
+
+    @Override
+    public void write(char[] cbuf, int off, int len) throws IOException {
+        for (int i = 0; i < len; i++) {
+            write(cbuf[off + i]);
+        }
+    }
+
+    @Override
+    public void write(int c) throws IOException {
+
+        if (nextLine == 1) {
+            out.write(nextLine + "\t");
+            nextLine++;
+        }
+
+        if (c == '\r') {
+            wasReturn = true;
+            out.write(c);
+        } else if (c == '\n') {
+            if (wasReturn) {
+                wasReturn = false;
+            }
+            out.write(c);
+            out.write(nextLine + "\t");
+            nextLine++;
+            wasEndOfLine = true;
+        } else if (wasEndOfLine || wasReturn) {
+            wasEndOfLine = false;
+            if (wasReturn) {
+                wasReturn = false;
+                out.write(nextLine + "\t");
+                nextLine++;
+            }
+            out.write(c);
+        } else {
+            out.write(c);
+        }
+
+    }
 
 }
