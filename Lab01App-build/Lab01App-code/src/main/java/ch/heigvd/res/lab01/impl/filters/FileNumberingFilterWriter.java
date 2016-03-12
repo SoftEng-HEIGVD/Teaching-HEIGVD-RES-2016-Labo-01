@@ -63,7 +63,10 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
     @Override
     public void write(char[] cbuf, int off, int len) throws IOException {
-        throw new UnsupportedOperationException("The student has not implemented this method yet.");
+        
+        // write each char
+        for (int i = off; i < off + len; i++)
+            write(cbuf[i]);
     }
 
     @Override

@@ -157,7 +157,7 @@ public class Application implements IApplication {
                 
                 // write current filepath to writer
                 try {
-                    writer.write(file.getPath() + System.lineSeparator());
+                    writer.write(file.getPath() + '\n'); // using System.lineSeparator() does not work (tested on Windows)
                 }
                 catch (IOException ex) {
                     LOG.log(Level.SEVERE, "Could not write quote. {0}", ex.getMessage());
