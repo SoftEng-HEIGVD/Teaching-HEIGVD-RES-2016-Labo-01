@@ -1,7 +1,5 @@
 package ch.heigvd.res.lab01.impl.filters;
 
-import ch.heigvd.res.lab01.impl.Utils;
-
 import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -21,7 +19,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
   private int lineNum = 0;
-  private boolean wroteNewLine;
+  private boolean wroteNewLine = false;
 
   public FileNumberingFilterWriter(Writer out) {
     super(out);
@@ -29,51 +27,42 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    str = transform(str.substring(off, off+len));
-    out.write(str, 0, str.length());
+    write(str.toCharArray(), off, len);
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    write(new String(cbuf), off, len);
+    for (int i = off; i < cbuf.length && i < off+len; ++i) {
+      write(cbuf[i]);
+    }
   }
 
   @Override
   public void write(int c) throws IOException {
-    write("" + (char)c, 0, 1);
+    char toWrite = (char)c;
+
+    if (lineNum == 0) {
+      write(++lineNum + "\t");
+    }
+
+    if (toWrite == '\n' || toWrite == '\r') {
+      // ignore new line
+      if (wroteNewLine) {
+        return;
+      }
+      super.write(c);
+      write(++lineNum + "\t");
+      wroteNewLine = true;
+    }
+
+    else {
+      super.write(toWrite);
+      wroteNewLine = false;
+    }
   }
 
-  private String transform(String s) {
-
-    /*
-     * See getNextLine for detailed behaviour. The important facts in this function are :
-     * - tmp[0] == "" -> no line separator in the line passed to getNextLine.
-     * - tmp[1] == "" -> line passed is the last line and finishes with a line separator.
-     */
-    String[] tmp = Utils.getNextLine(s);
-
-    // If it's the first line, we add the line number and a tab.
-    String res = lineNum == 0 ? (++lineNum) + "\t" + tmp[0] : tmp[0];
-
-    // We can return res here if s does not contain any line separator.
-    if (tmp[0].equals("")) {
-      res += tmp[1];
-      return res;
-    }
-
-    // While there are still a line to transform -> line number + tab char + line
-    while (!tmp[0].equals("")) {
-      tmp = Utils.getNextLine(tmp[1]);
-      // We write the line. If it's the last, we must take that into account too and write tmp[1] instead
-      res += (++lineNum) + "\t" + (tmp[0].equals("") ? tmp[1] : tmp[0]);
-
-      // The new tmp[1] is "" ->  the new tmp[0] is the last line and finishes with a line separator.
-      // Since the result of getNextLine will be the same next iteration, we can quit here.
-      if (tmp[1].equals("")) {
-        break;
-      }
-    }
-
-    return res;
+  @Override
+  public void write(String str) throws IOException {
+    write(str, 0, str.length());
   }
 }

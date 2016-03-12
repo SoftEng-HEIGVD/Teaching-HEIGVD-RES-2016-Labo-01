@@ -24,8 +24,8 @@ public class CompleteFileTransformer extends FileTransformer {
      * decorate with a FileNumberingFilterWriter. The resulting writer is used by the abstract class to write the characters read from the
      * input files. So, the input is first prefixed with line numbers, then transformed to uppercase, then sent to the output file.
      */
-    writer = new FileNumberingFilterWriter(new UpperCaseFilterWriter(writer));
-    return writer; 
+    writer = new UpperCaseFilterWriter(new FileNumberingFilterWriter(writer));
+    return writer;
   }
 
 }
