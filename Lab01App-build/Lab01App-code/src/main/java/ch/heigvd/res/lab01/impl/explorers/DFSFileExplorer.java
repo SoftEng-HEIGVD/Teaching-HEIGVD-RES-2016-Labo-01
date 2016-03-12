@@ -2,7 +2,6 @@ package ch.heigvd.res.lab01.impl.explorers;
 
 import ch.heigvd.res.lab01.interfaces.IFileExplorer;
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
-import com.sun.istack.internal.NotNull;
 
 import java.io.File;
 
