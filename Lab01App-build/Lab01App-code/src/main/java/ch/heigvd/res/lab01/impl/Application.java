@@ -97,9 +97,9 @@ public class Application implements IApplication {
 
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
       for (String tag : quote.getTags()) {
-        storeQuote(quote, "quote-" + i + ".utf8" );
         LOG.info("> " + tag);
       }
+      storeQuote(quote, "quote-" + i + ".utf8" );
     }
   }
   
@@ -133,18 +133,35 @@ public class Application implements IApplication {
         String filePath = WORKSPACE_DIRECTORY + "\\";
         FileOutputStream fos;
         BufferedWriter writer;
-        
-        
+
         for (String tag : quote.getTags()) {
             filePath += tag + "\\";
         }
         
         File file = new File(filePath + filename);
         
+        
+       /* File log = new File("E:\\Temp\\caca.txt");
+        log.createNewFile();
+        FileWriter fileWrite = new FileWriter(log,true);
+        fileWrite.write(file.toString());
+        fileWrite.write("\n");
+        fileWrite.close();*/
+        
+        for(int i = 0; i < 1000000; i++){
+            LOG.info("CACA");
+        }
+        
+        
         if (file.getParentFile() != null) {
             file.getParentFile().mkdirs();
+        
         }
          
+        file.createNewFile();
+        
+        
+        
         fos = new FileOutputStream(file);
         writer = new BufferedWriter(new OutputStreamWriter(fos, "utf-8"));
         
@@ -152,10 +169,7 @@ public class Application implements IApplication {
         writer.close();
         fos.close();
         
-         //file.createNewFile();
-        // FileWriter fileWrite = new FileWriter(file,true);
-        // fileWrite.write(quote.getQuote());
-        // fileWrite.close(); 
+
   }      
   
   /**
@@ -167,7 +181,15 @@ public class Application implements IApplication {
     explorer.explore(new File(WORKSPACE_DIRECTORY), new IFileVisitor() {
       @Override
       public void visit(File file) {
-        /*
+        
+        // TEST !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        try{
+            writer.write(file.toString());
+        }
+        catch(IOException e){
+            
+        }
+         /*
          * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
          * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
          * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
