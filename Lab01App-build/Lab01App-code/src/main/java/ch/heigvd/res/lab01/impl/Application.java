@@ -124,7 +124,7 @@ public class Application implements IApplication {
   void storeQuote(Quote quote, String filename) throws IOException {
 
     // Path to directory that will contain the file
-    String fileDirPath = WORKSPACE_DIRECTORY + File.separator + String.join(File.separator, quote.getTags());
+    String fileDirPath = WORKSPACE_DIRECTORY + "/" + String.join("/", quote.getTags());
 
     // Represents the directory that will contain the file
     File fileDir = new File(fileDirPath);
@@ -137,7 +137,7 @@ public class Application implements IApplication {
     }
 
     // Create the file with filename in the directory created. We then write the quote in it.
-    Writer writer = new OutputStreamWriter(new FileOutputStream(fileDirPath + File.separator + filename), "UTF-8");
+    Writer writer = new OutputStreamWriter(new FileOutputStream(fileDirPath + "/" + filename), "UTF-8");
     writer.write(quote.getQuote());
     writer.close();
   }
@@ -157,7 +157,7 @@ public class Application implements IApplication {
          * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
          */
         try {
-          writer.write(WORKSPACE_DIRECTORY + File.separator + file.getName() + "\n");
+          writer.write(WORKSPACE_DIRECTORY + "/" + file.getName() + "\n");
         } catch (IOException e) {
           LOG.log(Level.SEVERE, "could not write the filename to the writer");
         }
