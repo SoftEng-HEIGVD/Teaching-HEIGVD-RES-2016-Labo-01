@@ -164,11 +164,12 @@ public class Application implements IApplication {
             @Override
             public void visit(File file) {
                 try {
-                    writer.write(file.toString());
+                    writer.write(file.getPath() + "\n");
                 } catch (IOException e) {
 
                 }
             }
+            
         });
     }
 

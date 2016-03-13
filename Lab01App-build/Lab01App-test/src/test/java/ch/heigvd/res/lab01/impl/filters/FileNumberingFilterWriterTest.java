@@ -88,9 +88,6 @@ public class FileNumberingFilterWriterTest {
     StringWriter stringWriter = new StringWriter();
     FileNumberingFilterWriter writer = new FileNumberingFilterWriter(stringWriter);
     writer.write(line);
-    
-    String tmp = stringWriter.toString();
-    
     Assert.assertEquals(expected, stringWriter.toString());
   }
 

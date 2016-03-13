@@ -77,31 +77,6 @@ public class Utils {
         tmp[0] = "";
         tmp[1] = lines;  
     }
-        
-      
-    
-
-    
-
-   /* if(lines.contains("\r\n")){
-        int index = lines.indexOf("\r\n");
-        tmp[0] = lines.substring(0, index + 2);
-        tmp[1] = lines.substring(index + 2);
-    }
-    else if(lines.contains("\n")){
-        int index = lines.indexOf("\n");
-        tmp[0] = lines.substring(0, index + 1);
-        tmp[1] = lines.substring(index + 1);
-    }
-    else if(lines.contains("\r")){
-        int index = lines.indexOf("\r");
-        tmp[0] = lines.substring(0, index + 1);
-        tmp[1] = lines.substring(index + 1);
-    }
-    else{
-        tmp[0] = "";
-        tmp[1] = lines;
-    }*/
     
     return tmp;
   }
