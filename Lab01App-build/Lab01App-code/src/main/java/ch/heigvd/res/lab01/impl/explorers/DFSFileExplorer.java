@@ -1,3 +1,13 @@
+/*
+ -----------------------------------------------------------------------------------
+ Course       : RES
+ Laboratory   : Labo-01
+ File         : DFSFileExplorer.java
+ Author       : Olivier Liechti, Guillaume Serneels
+ Date         : 13.03.2016
+ But          : File Explorer for the quote fetching and treatment application
+ -----------------------------------------------------------------------------------
+*/
 package ch.heigvd.res.lab01.impl.explorers;
 
 import ch.heigvd.res.lab01.interfaces.IFileExplorer;

@@ -1,11 +1,12 @@
+
 /*
  -----------------------------------------------------------------------------------
- Cours       : RES
- Laboratoire : Labo-01
- Fichier     : Application.java
- Auteur(s)   : Guillaume Serneels
- Date        : 09.03.2016
- But         : 
+ Course       : RES
+ Laboratory   : Labo-01
+ File         : Application.java
+ Author       : Olivier Liechti, Guillaume Serneels
+ Date         : 13.03.2016
+ But          : Quote fetching and treatment application
  -----------------------------------------------------------------------------------
 */
 package ch.heigvd.res.lab01.impl;
@@ -17,6 +18,7 @@ import ch.heigvd.res.lab01.interfaces.IFileExplorer;
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
 import ch.heigvd.res.lab01.quotes.QuoteClient;
 import ch.heigvd.res.lab01.quotes.Quote;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -38,6 +40,8 @@ public class Application implements IApplication {
    * to where the Java application is invoked.
    */
   public static String WORKSPACE_DIRECTORY = "./workspace/quotes";
+  
+  //private static final int BUFFER_SIZE = 512;
   
   private static final Logger LOG = Logger.getLogger(Application.class.getName());
   
@@ -102,6 +106,7 @@ public class Application implements IApplication {
        * one method provided by this class, which is responsible for storing the content of the
        * quote in a text file (and for generating the directories based on the tags).
        */
+      
       this.storeQuote(quote, "quote-" + i + ".utf8" );
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
       for (String tag : quote.getTags()) {
@@ -137,22 +142,23 @@ public class Application implements IApplication {
    */
   void storeQuote(Quote quote, String filename) throws IOException {
         //Get complete path
-      String fullName = "";
+      String fullName = WORKSPACE_DIRECTORY;
       for(String tag : quote.getTags())
           fullName+= "/" + tag;
       fullName += filename;
       
-      try{
-          
+      try{        
             //Create the file
         File f = new File(fullName);
         f.mkdirs();
             //Create the stream
         OutputStreamWriter outWriter = new 
-        OutputStreamWriter(new FileOutputStream(f), "utf-8");
+            OutputStreamWriter(new FileOutputStream(f), "UTF-8");
+        BufferedWriter bos = new BufferedWriter(outWriter);
+        //byte[] buffer = new byte[BUFFER_SIZE];
         
         //write the quote to the file
-        outWriter.write(quote.getQuote());
+        bos.write(quote.getQuote());
        
         
       }catch(Exception e){

@@ -35,6 +35,8 @@ public class Utils {
             index= lines.indexOf("\n");
             newLineOccurence = true;
         }
+        //If the string contains a new line character, 
+        //we fill the array correctly
         if(newLineOccurence){
             linesArray[0] = lines.substring(0, index + 1);
             linesArray[1] = lines.substring(index + 1);
