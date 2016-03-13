@@ -82,6 +82,12 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(int c) throws IOException {
+      //Write the first line when necessary
+      if(linesCpt == '1'){
+          super.write(linesCpt);
+          super.write('\t');      
+          linesCpt++;
+      }
       
       //Handling of a potential windows new line feed (\r\n)
       if(newLineWithBackslashR){

@@ -142,15 +142,16 @@ public class Application implements IApplication {
    */
   void storeQuote(Quote quote, String filename) throws IOException {
         //Get complete path
-      String fullName = WORKSPACE_DIRECTORY;
+      String fullName = WORKSPACE_DIRECTORY + File.separator;
       for(String tag : quote.getTags())
-          fullName+= "/" + tag;
+          fullName+= tag + File.separator;
       fullName += filename;
       
       try{        
             //Create the file
         File f = new File(fullName);
-        f.mkdirs();
+        f.getParentFile().mkdirs();
+        f.createNewFile();
             //Create the stream
         OutputStreamWriter outWriter = new 
             OutputStreamWriter(new FileOutputStream(f), "UTF-8");
@@ -159,7 +160,9 @@ public class Application implements IApplication {
         
         //write the quote to the file
         bos.write(quote.getQuote());
-       
+        //Flush and close
+        bos.flush();
+        bos.close();
         
       }catch(Exception e){
           e.printStackTrace();
@@ -190,6 +193,11 @@ public class Application implements IApplication {
          * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
          * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
          */
+         try{
+            writer.write(file.getPath());
+         }catch(Exception e){
+            e.printStackTrace();
+         }  
       }
     });
   }
