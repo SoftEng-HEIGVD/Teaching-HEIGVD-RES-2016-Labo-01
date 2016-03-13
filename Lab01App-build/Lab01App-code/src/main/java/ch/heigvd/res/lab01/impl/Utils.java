@@ -1,3 +1,13 @@
+/*
+ -----------------------------------------------------------------------------------
+ Course       : RES
+ Laboratory   : Labo-01
+ File         : Utils.java
+ Author       : Olivier Liechti, Guillaume Serneels
+ Date         : 13.03.2016
+ But          : Utilitaries to implement the quote fetching and treatment application
+ -----------------------------------------------------------------------------------
+*/
 package ch.heigvd.res.lab01.impl;
 
 import java.util.logging.Logger;
