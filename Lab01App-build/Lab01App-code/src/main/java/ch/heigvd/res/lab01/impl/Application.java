@@ -129,13 +129,18 @@ public class Application implements IApplication {
       List<String> tags = quote.getTags(); // récupère les tags 
       String pathDir = WORKSPACE_DIRECTORY;
       for (String dir : tags) {
-         pathDir += File.separatorChar + dir;
+         pathDir += File.separator + dir;
       }
       File f = new File(pathDir);
       f.mkdirs();
-      FileWriter fos = new FileWriter(new File(pathDir + File.separatorChar + filename));
-      fos.write(quote.getQuote());
-      fos.close();
+      FileWriter fos = new FileWriter(new File(pathDir + File.separator + filename));
+      try {    
+         fos.write(quote.getQuote());
+         fos.close();
+      } catch (IOException e) {
+         e.getMessage();
+      }
+
    }
 
    /**
@@ -146,8 +151,13 @@ public class Application implements IApplication {
       IFileExplorer explorer = new DFSFileExplorer();
       explorer.explore(new File(WORKSPACE_DIRECTORY), new IFileVisitor() {
          @Override
-         public void visit(File file) {   
-                System.out.println("[PRINT FILE NAME] " + file.getPath() + file.getName());    
+         public void visit(File file) {
+           try{
+              writer.write(file.getPath()+"\n");       
+           }catch(IOException e){
+              e.getMessage();
+           }
+            //System.out.println("[PRINT FILE NAME] " + file.getPath() + file.getName());
             /*
              * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
              * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should

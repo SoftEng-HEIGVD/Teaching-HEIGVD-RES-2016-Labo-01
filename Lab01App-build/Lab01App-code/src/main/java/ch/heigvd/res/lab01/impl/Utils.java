@@ -49,11 +49,11 @@ public class Utils {
             s[1]="";
          } else { // cas d'au moins un 2ème séparateur
             s[1] = s[0].substring(pos+separator.length());
+            // mise à jour de la première partie
             s[0] = s[0].substring(0, pos+separator.length());
          }
       }
       return s;
-      //throw new UnsupportedOperationException("The student has not implemented this method yet.");
    }
 
 }
