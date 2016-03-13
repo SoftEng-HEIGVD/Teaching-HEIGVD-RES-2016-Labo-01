@@ -3,6 +3,8 @@ package ch.heigvd.res.lab01.impl.explorers;
 import ch.heigvd.res.lab01.interfaces.IFileExplorer;
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
 import java.io.File;
+import java.util.Arrays;
+import java.util.Stack;
 
 /**
  * This implementation of the IFileExplorer interface performs a depth-first
@@ -15,8 +17,30 @@ import java.io.File;
 public class DFSFileExplorer implements IFileExplorer {
 
   @Override
-  public void explore(File rootDirectory, IFileVisitor vistor) {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+  public void explore(File rootDirectory, IFileVisitor visitor) {
+    
+    // This is an iterative way to browse the folders
+    Stack<File> files = new Stack<>();
+    files.add(rootDirectory);
+
+    while(!files.isEmpty()) {
+      File file = files.pop();
+      visitor.visit(file);
+      
+      if(file.isDirectory()) {
+        File[] list = file.listFiles();
+
+        // Unfortunately listFiles method gives no guarantee that the strings
+        // appear in a specific order
+        // TODO : Reduce the complexity
+        Arrays.sort(list);
+        
+        for(int i = list.length - 1; i >= 0; i--) {
+          files.push(list[i]);
+        }
+      }
+    }
+    
   }
 
 }
