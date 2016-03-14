@@ -88,11 +88,9 @@ public class Application implements IApplication {
     QuoteClient client = new QuoteClient();
     for (int i = 1; i <= numberOfQuotes; i++) {
       Quote quote = client.fetchQuote();
-      /* There is a missing piece here!
-       * As you can see, this method handles the first part of the lab. It uses the web service
-       * client to fetch quotes. We have removed a single line from this method. It is a call to
-       * one method provided by this class, which is responsible for storing the content of the
-       * quote in a text file (and for generating the directories based on the tags).
+      
+      /*
+       * Store each quote with the correct filename
        */
       storeQuote(quote, "quote-"+i+".utf8");
               
@@ -131,20 +129,25 @@ public class Application implements IApplication {
   void storeQuote(Quote quote, String filename) throws IOException {
     List<String> tags = quote.getTags();
     String path = WORKSPACE_DIRECTORY;
+    
+    //First, create the "workspace/quotes" directory
     if(!new File(path).exists()){
           new File(path).mkdirs();
        }
+    
+    //Create the sub-directory or each tag
     for(String s : tags){
        path += "/"+s;
        if(!new File(path).exists()){
           new File(path).mkdir();
        }
     }
+    
+    //Create the quote file and write the content
     Writer writer = new OutputStreamWriter (new FileOutputStream(path+"/"+filename), "UTF-8");
     writer.write(quote.getQuote());
     writer.flush();
     writer.close();
-    //throw new UnsupportedOperationException("The student has not implemented this method yet.");
   }
   
   /**
@@ -156,14 +159,12 @@ public class Application implements IApplication {
     explorer.explore(new File(WORKSPACE_DIRECTORY), new IFileVisitor() {
       @Override
       public void visit(File file) {
-        /*
-         * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
-         * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
-         * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
-         */
+        //Write the filename, including the path, into the writer 
          try{
             writer.write(file.getPath()+"\n");
-         }catch(IOException e){}
+         }catch(IOException e){
+            e.printStackTrace();
+         }
 
       }
     });
@@ -172,7 +173,6 @@ public class Application implements IApplication {
   @Override
   public String getAuthorEmail() {
     return "lucie.steiner@heig-vd.ch";
-    //throw new UnsupportedOperationException("The student has not implemented this method yet.");
   }
 
   @Override

@@ -20,18 +20,24 @@ public class Utils {
    * contain any line separator, then the first element is an empty string.
    */
   public static String[] getNextLine(String lines) {
-    //throw new UnsupportedOperationException("The student has not implemented this method yet.");
+     
+     //Search for the next \n
     int index_n = lines.indexOf('\n');
+    
     if(index_n == -1){
+       //If none is found, search for a \r
        int index_r = lines.indexOf('\r');
-       if(index_r == -1){
+       if(index_r == -1){        
+          //If neither of them can be found, return an empty string
           return new String[]{"", lines};
        }
        else{
+          //Split the string and return it
           return new String[]{lines.substring(0, index_r+1), lines.substring(index_r+1, lines.length())};
        }
     }
     else{
+       // There's no need to search for \r\n, as we find it  by searching only for \n
        return new String[]{lines.substring(0, index_n+1), lines.substring(index_n+1, lines.length())};
     }
   }

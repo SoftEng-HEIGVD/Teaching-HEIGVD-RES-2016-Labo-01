@@ -54,17 +54,12 @@ public abstract class FileTransformer implements IFileVisitor {
       
       writer = decorateWithFilters(writer);
       
+      //Read the file in the reader byte by byte and write it in the writer
       int data = reader.read();
       while(data != -1){
          writer.write(data);
          data = reader.read();
       }
-      
-      /*
-       * There is a missing piece here: you have an input reader and an ouput writer (notice how the 
-       * writer has been decorated by the concrete subclass!). You need to write a loop to read the
-       * characters and write them to the writer.
-       */
       
       reader.close();
       writer.flush();
