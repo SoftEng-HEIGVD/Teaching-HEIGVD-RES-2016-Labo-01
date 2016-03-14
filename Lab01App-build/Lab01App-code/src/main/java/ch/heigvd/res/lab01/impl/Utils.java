@@ -5,9 +5,10 @@
  File         : Utils.java
  Author       : Olivier Liechti, Guillaume Serneels
  Date         : 13.03.2016
- But          : Utilitaries to implement the quote fetching and treatment application
+ But          : String processing utilitaries to implement the quote fetching 
+                and treatment application
  -----------------------------------------------------------------------------------
-*/
+ */
 package ch.heigvd.res.lab01.impl;
 
 import java.util.logging.Logger;
@@ -18,72 +19,51 @@ import java.util.logging.Logger;
  */
 public class Utils {
 
-  private static final Logger LOG = Logger.getLogger(Utils.class.getName());
+    private static final Logger LOG = Logger.getLogger(Utils.class.getName());
 
-  /**
-   * This method looks for the next new line separators (\r, \n, \r\n) to extract
-   * the next line in the string passed in arguments. 
-   * 
-   * @param lines a string that may contain 0, 1 or more lines
-   * @return an array with 2 elements; the first element is the next line with
-   * the line separator, the second element is the remaining text. If the argument does not
-   * contain any line separator, then the first element is an empty string.
-   */
+    /**
+     * This method looks for the next new line separators (\r, \n, \r\n) to
+     * extract the next line in the string passed in arguments.
+     *
+     * @param lines a string that may contain 0, 1 or more lines
+     * @return an array with 2 elements; the first element is the next line with
+     * the line separator, the second element is the remaining text. If the
+     * argument does not contain any line separator, then the first element is
+     * an empty string.
+     */
     public static String[] getNextLine(String lines) {
-        
+
         String[] linesArray = new String[2];
+        //To store the new line feed occurence's index
         int index = 0;
-        boolean newLineOccurence = false;
         
-        if(lines.contains("\r\n")){
-            index=lines.indexOf("\r\n") + 1;
+        boolean newLineOccurence = false;
+        //Check for windows style new line feed
+        if (lines.contains("\r\n")) {
+            index = lines.indexOf("\r\n") + 1;
             newLineOccurence = true;
-        }else if(lines.contains("\r")){
-            index=lines.indexOf("\r");
+        //Check for MacOSX style new line feed
+        } else if (lines.contains("\r")) {
+            index = lines.indexOf("\r");
             newLineOccurence = true;
-        }else if(lines.contains("\n")){
-            index= lines.indexOf("\n");
+        //Check for Linux style new line feed            
+        } else if (lines.contains("\n")) {
+            index = lines.indexOf("\n");
             newLineOccurence = true;
         }
         //If the string contains a new line character, 
-        //we fill the array correctly
-        if(newLineOccurence){
+        //we fill the array accordingly
+        if (newLineOccurence) {
             linesArray[0] = lines.substring(0, index + 1);
             linesArray[1] = lines.substring(index + 1);
-        }else{
+        } else {
             linesArray[0] = "";
-            linesArray[1] = lines;            
-        }  
+            linesArray[1] = lines;
+        }
         return linesArray;
     }
 }                
-        /*
-        
-        for (int i = 0; i < lines.length(); i++) {
-            char c = lines.charAt(i);
-            
-            if (c == '\n' || c == '\r') {
 
-                if (c == '\r' && i != (lines.length())) {
-                    if (lines.charAt(i + 1) == '\n') {
-                        i++;
-                        linesArray[0] = lines.substring(0, i + 1);
-                        linesArray[1] = lines.substring(i + 1);
-                        return linesArray;
-                    }
-                }
-                linesArray[0] = lines.substring(0, i + 1);
-                linesArray[1] = lines.substring(i + 1);
-                return linesArray;
-            }
-        }
-        linesArray[0] = "";
-        linesArray[1] = lines;
-        return linesArray;
-    }   
-}  */  //Process char
-
-    //throw new UnsupportedOperationException("The student has not implemented this method yet.");
   
 
 

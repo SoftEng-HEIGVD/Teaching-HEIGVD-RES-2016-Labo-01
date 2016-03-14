@@ -1,4 +1,3 @@
-
 /*
  -----------------------------------------------------------------------------------
  Course       : RES
@@ -6,7 +5,8 @@
  File         : Application.java
  Author       : Olivier Liechti, Guillaume Serneels
  Date         : 13.03.2016
- But          : Quote fetching and treatment application
+ But          : Main application class of the quote fetching and treatment 
+                application implemented during Labo-01
  -----------------------------------------------------------------------------------
 */
 package ch.heigvd.res.lab01.impl;
@@ -150,14 +150,16 @@ public class Application implements IApplication {
       try{        
             //Create the file
         File f = new File(fullName);
+            //Create the directories
         f.getParentFile().mkdirs();
         f.createNewFile();
-            //Create the stream
+        
+        //Create the stream
         OutputStreamWriter outWriter = new 
             OutputStreamWriter(new FileOutputStream(f), "UTF-8");
-        BufferedWriter bos = new BufferedWriter(outWriter);
-        //byte[] buffer = new byte[BUFFER_SIZE];
         
+        //Using a buffered writer for optimal performances
+        BufferedWriter bos = new BufferedWriter(outWriter);
         //write the quote to the file
         bos.write(quote.getQuote());
         //Flush and close
@@ -167,16 +169,6 @@ public class Application implements IApplication {
       }catch(Exception e){
           e.printStackTrace();
       }
-      
-      
-      
-      
-      
-      
-      /*
-      FileOutputStream fos = null;
-      fos = new FileOutputStream();*/
-   // throw new UnsupportedOperationException("The student has not implemented this method yet.");
   }
   
   /**
@@ -194,7 +186,8 @@ public class Application implements IApplication {
          * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
          */
          try{
-            writer.write(file.getPath());
+            //Visiting the file is writing the file path and a new line feed to the writer passed in argument
+            writer.write(file.getPath() + '\n');
          }catch(Exception e){
             e.printStackTrace();
          }  
@@ -204,7 +197,6 @@ public class Application implements IApplication {
   
   @Override
   public String getAuthorEmail() {
-    //throw new UnsupportedOperationException("The student has not implemented this method yet.");
       return "guillaume.serneels@heig-vd.ch";
   }
 

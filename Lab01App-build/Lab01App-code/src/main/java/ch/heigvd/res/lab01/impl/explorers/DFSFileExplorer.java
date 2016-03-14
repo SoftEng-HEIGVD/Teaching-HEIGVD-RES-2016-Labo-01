@@ -13,6 +13,7 @@ package ch.heigvd.res.lab01.impl.explorers;
 import ch.heigvd.res.lab01.interfaces.IFileExplorer;
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
 import java.io.File;
+import java.util.Arrays;
 
 /**
  * This implementation of the IFileExplorer interface performs a depth-first
@@ -25,15 +26,23 @@ import java.io.File;
 public class DFSFileExplorer implements IFileExplorer {
 
   @Override
-  public void explore(File rootDirectory, IFileVisitor vistor) {
-      if(rootDirectory == null)
+  public void explore(File rootDirectory, IFileVisitor visitor) {
+      //Visit the directory in order to apply the desired treatment
+      visitor.visit(rootDirectory);
+      //if our root directory doesn'exist, there is nothing more to do
+      if(!rootDirectory.exists())
           return;
-      
-      vistor.visit(rootDirectory);
-      
-      if(rootDirectory.isDirectory())   //Si il s'agit d'un dossier
-          for(File f : rootDirectory.listFiles())
-              explore(f, vistor);       //Appel résursif
+      //List and sort every file/directory of the root directory
+      File[] files = rootDirectory.listFiles();
+      Arrays.sort(files);
+      //Files get visited immediately
+      for(File f :files)
+          if(!f.isDirectory())
+              visitor.visit(f);
+      //Directories get explored 
+      for(File f :files)
+          if(f.isDirectory())
+              explore(f, visitor);  //Recursive call
           
   }
 
