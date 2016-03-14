@@ -131,12 +131,13 @@ public class Application implements IApplication {
      */
     void storeQuote(Quote quote, String filename) throws IOException {
 
-        String filePath = WORKSPACE_DIRECTORY + "\\";
+        String filePath = WORKSPACE_DIRECTORY + File.separator;
         FileOutputStream fos;
         BufferedWriter writer;
 
         for (String tag : quote.getTags()) {
-            filePath += tag + "\\";
+            filePath += tag + File.separator;
+            
         }
 
         File file = new File(filePath + filename);
