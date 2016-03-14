@@ -3,6 +3,7 @@ package ch.heigvd.res.lab01.impl.explorers;
 import ch.heigvd.res.lab01.interfaces.IFileExplorer;
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
 import java.io.File;
+import java.io.FileFilter;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,17 +22,31 @@ public class DFSFileExplorer implements IFileExplorer {
 
     @Override
     public void explore(File rootDirectory, IFileVisitor visitor) {
+        FileFilter fileFilter = new FileFilter() {
+            @Override
+            public boolean accept(File pathname) {
+                return pathname.isFile();
+            }
+        };
+
+        FileFilter dirFilter = new FileFilter() {
+            @Override
+            public boolean accept(File pathname) {
+                return pathname.isDirectory();
+            }
+        };
+
+        File[] files = rootDirectory.listFiles(fileFilter);
+        File[] dirs  = rootDirectory.listFiles(dirFilter);
+
         visitor.visit(rootDirectory);
-
-        File[] files = rootDirectory.listFiles();
-        if(rootDirectory.listFiles() == null)
-            return;
-
-        for(File file:files)
-            if(file.isDirectory())
-                explore(file, visitor);
-            else if(file.isFile())
+        if(files != null)
+            for(File file:files)
                 visitor.visit(file);
+
+        if(dirs != null)
+            for(File dir:dirs)
+                explore(dir,visitor);
     }
 
 }
