@@ -84,6 +84,7 @@ public class Application implements IApplication {
         QuoteClient client = new QuoteClient();
         for (int i = 0; i < numberOfQuotes; i++) {
             Quote quote = client.fetchQuote();
+            //Save the file with the good name
             storeQuote(quote, "quote-" + quote.getValue().getId() + ".utf8");
       /* There is a missing piece here!
        * As you can see, this method handles the first part of the lab. It uses the web service
@@ -125,15 +126,19 @@ public class Application implements IApplication {
      */
     void storeQuote(Quote quote, String filename) throws IOException {
         String str = "";
+        //Create a string with all the tags
         for(String tag: quote.getTags()){
             str += "/" + tag;
         }
+        //Create a new file with the correct path
         File f = new File(WORKSPACE_DIRECTORY + str);
         str += "/" + filename;
+        //Create the directories for the file
         f.mkdirs();
         FileOutputStream fo = new FileOutputStream(WORKSPACE_DIRECTORY + str);
         OutputStreamWriter fow = new OutputStreamWriter(fo, "utf-8");
         BufferedWriter bw = new BufferedWriter(fow);
+        //Write the content of the quote
         bw.write(quote.getQuote());
         bw.flush();
         bw.close();
@@ -145,6 +150,7 @@ public class Application implements IApplication {
      */
     void printFileNames(final Writer writer) {
         IFileExplorer explorer = new DFSFileExplorer();
+        //Write all the paths that are in the workspace
         explorer.explore(new File(WORKSPACE_DIRECTORY), new IFileVisitor() {
             @Override
             public void visit(File file) {

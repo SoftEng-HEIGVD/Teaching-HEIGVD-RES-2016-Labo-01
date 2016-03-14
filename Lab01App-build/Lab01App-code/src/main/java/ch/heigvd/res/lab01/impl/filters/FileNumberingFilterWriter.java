@@ -27,8 +27,10 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
     @Override
     public void write(String str, int off, int len) throws IOException {
+        //Get the end of the substring
         int endIndex = off + len;
         String subString;
+        //If the end is equal or more than the length of the string, get the length of the string
         if (endIndex >= str.length()) {
             subString = str.substring(off);
         } else {
@@ -36,12 +38,15 @@ public class FileNumberingFilterWriter extends FilterWriter {
         }
         String tmpString = "";
         int i = 0;
+        //If the last charater saved in the writer is a \r, than set the bool to false
         if (wasLastReturn) {
             wasLastReturn = false;
         }
+        //If it is the first line, write the first line
         if (lineNumber == 0) {
             tmpString = ++lineNumber + "\t";
         }
+        //For each line, write the number of the line + tab
         for (; i < subString.length(); i++) {
             if(wasLastReturn){
                 tmpString += ++lineNumber + "\t";

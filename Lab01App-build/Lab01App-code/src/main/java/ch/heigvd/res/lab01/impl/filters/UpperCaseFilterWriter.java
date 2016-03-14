@@ -16,8 +16,11 @@ public class UpperCaseFilterWriter extends FilterWriter {
 
     @Override
     public void write(String str, int off, int len) throws IOException {
+        //Get the length of the substring
         int endIndex = off + len;
         String upper;
+        //If the end index is more or equal of the length of the string, set it to the end of the string. Also
+        // transform it to uppercase
         if(off + len >= str.length()){
             upper = str.substring(off).toUpperCase();
         }

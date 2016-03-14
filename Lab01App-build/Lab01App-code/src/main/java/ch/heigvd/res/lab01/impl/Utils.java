@@ -25,6 +25,7 @@ public class Utils {
         int index = 0;
         boolean found = false;
         try{
+            //Search for a new Line character. If so, get the Next Line
             for (; index < lines.length(); index++) {
                 if (lines.charAt(index) == '\n' || lines.charAt(index) == '\r') {
                     found = true;
@@ -39,6 +40,7 @@ public class Utils {
             LOG.log(Level.SEVERE, "Couldn't get next Line!");
         }
 
+        //There is no new Line in the string
         if(!found){
             returnTab[0] = "";
             returnTab[1] = lines;
