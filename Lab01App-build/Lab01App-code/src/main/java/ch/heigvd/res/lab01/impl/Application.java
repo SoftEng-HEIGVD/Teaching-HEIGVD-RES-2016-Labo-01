@@ -86,7 +86,7 @@ public class Application implements IApplication {
   public void fetchAndStoreQuotes(int numberOfQuotes) throws IOException {
     clearOutputDirectory();
     QuoteClient client = new QuoteClient();
-    for (int i = 0; i < numberOfQuotes; i++) {
+    for (int i = 1; i <= numberOfQuotes; i++) {
       Quote quote = client.fetchQuote();
       /* There is a missing piece here!
        * As you can see, this method handles the first part of the lab. It uses the web service
@@ -132,7 +132,7 @@ public class Application implements IApplication {
     List<String> tags = quote.getTags();
     String path = WORKSPACE_DIRECTORY;
     if(!new File(path).exists()){
-          new File(path).mkdir();
+          new File(path).mkdirs();
        }
     for(String s : tags){
        path += "/"+s;
