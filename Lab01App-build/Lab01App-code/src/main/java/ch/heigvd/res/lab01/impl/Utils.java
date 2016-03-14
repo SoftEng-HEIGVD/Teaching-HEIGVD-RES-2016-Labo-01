@@ -1,5 +1,7 @@
 package ch.heigvd.res.lab01.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -20,7 +22,36 @@ public class Utils {
    * contain any line separator, then the first element is an empty string.
    */
   public static String[] getNextLine(String lines) {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+
+    String[] array = new String[2];
+    String delimiter;
+
+    //Try to find which delimiter is into the line
+    if(lines.contains("\n")){
+      delimiter = "\n";
+    }
+    else if(lines.contains("\r")){
+      delimiter = "\r";
+    }
+    //If there is no delimiter
+    else {
+      array[0] = "";
+      array[1] = lines;
+      return array;
+    }
+    //Cut the string with the delimiter
+    int idx = lines.indexOf(delimiter) + 1;
+    array[0] = lines.substring(0, idx);
+
+    //Case where the line contain other lines
+    if(lines.length() > idx){
+      array[1] = lines.substring(idx);
+    }
+    //Case where there is no other line
+    else{
+      array[1] = "";
+    }
+    return array;
   }
 
 }
