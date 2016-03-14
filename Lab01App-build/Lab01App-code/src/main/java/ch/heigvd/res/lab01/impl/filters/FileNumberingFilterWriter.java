@@ -21,6 +21,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
 	private int line = 1;
 	private boolean eol = true;
+	private boolean firstWrite = true;
 
 	public FileNumberingFilterWriter(Writer out) {
 		super(out);
@@ -45,7 +46,10 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
 	@Override
 	public void write(int c) throws IOException {
-		if (eol && c != '\n') writeLineNumber();
+		if (firstWrite || (eol && c != '\n')) {
+			writeLineNumber();
+			firstWrite = false;
+		}
 
 		out.write(c);
 
