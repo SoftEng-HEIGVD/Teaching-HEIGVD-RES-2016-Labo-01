@@ -18,20 +18,17 @@ import java.util.logging.Logger;
 public class FileNumberingFilterWriter extends FilterWriter {
 
    private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
-   private boolean r = false;
+   private boolean endOfLine = true;
+   private boolean dirtyBit = true;
    private int line = 0;
 
-   public FileNumberingFilterWriter(Writer out) throws IOException {
+   public FileNumberingFilterWriter(Writer out) {
 	  super(out);
-	  out.write(++line + "\t");
    }
 
    @Override
    public void write(String str, int off, int len) throws IOException {
-	  final String s = str.substring(off, len + off);
-	  for (int i = 0; i < s.length(); ++i) {
-		 write(s.charAt(i));
-	  }
+	  write(str.toCharArray(), off, len);
    }
 
    @Override
@@ -44,17 +41,19 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
    @Override
    public void write(int c) throws IOException {
-	  char s = (char) c;
+	  if(dirtyBit || (endOfLine && c != '\n')){
+		 out.write(String.format("%d\t", ++line));
+		 dirtyBit = false;
+		 endOfLine = false;
+	  }
 
-	  if (s == '\r') r = true;
-	  else {
-		 if (s == '\n') {
-			out.write("\n" + ++line + "\t");
-		 } else if (r) {
-			out.write("\n" + ++line + "\t" + s);
-		 } else out.write(s);
-		 r = false;
+	  out.write(c);
+
+	  if(c == '\r'){
+		 endOfLine = true;
+	  } else if(c == '\n') {
+		 out.write(String.format("%d\t", ++line));
+		 endOfLine = false;
 	  }
    }
-
 }
