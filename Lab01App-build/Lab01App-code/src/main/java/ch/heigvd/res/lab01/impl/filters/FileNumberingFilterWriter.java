@@ -49,17 +49,16 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
         char car = (char)c;
         if (car == '\r') {
+            out.write('\r');
             hasCr = true;
         } else if (car == '\n') {
             if (hasCr) {
-                out.write('\r');
                 hasCr = false;
             }
             out.write('\n');
             writeLineNo();
         } else {
             if (hasCr) {
-                out.write('\r');
                 writeLineNo();
                 hasCr = false;
             }
@@ -71,5 +70,12 @@ public class FileNumberingFilterWriter extends FilterWriter {
         out.write(lineNo + "\t");
         lineNo++;
     }
-    
+
+    @Override
+    public void flush() throws IOException {
+        if (hasCr) {
+            writeLineNo();
+        }
+        super.flush();
+    }
 }
