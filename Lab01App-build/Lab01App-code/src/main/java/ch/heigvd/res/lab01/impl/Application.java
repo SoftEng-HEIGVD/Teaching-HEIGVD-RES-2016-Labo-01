@@ -126,39 +126,27 @@ public class Application implements IApplication {
    * @param filename the name of the file to create and where to store the quote text
    * @throws IOException 
    */
-  void storeQuote(Quote quote, String filename) throws IOException {
-    String workspace = WORKSPACE_DIRECTORY;
-    
-    for (String tag : quote.getTags()) {
-        workspace += "/" + tag;
-    }
-    
-    File directory = new File(workspace);
-    directory.mkdirs();
-    
-    File myFile = new File(directory, filename);
-    myFile.createNewFile();
-    
-      Writer wr = null;
+    void storeQuote(Quote quote, String filename) throws IOException {
+        
+        String workspace = WORKSPACE_DIRECTORY;
 
-      try {
-          FileOutputStream file = new FileOutputStream(myFile);
-          OutputStreamWriter out = new OutputStreamWriter(file, "utf-8");
-          wr = new BufferedWriter(out);
-          wr.write(quote.getQuote());
+        for (String tag : quote.getTags()) {
+            workspace += "/" + tag;
+        }
 
-      } catch (IOException ex) {
-          ex.printStackTrace();
-      }
-      
-      try {
-          wr.flush();
-          wr.close();
-      } catch (IOException ex) {
-          ex.printStackTrace();
-      }
-    
-    
+        File directory = new File(workspace);
+        directory.mkdirs();
+
+        workspace += "/" + filename;
+
+        FileOutputStream fos = new FileOutputStream(workspace);
+        OutputStreamWriter out = new OutputStreamWriter(fos, "utf-8");
+        BufferedWriter bw = new BufferedWriter(out);
+        bw.write(quote.getQuote());
+
+        bw.flush();
+        bw.close();
+
   }
   
   /**
