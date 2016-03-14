@@ -29,6 +29,7 @@ public class ApplicationTest {
   private static final Logger LOG = Logger.getLogger(ApplicationTest.class.getName());
 
   private static int NUMBER_OF_QUOTES = 20;
+  
 
   @BeforeClass
   public static void invokeApplication() throws IOException {
