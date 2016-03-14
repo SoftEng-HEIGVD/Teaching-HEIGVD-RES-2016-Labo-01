@@ -54,10 +54,15 @@ public class FileNumberingFilterWriter extends FilterWriter {
     if(counter == 0)
       super.write(Integer.toString(++counter) + "\t");
 
-    super.write(c);
-
-    if(c == '\n')
+    if(c == '\n') {
+      super.write(c);
       super.write(Integer.toString(++counter) + "\t");
+    }
+    else{
+      if (previousChar == '\r')
+        super.write(Integer.toString(++counter) + "\t");
+      super.write(c);
+    }
 
     previousChar = c;
   }
