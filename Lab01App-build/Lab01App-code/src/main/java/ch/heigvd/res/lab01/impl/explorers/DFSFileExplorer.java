@@ -18,20 +18,33 @@ import java.io.FileFilter;
  */
 public class DFSFileExplorer implements IFileExplorer {
 
+    /**
+     * Perform depth first search of the specified directory
+     * @param rootDirectory the directory where to start the traversal
+     * @param visitor Instance of IFileVisitor interface
+     */
     @Override
     public void explore(File rootDirectory, IFileVisitor visitor) {
         exploreNode(rootDirectory, visitor);
     }
 
+    /**
+     * Inner function to perform DFS
+     * @param node Node to visit
+     * @param visitor Visitor
+     */
     private void exploreNode(File node, IFileVisitor visitor) {
-        // File node = new File(nodeName);
-
+        // Yield node to visitor
         visitor.visit(node);
+
+        // In the node is a directory, recurse
         if (node.isDirectory()) {
+            // Visit files first
             for (File child : node.listFiles((FileFilter) FileFileFilter.FILE)) {
                 visitor.visit(child);
             }
 
+            // Visit directories second
             for (File child : node.listFiles((FileFilter) DirectoryFileFilter.DIRECTORY)) {
                 exploreNode(child, visitor);
             }

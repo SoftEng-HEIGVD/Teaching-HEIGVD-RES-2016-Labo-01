@@ -25,8 +25,12 @@ public class Utils {
      */
     public static String[] getNextLine(String lines) {
         Matcher matcher = nextLine.matcher(lines);
+        // Use RegEx to find the first instance of a line separator
         if (matcher.find()) {
+            // Last character matched => End of line separator
             int index = matcher.end();
+
+            // Cut string at separator index
             String curLine = lines.substring(0, index);
             String rest = lines.substring(index);
             return new String[] { curLine, rest };
