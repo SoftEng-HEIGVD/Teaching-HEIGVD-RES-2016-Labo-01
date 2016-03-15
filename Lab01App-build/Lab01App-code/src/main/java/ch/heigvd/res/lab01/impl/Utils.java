@@ -21,7 +21,10 @@ public class Utils {
 	public static String[] getNextLine(String lines) {
 		for (int i = 0; i < lines.length(); i++) {
 			char c = lines.charAt(i);
+
+			// Split on new line
 			if (c == '\r' || c == '\n') {
+				// Check if we have "\r\n"
 				if ((i + 1) < lines.length() && lines.charAt(i + 1) == '\n') i++;
 				return new String[]{lines.substring(0, i + 1), lines.substring(i + 1)};
 			}

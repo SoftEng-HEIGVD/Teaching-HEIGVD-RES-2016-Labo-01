@@ -37,9 +37,12 @@ public class DFSFileExplorer implements IFileExplorer {
 			Collections.addAll(files, rootDirectory.listFiles());
 
 			files.sort((a, b) -> {
+				// Files come first
 				if (a.isFile() != b.isFile()) {
 					return a.isFile() ? -1 : 1;
 				}
+
+				// Lexicographical ordering
 				return a.getName().compareTo(b.getName());
 			});
 

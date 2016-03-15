@@ -116,17 +116,20 @@ public class Application implements IApplication {
    * @throws IOException
    */
   void storeQuote(Quote quote, String filename) throws IOException {
+    // File's parent directory
     File dir = new File(WORKSPACE_DIRECTORY, "quotes/" + String.join("/", quote.getTags()));
+
+    // Ensure dir exists and is a directory
     if (!dir.isDirectory() && !dir.mkdirs()) {
       throw new IOException("Unable to create quote directory");
     }
 
-    File quoteFile = new File(dir, filename);
+    File file = new File(dir, filename);
 
     // FileWriter does the work here.
     // There is no need for a buffered writer
     // if we only perform one write operation.
-    FileWriter fw = new FileWriter(quoteFile);
+    FileWriter fw = new FileWriter(file);
     fw.write(quote.getQuote());
     fw.close();
   }
@@ -141,8 +144,7 @@ public class Application implements IApplication {
       @Override
       public void visit(File file) {
         try {
-          writer.write(file.toString());
-          writer.write('\n');
+          writer.write(file.getPath() + "\n");
         } catch (IOException e) {
           throw new RuntimeException(e.getMessage(), e.getCause());
         }

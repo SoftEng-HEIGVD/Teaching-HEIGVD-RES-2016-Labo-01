@@ -39,6 +39,10 @@ public class FileNumberingFilterWriter extends FilterWriter {
 		}
 	}
 
+	/**
+	 * Writes the line number to the output
+	 * @throws IOException
+	 */
 	private void writeLineNumber() throws IOException {
 		out.write(String.format("%d\t", line++));
 		eol = false;
