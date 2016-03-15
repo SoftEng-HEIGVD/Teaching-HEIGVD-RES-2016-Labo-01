@@ -4,8 +4,7 @@ import ch.heigvd.res.lab01.interfaces.IFileExplorer;
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 
 /**
  * This implementation of the IFileExplorer interface performs a depth-first
@@ -24,19 +23,14 @@ public class DFSFileExplorer implements IFileExplorer {
 
 		if (rootDirectory.isDirectory()) {
 			/*
-				The recursion should be as simple as:
-				for (File f : rootDirectory.listFiles()) explore(f, vistor);
+			 This section of code ensures that children of the current
+			 directory are visited in lexicographical order and that
+			 directories are visited after all files.
+			*/
 
-				However the test theApplicationShouldBeAbleToGenerateTheListOfFileNames
-				assumes that files are visited before subdirectories.
+			File[] files = rootDirectory.listFiles();
 
-				I had no choice!
-			 */
-
-			ArrayList<File> files = new ArrayList<>();
-			Collections.addAll(files, rootDirectory.listFiles());
-
-			files.sort((a, b) -> {
+			Arrays.sort(files, (a, b) -> {
 				// Files come first
 				if (a.isFile() != b.isFile()) {
 					return a.isFile() ? -1 : 1;
