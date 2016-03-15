@@ -3,6 +3,8 @@ package ch.heigvd.res.lab01.impl.explorers;
 import ch.heigvd.res.lab01.interfaces.IFileExplorer;
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
 import java.io.File;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Stack;
 
 /**
@@ -22,28 +24,35 @@ public class DFSFileExplorer implements IFileExplorer {
   @Override
   public void explore(File rootDirectory, IFileVisitor visitor) {
 
-    // Initialize a stack to performe an iterative DFS
-    Stack<File> stack = new Stack<>();
-    stack.push(rootDirectory);
+    // Stop recursion
+    if (rootDirectory == null)
+      return;
 
-    // Process on each items of the stack
-    while (!stack.empty()) {
-      File current = stack.pop();
+    // Visite the current item
+    visitor.visit(rootDirectory);
 
-      // Visite the current item
-      visitor.visit(current);
+    // If the current item is a directory, visit all the files inside
+    // and after, explore all the directories inside
+    if (rootDirectory.isDirectory()) {
 
-      // Finally, if the current item is a directory, add all its child to the stack
-      // Go through the reverse result of the listFiles method to push the first alphanumeric
-      // item in last on the stack. So it will be next to be treated.
-      if (current.isDirectory()) {
-        File[] files = current.listFiles();
-        if (files != null)
-          for (int i = files.length - 1; i >= 0; --i)
-            stack.push(files[i]);
+      // Go throught all files and directories
+      File[] files = rootDirectory.listFiles();
+      if (files != null) {
+
+        // Manually sort the childs to prevent problems during the tests
+        Arrays.sort(files);
+
+        // Vitite files
+        for (File file : files)
+          if (file.isFile())
+            visitor.visit(file);
+
+        // Explore directories recursively
+        for (File dir : files)
+          if (dir.isDirectory())
+            explore(dir, visitor);
       }
     }
-
   }
 
 }
