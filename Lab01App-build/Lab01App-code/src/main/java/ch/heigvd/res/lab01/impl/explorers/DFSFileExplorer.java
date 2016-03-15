@@ -21,21 +21,11 @@ public class DFSFileExplorer implements IFileExplorer {
 
         File[] af = rootDirectory.listFiles();
 
-        try {
+        if (af != null) {
             for (File f : af) {
-                if (f == null)
-                    return;
-
-                if (f.isDirectory()) {
-                    explore(f, visitor);
-                }
+                explore(f, visitor);
             }
         }
-        catch (NullPointerException e) {
-            return;
-        }
-
-        //throw new UnsupportedOperationException("The student has not implemented this method yet.");
     }
 
 }

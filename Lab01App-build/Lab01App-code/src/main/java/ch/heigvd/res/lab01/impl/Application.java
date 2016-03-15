@@ -10,7 +10,6 @@ import ch.heigvd.res.lab01.quotes.QuoteClient;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
-import java.nio.Buffer;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -86,7 +85,7 @@ public class Application implements IApplication {
         for (int i = 0; i < numberOfQuotes; i++) {
             Quote quote = client.fetchQuote();
 
-            storeQuote(quote, "quotes-" + quote.getValue().getId() + ".utf8");
+            storeQuote(quote, "quote-" + quote.getValue().getId() + ".utf8");
 
             LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
             for (String tag : quote.getTags()) {
@@ -126,7 +125,6 @@ public class Application implements IApplication {
 
         for (String s : ls) {
             str += "/" + s;
-
         }
 
         File f = new File(str);
@@ -137,7 +135,8 @@ public class Application implements IApplication {
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(str), "utf-8"));
         bw.write(quote.getQuote());
 
-        //throw new UnsupportedOperationException("The student has not implemented this method yet.");
+        bw.flush();
+        bw.close();
     }
 
     /**
@@ -150,7 +149,7 @@ public class Application implements IApplication {
             @Override
             public void visit(File file) {
                 try {
-                    writer.write(file.getName());
+                    writer.write(file.getPath() + "\n");
                 }
                 catch (IOException e) {
                     LOG.log(Level.SEVERE, e.getMessage());
@@ -161,7 +160,6 @@ public class Application implements IApplication {
 
     @Override
     public String getAuthorEmail() {
-        //throw new UnsupportedOperationException("The student has not implemented this method yet.");
         return "yves.athanasiades@heig-vd.ch";
     }
 
