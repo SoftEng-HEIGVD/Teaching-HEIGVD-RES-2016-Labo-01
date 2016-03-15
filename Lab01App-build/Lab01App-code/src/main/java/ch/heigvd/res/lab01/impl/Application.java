@@ -129,13 +129,14 @@ public class Application implements IApplication {
       List<String> tags = quote.getTags(); // récupère les tags 
       String pathDir = WORKSPACE_DIRECTORY;
       for (String dir : tags) {
-         pathDir += File.separator + dir;
+         pathDir += File.separator + dir; // path of directory
       }
       File f = new File(pathDir);
-      f.mkdirs();
+      f.mkdirs(); // create directory
+     // create new file's quote
       FileWriter fos = new FileWriter(new File(pathDir + File.separator + filename));
       try {    
-         fos.write(quote.getQuote());
+         fos.write(quote.getQuote()); // wite quote
          fos.close();
       } catch (IOException e) {
          e.getMessage();
@@ -153,7 +154,7 @@ public class Application implements IApplication {
          @Override
          public void visit(File file) {
            try{
-              writer.write(file.getPath()+"\n");       
+              writer.write(file.getPath()+"\n"); // print file's name 
            }catch(IOException e){
               e.getMessage();
            }

@@ -17,17 +17,17 @@ public class UpperCaseFilterWriter extends FilterWriter {
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-     out.write(str.toUpperCase(),off,len);
+     out.write(str.toUpperCase(),off,len); // just apply toUpperCase and use super
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
     out.write((new String(cbuf)).toUpperCase(),off,len);
+   // convert cbuf of a String, apply toUpperCase, and use super
   }
 
   @Override
   public void write(int c) throws IOException {
-  out.write(Character.toUpperCase(c));
+  out.write(Character.toUpperCase(c));// just apply toUpperCase and use super
   }
-
 }

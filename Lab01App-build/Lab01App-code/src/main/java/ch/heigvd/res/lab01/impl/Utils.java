@@ -24,6 +24,7 @@ public class Utils {
       String[] s = new String[2];
       String separator ="";
       
+      // find first position separator and save symbol separator
       int pos = lines.indexOf("\r\n");
       if (pos == -1) {
          pos = lines.indexOf("\r");
@@ -39,17 +40,17 @@ public class Utils {
          separator = "\r\n";
       }
 
-      if (pos == -1) { // cas d'aucun séparateur
+      if (pos == -1) { // not separator
          s[0] = "";
          s[1] = lines;
-      } else { // cas d'au moins un séparateur
+      } else { 
          s[0]= lines.substring(0);
          pos = s[0].indexOf(separator);
-         if (pos == -1) { // cas d'un seul séparateur
+         if (pos == -1) { // just one line
             s[1]="";
-         } else { // cas d'au moins un 2ème séparateur
+         } else { // more line
             s[1] = s[0].substring(pos+separator.length());
-            // mise à jour de la première partie
+            // update s[0]
             s[0] = s[0].substring(0, pos+separator.length());
          }
       }

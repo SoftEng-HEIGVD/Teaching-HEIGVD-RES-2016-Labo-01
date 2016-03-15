@@ -34,7 +34,6 @@ public class FileNumberingFilterWriter extends FilterWriter {
          firstLine = false;
       }
       while (sTab[0].length() != 0) {
-
          out.write(sTab[0] + line++ + "\t");
          sTab = getNextLine(sTab[1]);
       }

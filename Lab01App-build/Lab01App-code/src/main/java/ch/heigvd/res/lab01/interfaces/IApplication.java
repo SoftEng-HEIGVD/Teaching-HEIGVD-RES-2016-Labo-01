@@ -44,4 +44,5 @@ public interface IApplication {
   public void fetchAndStoreQuotes(int numberOfQuotes) throws IOException;
 
   public void processQuoteFiles() throws IOException;
+  //
 }
