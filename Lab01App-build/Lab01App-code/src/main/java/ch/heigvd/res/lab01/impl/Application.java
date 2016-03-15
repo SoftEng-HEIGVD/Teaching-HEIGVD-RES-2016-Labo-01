@@ -9,10 +9,7 @@ import ch.heigvd.res.lab01.quotes.Quote;
 import ch.heigvd.res.lab01.quotes.QuoteClient;
 import org.apache.commons.io.FileUtils;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -89,7 +86,8 @@ public class Application implements IApplication {
        * one method provided by this class, which is responsible for storing the content of the
        * quote in a text file (and for generating the directories based on the tags).
        */
-		 storeQuote(quote, WORKSPACE_DIRECTORY);
+		 storeQuote(quote, "quote-" +i + ".utf8");
+
 		 LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
 		 for (String tag : quote.getTags()) {
 			LOG.info("> " + tag);
@@ -113,7 +111,7 @@ public class Application implements IApplication {
 	* <p>
 	* - with quote.getTags(), it gets a list of tags and uses
 	* it to create sub-folders (for instance, if a quote has three tags "A", "B" and
-	* "C", it will be stored in /quotes/A/B/C/quotes-n.utf8.
+	* "C", it will be stored in /quotes/A/B/C/quote-n.utf8.
 	* <p>
 	* - with quote.getQuote(), it has access to the text of the quote. It stores
 	* this text in UTF-8 file.
@@ -123,7 +121,19 @@ public class Application implements IApplication {
 	* @throws IOException
 	*/
    void storeQuote(Quote quote, String filename) throws IOException {
-	  throw new UnsupportedOperationException("The student has not implemented this method yet.");
+	  File dir = new File(WORKSPACE_DIRECTORY, String.join("/",quote.getTags()));
+	  if(!dir.isDirectory()) // If is not a directory, we create it
+	  	if(!dir.mkdirs()){
+		   throw new IOException("Can't create the directory" + dir.getAbsolutePath());
+		}
+
+	  File file = new File(dir, filename);
+
+	  // We use a fileWriter because we write only one string and therefore we don't need the overhead of the buffered
+	  FileWriter fw = new FileWriter(file);
+	  fw.write(quote.getValue().getJoke());
+	  fw.close();
+
    }
 
    /**
@@ -140,6 +150,12 @@ public class Application implements IApplication {
          * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
          * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
          */
+
+			try {
+			   writer.write(file.getCanonicalPath());
+			} catch (IOException e) {
+			   e.printStackTrace();
+			}
 		 }
 	  });
    }
