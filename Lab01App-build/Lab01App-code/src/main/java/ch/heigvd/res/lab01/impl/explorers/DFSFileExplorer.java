@@ -26,6 +26,7 @@ public class DFSFileExplorer implements IFileExplorer {
       if (rootDirectory != null) {
          vistor.visit(rootDirectory);
             if (rootDirectory.listFiles() != null && rootDirectory.isDirectory()) {
+               
                // Visits the files first
                for (File f : rootDirectory.listFiles()) {
                   if (f.isFile()) {
@@ -40,9 +41,6 @@ public class DFSFileExplorer implements IFileExplorer {
                   }
                }
             }
-      }
-      else {
-         return;
       }
    }
    
