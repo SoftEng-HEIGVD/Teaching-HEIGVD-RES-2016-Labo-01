@@ -40,19 +40,12 @@ public class Utils {
          separator = "\r\n";
       }
 
-      if (pos == -1) { // not separator
+      if (pos == -1) { // not separator, first line is empty, second is lines
          s[0] = "";
          s[1] = lines;
-      } else { 
-         s[0]= lines.substring(0);
-         pos = s[0].indexOf(separator);
-         if (pos == -1) { // just one line
-            s[1]="";
-         } else { // more line
-            s[1] = s[0].substring(pos+separator.length());
-            // update s[0]
-            s[0] = s[0].substring(0, pos+separator.length());
-         }
+      } else {
+         s[0] = lines.substring(0, pos+separator.length());
+         s[1] = lines.substring(pos+separator.length());
       }
       return s;
    }
