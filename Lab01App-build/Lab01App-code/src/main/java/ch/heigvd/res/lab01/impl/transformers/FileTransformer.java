@@ -36,6 +36,9 @@ public abstract class FileTransformer implements IFileVisitor {
      */
     public abstract Writer decorateWithFilters(Writer writer);
 
+    /*
+     *  reads content from a file and then writes it to another file
+     */
     @Override
     public void visit(File file) {
         if (!file.isFile()) {
@@ -46,18 +49,15 @@ public abstract class FileTransformer implements IFileVisitor {
             Writer writer = new OutputStreamWriter(new FileOutputStream(file.getPath() + ".out"), "UTF-8"); // the bug fix by teacher
             writer = decorateWithFilters(writer);
 
-      /*
-       * There is a missing piece here: you have an input reader and an output writer (notice how the
-       * writer has been decorated by the concrete subclass!). You need to write a loop to read the
-       * characters and write them to the writer.
-       */
-
+            // reads X bytes from the input file with a max of 512 bytes and
+            // writes it to the output file
             int count = 0;
             char[] cbuf = new char[512];
             while((count = reader.read(cbuf)) != -1) {
                 writer.write(cbuf, 0, count);
             }
 
+            // close the input file and the output file with flushing
             reader.close();
             writer.flush();
             writer.close();

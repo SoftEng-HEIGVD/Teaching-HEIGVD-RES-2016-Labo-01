@@ -21,6 +21,7 @@ public class Utils {
     public static String[] getNextLine(String lines) {
         String[] as = new String[2];
 
+        // if string was created by a windows system
         int i = lines.indexOf("\r\n");
         if(i != -1) {
             as[0] = lines.substring(0, i + 2);
@@ -29,6 +30,7 @@ public class Utils {
             return as;
         }
 
+        // if string was created by a Unix system
         i = lines.indexOf("\n");
         if(i != -1) {
             as[0] = lines.substring(0, i + 1);
@@ -37,6 +39,7 @@ public class Utils {
             return as;
         }
 
+        // if string was created by an OSX system
         i = lines.indexOf("\r");
         if(i != -1) {
             as[0] = lines.substring(0, i + 1);
@@ -45,7 +48,7 @@ public class Utils {
             return as;
         }
 
-
+        // contains only 1 line without a new line char of some kind present
         as[0] = "";
         as[1] = lines;
 

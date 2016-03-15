@@ -14,18 +14,19 @@ import java.io.File;
  * @author Olivier Liechti
  */
 public class DFSFileExplorer implements IFileExplorer {
-
     @Override
     public void explore(File rootDirectory, IFileVisitor visitor) {
+        // always visit
         visitor.visit(rootDirectory);
 
+        // get list of files and/or subdirs
         File[] af = rootDirectory.listFiles();
 
+        // if list isn't empty then proceed to the first item in it until end
         if (af != null) {
             for (File f : af) {
                 explore(f, visitor);
             }
         }
     }
-
 }

@@ -28,6 +28,9 @@ public class FileNumberingFilterWriter extends FilterWriter {
         super(out);
     }
 
+    /*
+     *  Call write(int) for every char in the string, starting at offset
+     */
     @Override
     public void write(String str, int off, int len) throws IOException {
         for(int i = 0; i < len; i++) {
@@ -35,6 +38,9 @@ public class FileNumberingFilterWriter extends FilterWriter {
         }
     }
 
+    /*
+     *  Call write(int) for every char in the char array, starting at offset
+     */
     @Override
     public void write(char[] cbuf, int off, int len) throws IOException {
         for(int i = 0; i < len; i++) {
@@ -42,31 +48,42 @@ public class FileNumberingFilterWriter extends FilterWriter {
         }
     }
 
+    /*
+     *  Writes chars one by one into the Stream and prepends the line number
+     */
     @Override
     public void write(int c) throws IOException {
+        // if it is line 1 then print number and tab
         if(lineNo == 1) {
             out.write(lineNo + "\t");
             lineNo++;
         }
 
+        // is this char a cr?
         if(c == '\r')
             cr = true;
+        // if char is a nl
         else if(c == '\n') {
+            // if cr was just before then print it
             if (cr) {
                 out.write("\r");
                 cr = false;
             }
+            // write char and line number + tab
             out.write(c);
             out.write(lineNo + "\t");
             lineNo++;
         }
+        // it wasn't a nl
         else {
+            // a cr was present before so print it with line number + tab
             if (cr) {
                 out.write("\r");
                 out.write(lineNo + "\t");
                 lineNo++;
                 cr = false;
             }
+            // finally write current char
             out.write(c);
         }
     }

@@ -82,6 +82,9 @@ public class Application implements IApplication {
     public void fetchAndStoreQuotes(int numberOfQuotes) throws IOException {
         clearOutputDirectory();
         QuoteClient client = new QuoteClient();
+
+        // loop until all quotes have been processed
+        // gets a quote and stores it into a file
         for (int i = 0; i < numberOfQuotes; i++) {
             Quote quote = client.fetchQuote();
 
@@ -123,18 +126,24 @@ public class Application implements IApplication {
         String str = WORKSPACE_DIRECTORY;
         List<String> ls = quote.getTags();
 
+        // appends the tags folders to the path
         for (String s : ls) {
             str += "/" + s;
         }
 
+        // create the File object
         File f = new File(str);
+        // creates the directories
         f.mkdirs();
 
         str += "/" + filename;
 
+        // create a BufferedWriter from the file path
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(str), "utf-8"));
+        // writes quote content
         bw.write(quote.getQuote());
 
+        // flush and close the file
         bw.flush();
         bw.close();
     }
@@ -149,6 +158,7 @@ public class Application implements IApplication {
             @Override
             public void visit(File file) {
                 try {
+                    // prints the filepath to the console, one by line
                     writer.write(file.getPath() + "\n");
                 }
                 catch (IOException e) {
