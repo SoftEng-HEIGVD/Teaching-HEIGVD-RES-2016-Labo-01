@@ -78,6 +78,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
           return;
       }
       else if (c != '\n' && previousChar == '\r') {
+          previousChar = c;
           write(new String(Character.toChars('\r')), 0, 1);
       }
       
