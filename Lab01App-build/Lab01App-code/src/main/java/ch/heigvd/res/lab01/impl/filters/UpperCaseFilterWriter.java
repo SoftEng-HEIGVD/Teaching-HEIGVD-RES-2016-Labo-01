@@ -32,7 +32,7 @@ public class UpperCaseFilterWriter extends FilterWriter {
   @Override
   public void write(int c) throws IOException {
     // Directly writes the character to upper case.
-    out.write(Character.toUpperCase((char)c));
+    out.write(Character.toUpperCase(c));
   }
 
 }

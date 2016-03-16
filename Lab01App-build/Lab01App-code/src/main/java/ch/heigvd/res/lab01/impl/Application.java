@@ -137,8 +137,9 @@ public class Application implements IApplication {
     }
 
     // Create the file with filename in the directory created. We then write the quote in it.
-    Writer writer = new OutputStreamWriter(new FileOutputStream(fileDirPath + "/" + filename), "UTF-8");
+    Writer writer  = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileDirPath + "/" + filename), "UTF-8"));
     writer.write(quote.getQuote());
+    writer.flush();
     writer.close();
   }
 

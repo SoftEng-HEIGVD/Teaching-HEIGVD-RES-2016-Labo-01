@@ -3,7 +3,7 @@ package ch.heigvd.res.lab01.impl;
 import java.util.logging.Logger;
 
 /**
- * 
+ *
  * @author Olivier Liechti, Basile Vu
  */
 public class Utils {
