@@ -128,7 +128,6 @@ public class Application implements IApplication {
 	  // We use a fileWriter because we write only one string and therefore we don't need the overhead of the buffered
 	  FileWriter fw = new FileWriter(file);
 	  fw.write(quote.getQuote());
-	  fw.flush();
 	  fw.close();
 
    }
