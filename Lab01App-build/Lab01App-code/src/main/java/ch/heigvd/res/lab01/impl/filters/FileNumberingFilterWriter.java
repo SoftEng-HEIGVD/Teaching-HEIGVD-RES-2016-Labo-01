@@ -31,14 +31,14 @@ public class FileNumberingFilterWriter extends FilterWriter {
     private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
 
     //Our lines counter is an int representing a char, we will increment it and print it
-    private static int linesCpt = '1';
+    private int linesCpt;
 
     //Are we currently starting a new line with a '\r'(necessary for writing int by int)
     private static boolean newLineWithBackslashR = true;
 
     public FileNumberingFilterWriter(Writer out) {
         super(out);
-        linesCpt = '1';
+        //linesCpt = 1;
 
     }
 
@@ -48,10 +48,11 @@ public class FileNumberingFilterWriter extends FilterWriter {
         int i = off;
 
         //Write the first line when necessary
-        if (linesCpt == '1') {
-            super.write(linesCpt);
-            super.write('\t');
+        if (linesCpt == 0) {
             linesCpt++;
+            super.write(Integer.toString(linesCpt));
+            super.write('\t');
+            
         }
         //Write each char with appropriate processing of new lines
         for (int lengthRemaining = len; lengthRemaining > 0; lengthRemaining--) {
@@ -63,10 +64,11 @@ public class FileNumberingFilterWriter extends FilterWriter {
                     lengthRemaining--;
                     super.write(str.charAt(i));
                 }
-                super.write(linesCpt);
+                linesCpt++;
+                super.write(Integer.toString(linesCpt));
                 super.write('\t');
                 //Since we wrote a new line, we have to increment the lines counter
-                linesCpt++;
+                
             }
             i++;
         }
@@ -82,26 +84,28 @@ public class FileNumberingFilterWriter extends FilterWriter {
     @Override
     public void write(int c) throws IOException {
         //Write the first line when necessary
-        if (linesCpt == '1') {
-            super.write(linesCpt);
-            super.write('\t');
+        if (linesCpt == 0) {
             linesCpt++;
+            super.write(Integer.toString(linesCpt));
+            super.write('\t');
+            
         }
 
         //Handling of a potential windows new line feed (\r\n)
         if (newLineWithBackslashR) {
+            linesCpt++;
             if (c == '\n') {
                 super.write(c);
-                super.write(linesCpt);
+                super.write(Integer.toString(linesCpt));
                 super.write('\t');
             } else {
                 //After all, it was only a MacOSX new line feed (\r)
-                super.write(linesCpt);
+                super.write(Integer.toString(linesCpt));
                 super.write('\t');
                 super.write(c);
             }
             newLineWithBackslashR = false;
-            linesCpt++;
+            
 
         } else if (c == '\r') {
             super.write(c);
@@ -109,9 +113,10 @@ public class FileNumberingFilterWriter extends FilterWriter {
         } else if (c == '\n') {
             //Handling a Unix new line feed (\n)
             super.write(c);
-            super.write(linesCpt);
-            super.write('\t');
             linesCpt++;
+            super.write(Integer.toString(linesCpt));
+            super.write('\t');
+            
         } else {
             super.write(c);
         }
