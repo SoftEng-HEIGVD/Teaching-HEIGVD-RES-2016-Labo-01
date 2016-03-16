@@ -20,14 +20,16 @@ public class DFSFileExplorer implements IFileExplorer {
     vistor.visit(rootDirectory);
 
     //check if directory not empty
-    if(rootDirectory.listFiles() != null)
+    if(rootDirectory.listFiles() != null) {
       // process all folder & file
-      for(File f : rootDirectory.listFiles()){
-        if(f.isDirectory())
-          explore(f,vistor);
-        else
-          vistor.visit(f);
+      for (File f : rootDirectory.listFiles()) {
+        if (!f.isDirectory())
+          explore(f, vistor);
       }
+      for (File f : rootDirectory.listFiles()) {
+        if (f.isDirectory())
+          explore(f, vistor);
+      }
+    }
   }
-
 }

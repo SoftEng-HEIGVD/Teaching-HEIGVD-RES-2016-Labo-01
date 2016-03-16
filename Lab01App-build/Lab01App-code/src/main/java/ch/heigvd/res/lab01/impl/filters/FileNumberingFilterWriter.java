@@ -19,6 +19,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
     private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
     private int nbrLine = 1;
+    private char prevChar = 'a';
 
     public FileNumberingFilterWriter(Writer out) {
 
@@ -61,12 +62,16 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
     @Override
     public void write(int c) throws IOException {
-        if (c == '\n') {
-            super.write('\n');
+        if(c=='\n'){
+            super.write(c);
             super.write(++nbrLine + "\t");
-        } else {
+        }else{
+            if(prevChar == '\r'){
+                super.write(++nbrLine + "\t");
+            }
             super.write(c);
         }
+        prevChar = (char)c;
     }
 
 }
