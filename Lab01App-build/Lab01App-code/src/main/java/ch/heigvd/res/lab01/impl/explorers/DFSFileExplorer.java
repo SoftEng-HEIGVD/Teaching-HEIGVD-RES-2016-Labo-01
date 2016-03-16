@@ -15,14 +15,17 @@ import java.io.File;
 public class DFSFileExplorer implements IFileExplorer {
 
   @Override
-  public void explore(File rootDirectory, IFileVisitor visitor) {
-    
-    for(String path : rootDirectory.list()){	
-    	File tmp = new File(rootDirectory.getPath() + '/' + path);
-    	if(tmp.isDirectory())
-    		explore(tmp, visitor);
-    	else
-    		visitor.visit(tmp); 	
+  public void explore(File rootDirectory, IFileVisitor visitor) {	
+	visitor.visit(rootDirectory);
+	
+    String[] pathList;
+    if((pathList = rootDirectory.list()) == null) return;
+    for(String path : pathList){	
+   		File tmp = new File(rootDirectory.getPath() + '/' + path);
+   		if(tmp.isDirectory())
+   			explore(tmp, visitor);
+   		else
+   			visitor.visit(tmp); 
+   		}
     }
-  }
 }
