@@ -135,22 +135,28 @@ public class Application implements IApplication {
         FileOutputStream fos;
         BufferedWriter writer;
 
+        // For each tag we add it to the path.
         for (String tag : quote.getTags()) {
             filePath += tag + File.separator;
             
         }
 
+        // Initiate the file (his name + his path).
         File file = new File(filePath + filename);
 
+        // If the path of the file doesn't exist we create it.
         if (file.getParentFile() != null) {
             file.getParentFile().mkdirs();
         }
 
+        // crate the file en write in it.
         file.createNewFile();
         fos = new FileOutputStream(file);
         writer = new BufferedWriter(new OutputStreamWriter(fos, "utf-8"));
 
+        // Cloe all the things.
         writer.write(quote.getQuote());
+        writer.flush();
         writer.close();
         fos.close();
     }

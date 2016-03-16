@@ -34,11 +34,13 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
         String[] tmpTab = Utils.getNextLine(str);
 
+        // If it's the first time we come here we write the 1\t in the file
         if (FIRST_TIME == true) {
             out.write(LINE_CPT + "\t");
             FIRST_TIME = false;
         }
 
+        // If str doesn't contain any EOL.
         if (tmpTab[0].equalsIgnoreCase("")) {
             out.write(tmpTab[1]);
         }//  In this case str contain an EOL char
@@ -56,6 +58,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
     @Override
     public void write(char[] cbuf, int off, int len) throws IOException {
 
+        // For each char in the array we call the write fonction "write(int c)".
         String tmp = "";
         int i = 0;
         while (i < len) {
@@ -77,14 +80,14 @@ public class FileNumberingFilterWriter extends FilterWriter {
             return;
         }
         
-        // if the previous char was a \r
+        // If the previous char was a \r.
         if(WAIT_NEXT_CHAR){
             // and if the current char is a \n we have to deal with windows EOF.
             if(tmpChar == '\n'){
                 LINE_CPT ++;
                 out.write("\r\n" + LINE_CPT + "\t");
                 WAIT_NEXT_CHAR = false;
-            }// If it was a false alarm write the last \r and the current
+            }// If it was a false alarm write the last \r and the current.
              // char.
             else{
                 LINE_CPT ++;
@@ -92,7 +95,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
                 WAIT_NEXT_CHAR = false; 
             }
         }
-        else{
+        else{ // If the previous char was a normal char we come here.
             this.write(Character.toString(tmpChar));
             WAIT_NEXT_CHAR = false;
         }

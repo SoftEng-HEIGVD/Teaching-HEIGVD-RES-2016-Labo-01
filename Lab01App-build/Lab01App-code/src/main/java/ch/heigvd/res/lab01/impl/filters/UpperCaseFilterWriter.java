@@ -22,6 +22,7 @@ public class UpperCaseFilterWriter extends FilterWriter {
     @Override
     public void write(char[] cbuf, int off, int len) throws IOException {
 
+        // Call the write fonction "write(int c" for each char in the array.
         String tmp = "";
         int i = 0;
         while (i < len) {

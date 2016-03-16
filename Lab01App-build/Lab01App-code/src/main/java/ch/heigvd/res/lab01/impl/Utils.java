@@ -34,8 +34,7 @@ public class Utils {
     if(lines.contains("\r") || lines.contains("\n")){
         iR = lines.indexOf("\r");
         iN = lines.indexOf("\n");
-        
-        
+
         // Check if "\r" occur, or if "\n" occur or if both occur, if so check 
         // wich one occur first.
         if(iR == -1){

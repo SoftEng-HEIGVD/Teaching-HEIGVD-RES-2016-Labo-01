@@ -53,8 +53,8 @@ public abstract class FileTransformer implements IFileVisitor {
       Writer writer = new OutputStreamWriter(new FileOutputStream(file.getPath()+ ".out"), "UTF-8"); // the bug fix by teacher
       writer = decorateWithFilters(writer);
 
-      // TEST
-      //-----------------------------------------------------------------------
+      // Read the reader while there's something to read and write it in the
+      // writer.
       String tmp = "";
       int i;
       while(true){
@@ -62,7 +62,6 @@ public abstract class FileTransformer implements IFileVisitor {
           if(i == -1)
               break;
           tmp += Character.toString((char)i);
-            //writer.write(i);
       }
       writer.write(tmp);
       
@@ -73,6 +72,7 @@ public abstract class FileTransformer implements IFileVisitor {
        */
       
 
+      
       reader.close();
       writer.flush();
       writer.close();
