@@ -19,7 +19,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
   
-  private int lineNumber = '1';
+  private int lineNumber = 1;
   private char previous;
 
   public FileNumberingFilterWriter(Writer out) {
@@ -69,7 +69,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
   }
   
   private void header() throws IOException {
-      super.write(lineNumber++);
+      super.out.write(Integer.toString(lineNumber++));
       super.write('\t');
   }
 
