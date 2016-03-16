@@ -20,7 +20,7 @@ public class DFSFileExplorer implements IFileExplorer {
 
     //throw new UnsupportedOperationException("The student has not implemented this method yet.");
     File[] filesArray = rootDirectory.listFiles();
-    // tester file null
+    // check if filesArray is not null
     if (filesArray != null) {
       for (File file : filesArray) {
         if (file.isFile()) {
