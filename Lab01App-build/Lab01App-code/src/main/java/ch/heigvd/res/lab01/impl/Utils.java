@@ -45,7 +45,7 @@ public class Utils {
    * @return the first element is the position and the second is the length
    * of the separator
    */
-  private static int[] getSeparatorPosition(String s) {
+  public static int[] getSeparatorPosition(String s) {
       int pos = -1, len = -1, sLen = s.length();
       char[] sArray = s.toCharArray();
       
