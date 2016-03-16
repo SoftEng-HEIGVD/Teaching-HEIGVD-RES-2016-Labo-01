@@ -1,0 +1,5 @@
+Olivier Liechti doesn't
+need garbage collection
+because he doesn't
+call .Dispose(), he
+calls .DropKick().
