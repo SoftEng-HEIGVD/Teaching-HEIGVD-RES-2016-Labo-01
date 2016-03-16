@@ -7,7 +7,7 @@ import ch.heigvd.res.lab01.interfaces.IFileExplorer;
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
 import ch.heigvd.res.lab01.quotes.QuoteClient;
 import ch.heigvd.res.lab01.quotes.Quote;
-import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -135,7 +135,11 @@ public class Application implements IApplication {
         File dir = new File(path);
         dir.mkdirs();
         path += "/" + filename;
-        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(path));
+        OutputStreamWriter ow = new OutputStreamWriter(new FileOutputStream(path));
+        BufferedWriter bw = new BufferedWriter(ow);
+        bw.write(quote.getQuote());
+        bw.close();
+        
 
     }
 
