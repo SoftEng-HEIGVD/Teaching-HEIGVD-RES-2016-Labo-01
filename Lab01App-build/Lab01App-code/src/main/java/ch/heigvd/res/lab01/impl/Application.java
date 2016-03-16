@@ -129,16 +129,19 @@ public class Application implements IApplication {
     void storeQuote(Quote quote, String filename) throws IOException {
         
         String workspace = WORKSPACE_DIRECTORY;
-
+        
+        // get a list of tags and create sub-folder
         for (String tag : quote.getTags()) {
             workspace += "/" + tag;
         }
 
+        // create the workspace directory
         File directory = new File(workspace);
         directory.mkdirs();
 
         workspace += "/" + filename;
 
+        // create the quote file, get access to text of the quote and write it.
         FileOutputStream fos = new FileOutputStream(workspace);
         OutputStreamWriter out = new OutputStreamWriter(fos, "utf-8");
         BufferedWriter bw = new BufferedWriter(out);

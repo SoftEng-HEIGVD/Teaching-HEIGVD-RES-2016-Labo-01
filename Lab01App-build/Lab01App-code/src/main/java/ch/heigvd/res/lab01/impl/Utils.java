@@ -25,16 +25,18 @@ public class Utils {
         int idxBackR = 0; // index of \r
         int idxBackN = 0; // it works for \n or \r\n
         String[] elems = new String[arraySize];
-
+        
+        // search for \n, or \r if no \n was found
         idxBackN = lines.indexOf("\n");
         if (idxBackN == -1) {
             idxBackR = lines.indexOf("\r");
         }
-
+        // case if no line separators were found
         if (idxBackN == -1 && idxBackR == -1) {
             elems[0] = "";
             elems[1] = lines;
             return elems;
+          // if there was a \n, check if there is more line or not
         } else if (idxBackN != -1) {
             elems[0] = lines.substring(0, idxBackN + 1);
             if (lines.length() < idxBackN + 1) {
@@ -42,6 +44,7 @@ public class Utils {
             } else {
                 elems[1] = lines.substring(idxBackN + 1);
             }
+          // it's \r, check if there is more line or not
         } else {
             elems[0] = lines.substring(0, idxBackR + 1);
             if (lines.length() < idxBackR + 1) {
