@@ -35,6 +35,7 @@ public class DFSFileExplorer implements IFileExplorer {
                 }
             }
 
+            // In the end, explore every directory in the list
             for (File f : dirs) {
                 explore(f, vistor);
             }

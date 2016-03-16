@@ -16,14 +16,13 @@ public class UpperCaseFilterWriter extends FilterWriter {
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-
+    // Convert whole string in uppercase
     super.write(str.toUpperCase(), off, len);
-
-    //throw new UnsupportedOperationException("The student has not implemented this method yet.");
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
+    // Convert whole string in uppercase, but here it needs a loop
     for(int i = 0; i < cbuf.length; i++){
       cbuf[i] = Character.toUpperCase(cbuf[i]);
     }
@@ -33,6 +32,7 @@ public class UpperCaseFilterWriter extends FilterWriter {
 
   @Override
   public void write(int c) throws IOException {
+    // Only one char
     super.write(Character.toUpperCase((char)c));
   }
 

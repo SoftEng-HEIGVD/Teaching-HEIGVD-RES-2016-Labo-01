@@ -22,10 +22,12 @@ public class Utils {
   public static String[] getNextLine(String lines) {
     String[] n = new String[2];
 
+    // Find line jumps
     int macos = lines.indexOf("\r");
     int unix = lines.indexOf("\n");
     int win = lines.indexOf("\r\n");
 
+    // Test windows first (needs two chars)
     if(win >= 0){
       n[0] = lines.substring(0, win+2);
       n[1] = lines.substring(win+2, lines.length());
@@ -36,6 +38,7 @@ public class Utils {
       n[0] = lines.substring(0, unix+1);
       n[1] = lines.substring(unix+1, lines.length());
     } else {
+      // No line jumps, all in the second case of the array
       n[0] = "";
       n[1] = lines;
     }

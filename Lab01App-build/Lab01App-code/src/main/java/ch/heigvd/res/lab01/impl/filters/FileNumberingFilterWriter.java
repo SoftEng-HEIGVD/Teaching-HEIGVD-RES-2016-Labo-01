@@ -31,6 +31,8 @@ public class FileNumberingFilterWriter extends FilterWriter {
     @Override
     public void write(String str, int off, int len) throws IOException {
         String n = "";
+
+        // Choosing which line jump char to use
         char lnjmp = (str.indexOf("\n") != -1 ? '\n' : '\r');
 
         str = str.substring(off, off+len);
@@ -41,6 +43,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
         for(int i = 0; i < str.length(); i++){
             n += str.charAt(i);
 
+            // If last char read was a line jump, begin new line
             if(str.charAt(i) == lnjmp) {
                 n += String.valueOf(++count) + "\t";
             }
@@ -51,6 +54,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
     @Override
     public void write(char[] cbuf, int off, int len) throws IOException {
+        // Call function above with String->char[] transformation
         write(cbuf.toString(), off, len);
     }
 
@@ -62,14 +66,17 @@ public class FileNumberingFilterWriter extends FilterWriter {
             out.write(String.valueOf(++count) + "\t");
         }
 
+        // Adding line numbers in case by case
         if(car == '\r'){
             charWasR = true;
             out.write(car);
         } else if(car == '\n') {
+            // Ignores last '\r' if any
             out.write(car);
             out.write(String.valueOf(++count) + "\t");
             charWasR = false;
         } else {
+            // New line if last char was '\r'
             if(charWasR){
                 out.write(String.valueOf(++count) + "\t");
                 charWasR = false;
