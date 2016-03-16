@@ -1,5 +1,6 @@
 package ch.heigvd.res.lab01.impl;
 
+import java.util.LinkedList;
 import java.util.logging.Logger;
 
 /**
@@ -19,8 +20,42 @@ public class Utils {
    * the line separator, the second element is the remaining text. If the argument does not
    * contain any line separator, then the first element is an empty string.
    */
-  public static String[] getNextLine(String lines) {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+  public static String[] getNextLine(String lines)
+  {
+    String rtn[] = new String[2];
+
+
+    for (int i = 0; i < lines.length(); ++i)
+    {
+      if (lines.charAt(i) == '\r')
+      {
+
+        if (lines.length() > i+1 && lines.charAt(i+1) == '\n')
+        {
+          rtn[0] = lines.substring(0, i+2);
+          rtn[1] = lines.substring(i+2);
+          return rtn;
+        }
+        else
+        {
+          rtn[0] = lines.substring(0, i+1);
+          rtn[1] = lines.substring(i+1);
+          return rtn;
+        }
+
+      }
+
+      if (lines.charAt(i) == '\n')
+      {
+        rtn[0] = lines.substring(0,i+1);
+        rtn[1] = lines.substring(i+1);
+        return rtn;
+      }
+    }
+
+    rtn[0] = "";
+    rtn[1] = lines;
+    return rtn;
   }
 
 }
