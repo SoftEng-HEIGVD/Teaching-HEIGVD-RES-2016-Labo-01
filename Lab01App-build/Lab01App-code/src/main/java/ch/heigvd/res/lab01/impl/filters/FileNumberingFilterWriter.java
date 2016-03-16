@@ -18,6 +18,9 @@ import java.util.logging.Logger;
 public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
+  
+  private int finalChar;
+  private int lineNumber;
 
   public FileNumberingFilterWriter(Writer out) {
     super(out);
@@ -25,17 +28,37 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+     write(str.toCharArray(), off, len);
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+     for(int i = 0; (i < len) && (i + off < cbuf.length); ++i)
+        write(cbuf[off + i]);    
   }
 
   @Override
   public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+     if(lineNumber == 0){
+        ++lineNumber;
+        super.write('1');
+        super.write('\t');
+     }
+     // Detection of the end of line for Unix and Windows
+     if(c == '\n'){
+        super.write(c);
+        super.write(((++lineNumber) + "").charAt(0));
+        super.write('\t');
+        
+     } else if(finalChar == '\r'){ // Detection of the end of line for MacOS
+        super.write(((++lineNumber) + "").charAt(0));
+        super.write('\t');
+        super.write(c);
+        
+     } else 
+        super.write(c);
+     // in case of \r\n
+     finalChar = c;
   }
 
 }

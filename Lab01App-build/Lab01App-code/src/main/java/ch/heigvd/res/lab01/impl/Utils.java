@@ -20,7 +20,28 @@ public class Utils {
    * contain any line separator, then the first element is an empty string.
    */
   public static String[] getNextLine(String lines) {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+     // unfound notif, value return by the class method String.indexOf() 
+     // if the char doesn't occur
+     final int UNFOUND = -1;
+     String res[] = new String[2];
+     // init of the two strings contained in the tab
+     res[0] = "";
+     res[1] = "";
+     int pos = lines.indexOf('\n'); // for Windows and Unix
+    
+     if(pos == UNFOUND) 
+        pos = lines.indexOf("\r"); // for Mac
+     // if no new line characters found, affect the lines and do nothing 
+     // for the separator
+     if(pos == UNFOUND){
+        res[1] = lines;
+        return res;
+        
+     } else{
+        res[0] = lines.substring(0, pos + 1); // pos + 1 for the delimitor
+        res[1]= lines.substring(pos + 1); // idem
+     }
+     return res;                     
   }
 
 }
