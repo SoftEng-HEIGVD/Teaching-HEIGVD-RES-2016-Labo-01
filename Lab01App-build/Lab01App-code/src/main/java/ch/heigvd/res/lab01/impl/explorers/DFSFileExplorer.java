@@ -16,6 +16,8 @@ public class DFSFileExplorer implements IFileExplorer {
 
   @Override
   public void explore(File rootDirectory, IFileVisitor vistor) {
+	  if(!rootDirectory.exists())
+		  return;
 	  for(String child : rootDirectory.list()){
 		  File file = new File(rootDirectory.getPath() + "/" + child);
 		  vistor.visit(file);

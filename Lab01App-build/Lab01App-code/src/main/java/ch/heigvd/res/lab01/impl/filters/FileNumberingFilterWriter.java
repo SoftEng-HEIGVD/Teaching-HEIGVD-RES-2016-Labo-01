@@ -24,6 +24,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
   private int i = 1;
   private boolean newLigne = true;
+  private boolean already_return = false;
 
   public FileNumberingFilterWriter(Writer out) {
     super(out);
@@ -43,15 +44,35 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(int c) throws IOException {
-	if(newLigne && c != '\n'){
+	if(newLigne){
 		String num = String.valueOf(i++);
 	    super.write(num, 0, num.length());
 	    super.write('\t');
 	    newLigne = false;
 	}
-	if(c == '\n' || c == '\r')
-		newLigne = true;
+	else if(already_return){
+		if(c == '\n')
+			super.write(c);
+		String num = String.valueOf(i++);
+	    super.write(num, 0, num.length());
+	    super.write('\t');
+	    newLigne = false;	
+		if(c == '\n'){
+			already_return = false;
+			return;
+		}
+	}
     super.write(c);
+	if(c == '\r'){
+	    already_return = true;
+	}
+	else if(c == '\n' && !already_return){
+		String num = String.valueOf(i++);
+	    super.write(num, 0, num.length());
+	    super.write('\t');
+	}
+	else if (already_return)
+		already_return = false;
   }
 
 }
