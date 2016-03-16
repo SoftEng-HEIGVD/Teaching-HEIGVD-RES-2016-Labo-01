@@ -24,7 +24,7 @@ public class Utils {
   {
     String rtn[] = new String[2];
 
-
+    // parce the string and detect the /n or /r
     for (int i = 0; i < lines.length(); ++i)
     {
       if (lines.charAt(i) == '\r')
@@ -53,6 +53,7 @@ public class Utils {
       }
     }
 
+    // If it's empty
     rtn[0] = "";
     rtn[1] = lines;
     return rtn;

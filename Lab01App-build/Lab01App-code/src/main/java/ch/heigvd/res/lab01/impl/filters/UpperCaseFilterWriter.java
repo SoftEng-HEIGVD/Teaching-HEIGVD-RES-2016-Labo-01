@@ -14,6 +14,9 @@ public class UpperCaseFilterWriter extends FilterWriter {
     super(wrappedWriter);
   }
 
+
+  // This methode transform the str to un uppercase and write it
+  // the goal is to do the both action with the call of one methode.
   @Override
   public void write(String str, int off, int len) throws IOException
   {
@@ -21,6 +24,8 @@ public class UpperCaseFilterWriter extends FilterWriter {
     super.write(str, off, len);
   }
 
+  // For this methode I didn't call the wirte with the string
+  // because the toUpercase will do the same as me but will need to create a string
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException
   {
@@ -32,6 +37,7 @@ public class UpperCaseFilterWriter extends FilterWriter {
     super.write(cbuf, off, len);
   }
 
+  // just call the super write methode with a upercase
   @Override
   public void write(int c) throws IOException
   {

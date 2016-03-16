@@ -28,6 +28,10 @@ public class FileNumberingFilterWriter extends FilterWriter {
     super(out);
   }
 
+  // Wrapping of the writer
+  // Writing in a writer with an edited String by the methode
+  // I didn't call the other write method with a char, due to perf, if the user use unbuffered stream
+  // it will take long time
   @Override
   public void write(String str, int off, int len) throws IOException
   {
@@ -55,17 +59,20 @@ public class FileNumberingFilterWriter extends FilterWriter {
       }
     }
 
-
     super.write(rtn, 0, rtnLen);
-
   }
 
+  // Same as the other one butt with a char[]
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
     String rtn = new String(cbuf);
     write(rtn, off, len);
   }
 
+
+  // Same as the other one but for a single char
+  // I could call the methode with string and cast the char but it will make a lof of
+  // only once used objects
   @Override
   public void write(int c) throws IOException
   {
@@ -93,8 +100,6 @@ public class FileNumberingFilterWriter extends FilterWriter {
       }
 
       super.write(c);
-
-
 
   }
 
