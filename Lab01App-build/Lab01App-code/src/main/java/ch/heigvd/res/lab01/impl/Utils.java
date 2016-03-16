@@ -28,14 +28,17 @@ public class Utils {
     int currentIndex;
     int separatorIndex = -1;
 
+    //look for each of the separators in the line
     for (int i = 0; i < separators.length; i++) {
       currentIndex = lines.indexOf(separators[i]);
+      //update if a separator has been found closer to the start of the line
       if(minIndex == -1 || currentIndex != -1 && currentIndex < minIndex) {
         minIndex = currentIndex;
         separatorIndex = i;
       }
     }
 
+    //if no separators
     if(minIndex == -1)
       return ret;
 

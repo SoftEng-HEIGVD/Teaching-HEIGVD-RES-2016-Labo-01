@@ -31,13 +31,16 @@ public class FileNumberingFilterWriter extends FilterWriter {
     String[] strings = Utils.getNextLine(str.substring(off, off+len));
     String newStr = "";
 
+    //start numbering if at first line
     if(counter == 0)
       newStr += Integer.toString(++counter) + "\t";
 
+    //number while there are still lines to be numbered
     while(!strings[0].equals("")) {
       newStr += strings[0] + Integer.toString(++counter) + "\t";
       strings = Utils.getNextLine(strings[1]);
     }
+    //add last line
     newStr += strings[1];
 
     super.write(newStr,0,newStr.length());
@@ -51,13 +54,17 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(int c) throws IOException {
+    //start numbering if at first line
     if(counter == 0)
       super.write(Integer.toString(++counter) + "\t");
 
+    //if newline, continue numbering
     if(c == '\n') {
       super.write(c);
       super.write(Integer.toString(++counter) + "\t");
     }
+    //otherwise check if previous character was a "\r". This is due to the fact that there is a "\r" and a
+    //"\r\n" line return, which can only be handled by storing previous character and checking back
     else{
       if (previousChar == '\r')
         super.write(Integer.toString(++counter) + "\t");

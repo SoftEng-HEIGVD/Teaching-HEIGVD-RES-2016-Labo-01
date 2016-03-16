@@ -22,23 +22,24 @@ public class DFSFileExplorer implements IFileExplorer {
 
     @Override
     public void explore(File rootDirectory, IFileVisitor visitor) {
-        FileFilter fileFilter = new FileFilter() {
+
+        //list of all files using filter
+        File[] files = rootDirectory.listFiles(new FileFilter() {
             @Override
             public boolean accept(File pathname) {
                 return pathname.isFile();
             }
-        };
+        });
 
-        FileFilter dirFilter = new FileFilter() {
+        //list of all directories using filter
+        File[] dirs  = rootDirectory.listFiles(new FileFilter() {
             @Override
             public boolean accept(File pathname) {
                 return pathname.isDirectory();
             }
-        };
+        });
 
-        File[] files = rootDirectory.listFiles(fileFilter);
-        File[] dirs  = rootDirectory.listFiles(dirFilter);
-
+        //visit files first to pass ApplicationTest
         visitor.visit(rootDirectory);
         if(files != null)
             for(File file:files)
