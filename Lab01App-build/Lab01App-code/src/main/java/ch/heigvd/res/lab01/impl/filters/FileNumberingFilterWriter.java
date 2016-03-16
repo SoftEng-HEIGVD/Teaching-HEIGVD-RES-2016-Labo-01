@@ -21,7 +21,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
     private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
 
     private int count = 0;
-    private boolean jump = false;
+    private boolean charWasR = false;
 
     public FileNumberingFilterWriter(Writer out) {
         super(out);
@@ -56,14 +56,25 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
     @Override
     public void write(int c) throws IOException {
-        if(count == 0)
-            out.write(String.valueOf(++count) + "\t");
+        char car = (char)c;
 
-        out.write((char)c);
-
-        if((char)c == '\n'){
+        if(count == 0) {
             out.write(String.valueOf(++count) + "\t");
         }
-    }
 
+        if(car == '\r'){
+            charWasR = true;
+            out.write(car);
+        } else if(car == '\n') {
+            out.write(car);
+            out.write(String.valueOf(++count) + "\t");
+            charWasR = false;
+        } else {
+            if(charWasR){
+                out.write(String.valueOf(++count) + "\t");
+                charWasR = false;
+            }
+            out.write(car);
+        }
+    }
 }
