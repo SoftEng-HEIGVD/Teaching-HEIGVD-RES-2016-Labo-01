@@ -4,7 +4,6 @@ import ch.heigvd.res.lab01.interfaces.IFileExplorer;
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
 import java.io.File;
 import java.util.Arrays;
-import java.util.Stack;
 
 /**
  * This implementation of the IFileExplorer interface performs a depth-first
@@ -18,29 +17,30 @@ public class DFSFileExplorer implements IFileExplorer {
 
   @Override
   public void explore(File rootDirectory, IFileVisitor visitor) {
-    
-    // This is an iterative way to browse the folders
-    Stack<File> files = new Stack<>();
-    files.add(rootDirectory);
+    visitor.visit(rootDirectory);
 
-    while(!files.isEmpty()) {
-      File file = files.pop();
-      visitor.visit(file);
-      
-      if(file.isDirectory()) {
-        File[] list = file.listFiles();
+    if(rootDirectory.isDirectory()) {
 
-        // Unfortunately listFiles method gives no guarantee that the strings
-        // appear in a specific order
-        // TODO : Reduce the complexity
-        Arrays.sort(list);
-        
-        for(int i = list.length - 1; i >= 0; i--) {
-          files.push(list[i]);
-        }
+      // Get folders and files in the folders
+      File[] list = rootDirectory.listFiles();
+
+      // Unfortunately listFiles method gives no guarantee that the files
+      // appear in a specific order
+      Arrays.sort(list);
+
+      // Visit the files
+      for(File f : list)
+      {
+        if(f.isFile())
+          visitor.visit(f);
+      }
+
+      // Browse the subfolders
+      for(File f : list)
+      {
+        if(f.isDirectory())
+          explore(f, visitor);
       }
     }
-    
   }
-
 }
