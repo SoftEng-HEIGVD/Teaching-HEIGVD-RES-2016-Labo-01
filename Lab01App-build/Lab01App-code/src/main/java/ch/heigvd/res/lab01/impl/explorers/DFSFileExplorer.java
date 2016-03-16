@@ -10,10 +10,8 @@ import java.util.LinkedList;
  * exploration of the file system and invokes the visitor for every encountered
  * node (file and directory). When the explorer reaches a directory, it visits all
  * files in the directory and then moves into the subdirectories.
- *
- * Please note that the files of a directory D are visited before exploring the first sub-directory of D.
  * 
- * @author Olivier Liechti
+ * @author Olivier Liechti, Basile Vu
  */
 public class DFSFileExplorer implements IFileExplorer {
 
@@ -22,7 +20,7 @@ public class DFSFileExplorer implements IFileExplorer {
 
     visitor.visit(rootDirectory);
 
-    // All the files in the directory
+    // All the files in the directory.
     File[] files = rootDirectory.listFiles();
 
     // "files" can be null if rootDirectory is not a directory or if an I/O error occurs.
@@ -30,7 +28,7 @@ public class DFSFileExplorer implements IFileExplorer {
       return;
     }
 
-    // Store the directories to explore later
+    // Store the directories to explore later.
     LinkedList<File> dirs = new LinkedList<>();
 
     // Visit each file and add sub-directories to explore later
@@ -42,7 +40,7 @@ public class DFSFileExplorer implements IFileExplorer {
       }
     }
 
-    // Explore sub-directories
+    // Explore sub-directories.
     for (File f : dirs) {
       explore(f, visitor);
     }

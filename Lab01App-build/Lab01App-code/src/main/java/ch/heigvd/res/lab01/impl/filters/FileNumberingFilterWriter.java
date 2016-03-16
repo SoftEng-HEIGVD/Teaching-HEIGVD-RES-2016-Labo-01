@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  *
  * Hello\n\World -> 1\tHello\n2\tWorld
  *
- * @author Olivier Liechti
+ * @author Olivier Liechti, Basile Vu
  */
 public class FileNumberingFilterWriter extends FilterWriter {
 
@@ -27,11 +27,14 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(String str, int off, int len) throws IOException {
+    // Writes the string as char arrays using our write function.
     write(str.toCharArray(), off, len);
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
+    // Writes 'len' chars, starting char at pos 'off', using our write method for chars.
+    // If the offset is not smaller than the buffer length, we stop.
     for (int i = off; i < cbuf.length && i < off+len; ++i) {
       write(cbuf[i]);
     }
@@ -43,20 +46,20 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
     // Always write line number + tab if beginning
     if (lineNum == 0) {
-      wrLN();
+      writeLineNum();
     }
 
     // Always write line number + tab after \n
     if (toWrite == '\n') {
       out.write(c);
-      wrLN();
+      writeLineNum();
     }
 
     else if (toWrite == '\r') {
       // here, \r is a new line since \r was written before -> write a new line with its number
       if (wroteR) {
         out.write(c);
-        wrLN();
+        writeLineNum();
       }
       out.write(c);
       wroteR = true;
@@ -65,7 +68,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
     else {
       // if a \r was written before and expecting a n but another char is written, we must put the number + tab
       if (wroteR) {
-        wrLN();
+        writeLineNum();
       }
       out.write(toWrite);
     }
@@ -75,7 +78,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
    * Writes the current line number + a tab to the stream.
    * @throws IOException
    */
-  private void wrLN() throws IOException {
+  private void writeLineNum() throws IOException {
     out.write(String.valueOf(++lineNum) + "\t");
     wroteR = false;
   }

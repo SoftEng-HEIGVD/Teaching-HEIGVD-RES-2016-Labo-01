@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Olivier Liechti
+ * @author Olivier Liechti, Basile Vu
  */
 public class Application implements IApplication {
 
