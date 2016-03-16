@@ -135,21 +135,24 @@ public class Application implements IApplication {
       OutputStream outputStream = null;
       Writer writer = null;
       File parentFileDirectory, currentFile;
-      
+
       // construct the complete path 
-      for (int i = 0; i < listTags.size(); ++i)
+      for (int i = 0; i < listTags.size(); ++i) {
          path += "/" + listTags.get(i);
-      
+      }
+
       parentFileDirectory = new File(path);
       // creation of the directory and files
       parentFileDirectory.mkdirs();
 
       currentFile = new File(parentFileDirectory, filename);
-      currentFile.createNewFile();
-
       try {
+         // creation of the file named by the string filename
+         currentFile.createNewFile();
+         // output stream for writing data to the currentFile
          outputStream = new FileOutputStream(currentFile);
          writer = new OutputStreamWriter(outputStream);
+         // writes the data 
          writer.write(quote.getQuote());
       } catch (IOException ex) {
          Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);

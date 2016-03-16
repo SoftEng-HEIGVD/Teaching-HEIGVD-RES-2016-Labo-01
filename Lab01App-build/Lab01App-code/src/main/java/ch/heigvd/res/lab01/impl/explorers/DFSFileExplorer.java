@@ -16,15 +16,16 @@ public class DFSFileExplorer implements IFileExplorer {
 
    @Override
    public void explore(File rootDirectory, IFileVisitor vistor) {
+      // array containing the files
       File listFiles[] = null;
       if (rootDirectory == null) 
          throw new UnsupportedOperationException("root directory doesn't exist");
       
       vistor.visit(rootDirectory);
-      // checks whether the file is a directory.
+      // checks whether the file is a directory or not.
       if (rootDirectory.isDirectory()) {
          // get the files from the root directory and checks whether the directory 
-         //was empty 
+         // was empty 
          if ((listFiles = rootDirectory.listFiles()) == null) 
             throw new UnsupportedOperationException("there are no files in the root "
                                                       + "directory");
