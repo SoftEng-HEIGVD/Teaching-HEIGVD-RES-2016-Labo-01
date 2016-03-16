@@ -17,6 +17,7 @@ import java.util.logging.Logger;
  */
 public class FileNumberingFilterWriter extends FilterWriter {
 
+  private int i = 1;
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
 
   public FileNumberingFilterWriter(Writer out) {
@@ -25,17 +26,66 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    boolean tabPlusEnter = false;
+    int myLen = len;
+    String myStr = "";
+    // if beggining of the line, add 1\t
+    if(i == 1) {
+      myStr = Integer.toString(i) + "\t";
+      i++;
+      myLen += 2;
+    }
+
+    for(int k = off; k < (off+len); k++) {
+
+      // look for \n or \r
+
+      if (str.charAt(k) == '\n') {
+          // add char
+          myStr += str.charAt(k);
+          myStr = myStr + Integer.toString(i) + "\t";
+          i++;
+          myLen += 2;
+      }
+
+      if (str.charAt(k) == '\r') {
+        // add char
+        myStr += str.charAt(k);
+        if(str.length() > k+1 && str.charAt(k+1) == '\n') {
+          // add char
+          myStr += str.charAt(k+1);
+          k++;
+          tabPlusEnter = true;
+        }
+      }
+
+      // if \r with or without \n after, add i\t
+      if((k-1 >= 0 && str.charAt(k-1) == '\r') || tabPlusEnter) {
+        myStr = myStr + Integer.toString(i) + "\t";
+        i++;
+        myLen += 2;
+        tabPlusEnter = false;
+      }
+
+      // if \n or \r the char was already added
+      if(str.charAt(k) != '\n' && str.charAt(k) != '\r') {
+        // add char
+        myStr += str.charAt(k);
+      }
+    }
+
+    super.write(myStr, 0, myLen);
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    String myStr = new String(cbuf);
+    write(myStr, off, len);
   }
 
   @Override
   public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    write(Character.toString((char)c), 0, 1);
   }
 
 }
