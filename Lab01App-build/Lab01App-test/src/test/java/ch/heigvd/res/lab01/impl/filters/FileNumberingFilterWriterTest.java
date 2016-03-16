@@ -1,10 +1,11 @@
 package ch.heigvd.res.lab01.impl.filters;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.logging.Logger;
-import org.junit.Assert;
-import org.junit.Test;
 
 /**
  *

@@ -18,6 +18,6 @@ public interface IFileVisitor {
    * 
    * @param file the current file or directory visited by the IFileExplorer instance
    */
-  public void visit(File file);
+  void visit(File file);
   
 }

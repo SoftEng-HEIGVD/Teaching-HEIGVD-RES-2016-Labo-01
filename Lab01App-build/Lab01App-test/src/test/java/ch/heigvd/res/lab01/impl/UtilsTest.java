@@ -1,8 +1,10 @@
 package ch.heigvd.res.lab01.impl;
 
-import java.util.logging.Logger;
-import static org.junit.Assert.*;
 import org.junit.Test;
+
+import java.util.logging.Logger;
+
+import static org.junit.Assert.assertArrayEquals;
 
 /**
  *
@@ -21,9 +23,7 @@ public class UtilsTest {
     String[] r2 = Utils.getNextLine(r1[1]);
     String[] e2 = {"world\r\n", ""};
     assertArrayEquals(e2, r2);
-  }
-
-  @Test
+  }@Test
   public void itShouldBePossibleToGetANewLineOnMacOS9() {
     String lines = "hello\rworld\r";
     String[] r1 = Utils.getNextLine(lines);

@@ -107,3 +107,4 @@ fabric.properties
 
 # Code Recommenders
 .recommenders/
+/bin/
