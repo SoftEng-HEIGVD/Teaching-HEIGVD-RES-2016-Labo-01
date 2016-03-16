@@ -55,7 +55,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
      // Convertion of the int to a char
      char currentChar = Character.toChars(c)[0];
 
-     // If it's the beginning we do it once
+     // If it's the beginning, the first line to be written we do it once
        if (lineNumber == 0) {
          out.write(++lineNumber + "\t");
         }
@@ -68,15 +68,17 @@ public class FileNumberingFilterWriter extends FilterWriter {
          carriageReturn = false;
          out.write(currentChar);
       } 
+      // If we encounter a \n, we set the flag to true so that we can produced the
+      // right results in the test
+      else if (currentChar == '\r') {
+         carriageReturn = true;
+      } 
       
       // The char is also writen when it's not a carriage return
       else if ((currentChar != '\r' && currentChar != '\n') && carriageReturn == false) {
          out.write(currentChar);
       } 
-      
-      else if (currentChar == '\r') {
-         carriageReturn = true;
-      } 
+
       
       // We write the following line when a '\n and a carriageReturn is found'
       else if (currentChar == '\n' && carriageReturn) {
