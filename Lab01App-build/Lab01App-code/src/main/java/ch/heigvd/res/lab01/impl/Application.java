@@ -32,13 +32,13 @@ public class Application implements IApplication {
    private static final Logger LOG = Logger.getLogger(Application.class.getName());
 
    public static void main(String[] args) {
-
       /*
        * I prefer to have LOG output on a single line, it's easier to read. Being able
        * to change the formatting of console outputs is one of the reasons why it is
        * better to use a Logger rather than using System.out.println
        */
       System.setProperty("java.util.logging.SimpleFormatter.format", "%4$s: %5$s%6$s%n");
+      System.setProperty( "file.encoding", "UTF-8" ); // encodimg utf8
 
       int numberOfQuotes = 0;
       try {

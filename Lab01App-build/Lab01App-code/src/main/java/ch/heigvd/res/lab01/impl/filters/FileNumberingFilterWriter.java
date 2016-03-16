@@ -30,10 +30,10 @@ public class FileNumberingFilterWriter extends FilterWriter {
    public void write(String str, int off, int len) throws IOException {
       String[] sTab = getNextLine(str.substring(off, off + len));
       if (firstLine == true) {
-         out.write(line++ + "\t");
+         out.write(line++ + "\t"); // this is a counter for current line we are working on
          firstLine = false;
       }
-      while (sTab[0].length() != 0) {
+      while (sTab[0].length() != 0) { // same thing with others lines
          out.write(sTab[0] + line++ + "\t");
          sTab = getNextLine(sTab[1]);
       }
@@ -49,22 +49,18 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
    @Override
    public void write(int c) throws IOException {
-//      if (firstLine == true) {
-//         out.write(line++ + "\t");
-//         firstLine = false;
-//      }
-//      out.write(c + line++ + "\t");
-//   }
-      if (firstLine == true) {
-         out.write(line++ + "\t");
-         firstLine = false;
-      } 
-      out.write(c);
-         if (c == '\n') {
-          out.write(line++ +"\t");
-         }
-      
-     
+     if (firstLine == true) {
+            if (c != '\n') {
+               firstLine = false;
+                out.write(line++ + "\t"); // this is a counter for current line we are working on
+                
+            }
+        }
+        out.write(c);
+        if (c == '\n' || c == '\r') { // on next separator, use firstline var to begin a new line
+            firstLine = true;
+        }
+
    }
 
 }
