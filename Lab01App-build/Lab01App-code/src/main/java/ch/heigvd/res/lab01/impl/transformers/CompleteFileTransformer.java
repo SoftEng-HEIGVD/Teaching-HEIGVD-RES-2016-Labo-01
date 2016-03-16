@@ -13,14 +13,20 @@ import java.io.Writer;
  * beginning of each line.
  * 
  * @author Olivier Liechti
+ * @modifiedBy Sebastien Boson
  */
 public class CompleteFileTransformer extends FileTransformer {
 
+  /**
+   * This method will decorate with specific filters the writer.
+   * The first filter will convert the content of the writer to uppercase.
+   * The second filter will add a line number and a \t for all lines in the writer.
+   *
+   * @param writer the writer that we bill decorated
+   * @return the writer decorated
+   */
   @Override
   public Writer decorateWithFilters(Writer writer) {
-    /*if (true) {
-      throw new UnsupportedOperationException("The student has not implemented this method yet.");
-    }*/
     /*
      * If you uncomment the following line (and get rid of th 3 previous lines...), you will restore the decoration 
      * of the writer (connected to the file. You can see that you first decorate the writer with an UpperCaseFilterWriter, which you then

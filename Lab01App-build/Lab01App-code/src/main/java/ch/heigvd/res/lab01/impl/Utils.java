@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 /**
  *
  * @author Olivier Liechti
+ * @modifiedBy Sebastien Boson
  */
 public class Utils {
 
@@ -20,15 +21,16 @@ public class Utils {
    * contain any line separator, then the first element is an empty string.
    */
   public static String[] getNextLine(String lines) {
-    //throw new UnsupportedOperationException("The student has not implemented this method yet.");
     String[] result = new String[2];
     String firstElement = "";
 
+    // we go through all the char in the String
     for (int i = 0; i < lines.length(); i++) {
       firstElement += lines.charAt(i);
 
+      // if we have a line separator \r
       if (lines.charAt(i) == '\r') {
-        // check if we are not at the end of the lines
+        // check if we are not at the end of the String and if we have a \r\n
         if ((i + 1) != lines.length() && lines.charAt(i + 1) == '\n') {
           firstElement += lines.charAt(i + 1);
 

@@ -17,6 +17,7 @@ import java.util.logging.Logger;
  * a list of filters and decorates the output writer with them.
  * 
  * @author Olivier Liechti
+ * @modifiedBy Sebastien Boson
  */
 public abstract class FileTransformer implements IFileVisitor {
 
@@ -36,6 +37,11 @@ public abstract class FileTransformer implements IFileVisitor {
    */
   public abstract Writer decorateWithFilters(Writer writer);
 
+  /**
+   * This method will decorate the content of the file with the specified filters.
+   *
+   * @param file the file that we bill decorated
+   */
   @Override
   public void visit(File file) {
     if (!file.isFile()) {
@@ -50,6 +56,7 @@ public abstract class FileTransformer implements IFileVisitor {
 
       int value;
 
+      // we read the value from the file and write it in an another file
       while ((value = reader.read()) != -1 ) {
         writer.write(value);
       }
@@ -60,7 +67,6 @@ public abstract class FileTransformer implements IFileVisitor {
        */
 
       reader.close();
-      //writer.flush();
       writer.close();
     } catch (IOException ex) {
       LOG.log(Level.SEVERE, null, ex);

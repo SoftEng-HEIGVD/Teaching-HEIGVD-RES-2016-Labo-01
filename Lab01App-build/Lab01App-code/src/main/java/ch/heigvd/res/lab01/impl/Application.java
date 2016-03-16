@@ -14,9 +14,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Class ...
+ * Main class of the program that will fetch quotes from a server and written it in utf8 files.
+ * After that, the files are visited a second time to put its content to uppercase and write a line
+ * number and a \t before all lines. The original content is not overwritten. We create a second file
+ * for that.
  *
  * @author Olivier Liechti
+ * @modifiedBy Sebastien Boson
  */
 public class Application implements IApplication {
 
@@ -27,7 +31,10 @@ public class Application implements IApplication {
   public static String WORKSPACE_DIRECTORY = "./workspace/quotes";
   
   private static final Logger LOG = Logger.getLogger(Application.class.getName());
-  
+
+  /**
+   * This the main method of the program.
+   */
   public static void main(String[] args) {
     
     /*
@@ -77,6 +84,11 @@ public class Application implements IApplication {
     }
   }
 
+  /**
+   * This method will fetch quotes from a server and written it in utf8 files.
+   *
+   * @param numberOfQuotes the number of quotes to be fetched
+   */
   @Override
   public void fetchAndStoreQuotes(int numberOfQuotes) throws IOException {
     clearOutputDirectory();
@@ -125,9 +137,9 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    //throw new UnsupportedOperationException("The student has not implemented this method yet.");
     String path = WORKSPACE_DIRECTORY;
 
+    // to build the path of the file (the directories)
     for (String tag : quote.getTags()) {
       path += File.separator + tag;
     }
@@ -141,6 +153,7 @@ public class Application implements IApplication {
       }
     }
 
+    // we create the file in the directories
     FileOutputStream fileOutputStream = new FileOutputStream(path + File.separator + filename);
     Writer writer = new OutputStreamWriter(fileOutputStream, "UTF-8");
     BufferedWriter bufferedWriter = new BufferedWriter(writer);
@@ -153,6 +166,8 @@ public class Application implements IApplication {
   /**
    * This method uses a IFileExplorer to explore the file system and prints the name of each
    * encountered file and directory.
+   *
+   * @param writer the writer to explore
    */
   void printFileNames(final Writer writer) {
     IFileExplorer explorer = new DFSFileExplorer();
@@ -160,6 +175,7 @@ public class Application implements IApplication {
       @Override
       public void visit(File file) {
         try {
+          // we write the path of the file
           writer.write(file.getPath() + "\n");
         } catch (IOException ex) {
           LOG.log(Level.SEVERE, null, ex);
@@ -172,15 +188,18 @@ public class Application implements IApplication {
       }
     });
   }
-  
+
+  /**
+   * This method just return the author email.
+   * @return author email
+   */
   @Override
   public String getAuthorEmail() {
-    //throw new UnsupportedOperationException("The student has not implemented this method yet.");
     return "sebastien.boson@heig-vd.ch";
   }
 
-  /*
-   *
+  /**
+   * This method explore the files in the specified rootDirectory.
    */
   @Override
   public void processQuoteFiles() throws IOException {
