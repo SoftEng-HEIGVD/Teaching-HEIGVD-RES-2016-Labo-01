@@ -44,6 +44,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
     @Override
     public void write(int c) throws IOException {
 
+        // If nothing was written before
         if (nextLine == 1) {
             out.write(nextLine + "\t");
             nextLine++;
@@ -52,6 +53,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
         if (c == '\r') {
             wasReturn = true;
             out.write(c);
+
         } else if (c == '\n') {
             if (wasReturn) {
                 wasReturn = false;
@@ -60,6 +62,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
             out.write(nextLine + "\t");
             nextLine++;
             wasEndOfLine = true;
+
         } else if (wasEndOfLine || wasReturn) {
             wasEndOfLine = false;
             if (wasReturn) {
@@ -68,6 +71,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
                 nextLine++;
             }
             out.write(c);
+
         } else {
             out.write(c);
         }

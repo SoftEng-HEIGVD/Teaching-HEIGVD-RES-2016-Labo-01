@@ -19,7 +19,11 @@ import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 
 /**
- *
+ * This Application first clears the output directory then uses the QuotesClient 
+ * to fetch quotes from a web service and stores each quote in a file.
+ * After that it uses a file explorer to traverse the file system and print the name of each directory and file.
+ * Finally processes the quote files, by applying 2 transformations to their content (to uppercase and add line numbers)
+ * 
  * @author Olivier Liechti
  * @author Ciani Antony
  */
@@ -81,20 +85,22 @@ public class Application implements IApplication {
         }
     }
 
+    /*This method handles the first part of the lab. It uses the web service
+    * client to fetch quotes then stores its content 
+    * in a text file placed in subdirectories named after the tags of the quote
+     */
     @Override
     public void fetchAndStoreQuotes(int numberOfQuotes) throws IOException {
         clearOutputDirectory();
         QuoteClient client = new QuoteClient();
         for (int i = 0; i < numberOfQuotes; i++) {
             Quote quote = client.fetchQuote();
-            /* There is a missing piece here!
-            * As you can see, this method handles the first part of the lab. It uses the web service
-            * client to fetch quotes. We have removed a single line from this method. It is a call to
-            * one method provided by this class, which is responsible for storing the content of the
-            * quote in a text file (and for generating the directories based on the tags).
-             */
+
             LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
+
+            // Stores the quote with filename like quote-%idofquote%.utf8
             storeQuote(quote, "quote-" + quote.getValue().getId() + ".utf8");
+
             for (String tag : quote.getTags()) {
                 LOG.info("> " + tag);
             }
@@ -129,17 +135,24 @@ public class Application implements IApplication {
      */
     void storeQuote(Quote quote, String filename) throws IOException {
         String path = WORKSPACE_DIRECTORY;
+
+        // Retrie the quote tags and building the directories path
         for (String tag : quote.getTags()) {
             path += "/" + tag;
         }
+
+        // Create the subdirectories in case they dont exist
         File dir = new File(path);
         dir.mkdirs();
+
+        // Build the file path
         path += "/" + filename;
-        OutputStreamWriter ow = new OutputStreamWriter(new FileOutputStream(path));
+
+        // Write the content of the quote in the file in utf-8 
+        OutputStreamWriter ow = new OutputStreamWriter(new FileOutputStream(path), "utf-8");
         BufferedWriter bw = new BufferedWriter(ow);
         bw.write(quote.getQuote());
         bw.close();
-        
 
     }
 
@@ -151,12 +164,8 @@ public class Application implements IApplication {
         IFileExplorer explorer = new DFSFileExplorer();
         explorer.explore(new File(WORKSPACE_DIRECTORY), new IFileVisitor() {
             @Override
+            // writes the filename of the file, including the path, to the writer passed in argument
             public void visit(File file) {
-                /*
-         * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
-         * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
-         * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
-                 */
                 try {
                     writer.write(file.getPath());
                     writer.write('\n');
@@ -169,11 +178,14 @@ public class Application implements IApplication {
     }
 
     @Override
+    // returns the author email
     public String getAuthorEmail() {
         return "antony.ciani@heig-vd.ch";
     }
 
     @Override
+    // Explores all the file system to apply filters to the files
+    // I first applies an upper case filter and then a file numbering filter
     public void processQuoteFiles() throws IOException {
         IFileExplorer explorer = new DFSFileExplorer();
         explorer.explore(new File(WORKSPACE_DIRECTORY), new CompleteFileTransformer());

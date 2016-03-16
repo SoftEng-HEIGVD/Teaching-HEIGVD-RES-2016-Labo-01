@@ -16,39 +16,47 @@ import java.io.FileFilter;
  */
 public class DFSFileExplorer implements IFileExplorer {
 
+    // File filter to retrieve only files that are directories
     private FileFilter directoryFilter = new FileFilter() {
-                @Override
-                public boolean accept(File pathname) {
-                    if (pathname.isDirectory()) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            };
+        @Override
+        public boolean accept(File pathname) {
+            if (pathname.isDirectory()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    };
+
+    // File filter to retrieve only files that are not directories
     private FileFilter fileFilter = new FileFilter() {
-                @Override
-                public boolean accept(File pathname) {
-                    if (pathname.isFile()) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            };
+        @Override
+        public boolean accept(File pathname) {
+            if (pathname.isFile()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    };
 
     @Override
     public void explore(File rootDirectory, IFileVisitor vistor) {
 
+        // First visit the directory/file
         vistor.visit(rootDirectory);
-        if (rootDirectory.isDirectory()) {
+
+        if (rootDirectory.isDirectory()) { // if the file is a directory
+
             File[] filesInDirectory = rootDirectory.listFiles(this.fileFilter);
             File[] subdirectories = rootDirectory.listFiles(this.directoryFilter);
 
+            // First visit the files
             for (File f : filesInDirectory) {
                 vistor.visit(f);
             }
-            for (File f : subdirectories){
+            // Then explore the rest of the subdirectories
+            for (File f : subdirectories) {
                 explore(f, vistor);
             }
         }
