@@ -91,6 +91,7 @@ public class Application implements IApplication {
        */
 
       // store the quote with this name pattern : quote-\\d*.utf8
+      // where \\d* equals quote's ID
       storeQuote(quote, "quote-" + quote.getValue().getId() + ".utf8");
 
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
@@ -155,6 +156,7 @@ public class Application implements IApplication {
          * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
          */
 
+        // write the path follow by \n
         try {
           writer.write(file.getPath() + "\n");
         } catch (IOException e) {

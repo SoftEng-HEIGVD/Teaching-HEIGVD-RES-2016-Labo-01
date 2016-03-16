@@ -23,7 +23,7 @@ public class DFSFileExplorer implements IFileExplorer {
     // mark as visited
     visitor.visit(rootDirectory);
 
-    // if its a directory, explore file and subDirectory
+    // if its a directory, explore files in this directory and subDirectories
     if(rootDirectory.isDirectory())
     {
       // explore all files
@@ -32,7 +32,7 @@ public class DFSFileExplorer implements IFileExplorer {
         explore(myFile, visitor);
       }
 
-      // explore all subDirectory
+      // explore all subDirectories
       for(File myFile: rootDirectory.listFiles((FileFilter) DirectoryFileFilter.DIRECTORY))
       {
         explore(myFile, visitor);

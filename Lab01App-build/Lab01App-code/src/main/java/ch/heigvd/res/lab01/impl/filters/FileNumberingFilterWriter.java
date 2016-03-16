@@ -26,20 +26,24 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    boolean tabPlusEnter = false;
     int myLen = len;
     String myStr = "";
-    // if beggining of the line, add 1\t
+    // if it's the beginning of the line, add 1\t
+    // and add 2 for the length
     if(i == 1) {
       myStr = Integer.toString(i) + "\t";
       i++;
       myLen += 2;
     }
 
+    // go though the string str
+    // and add char after char to add in proper place i\t
     for(int k = off; k < (off+len); k++) {
 
       // look for \n or \r
 
+      // if it's a \n, add 1\t
+      // and add 2 for the length
       if (str.charAt(k) == '\n') {
           // add char
           myStr += str.charAt(k);
@@ -48,26 +52,28 @@ public class FileNumberingFilterWriter extends FilterWriter {
           myLen += 2;
       }
 
+      // if it's a \r, check if there is a \n after it
       if (str.charAt(k) == '\r') {
         // add char
         myStr += str.charAt(k);
+        // if there are \n following a \r don't add twice i\t but only once.
         if(str.length() > k+1 && str.charAt(k+1) == '\n') {
           // add char
           myStr += str.charAt(k+1);
           k++;
-          tabPlusEnter = true;
         }
       }
 
-      // if \r with or without \n after, add i\t
-      if((k-1 >= 0 && str.charAt(k-1) == '\r') || tabPlusEnter) {
+      // if \r without \n after, add i\t
+      // and add 2 for the length
+      if(k-1 >= 0 && str.charAt(k-1) == '\r') {
         myStr = myStr + Integer.toString(i) + "\t";
         i++;
         myLen += 2;
-        tabPlusEnter = false;
       }
 
-      // if \n or \r the char was already added
+      // if it's a \n or a \r the char was already added
+      // if it's not a \r or a \n the char need to be add
       if(str.charAt(k) != '\n' && str.charAt(k) != '\r') {
         // add char
         myStr += str.charAt(k);

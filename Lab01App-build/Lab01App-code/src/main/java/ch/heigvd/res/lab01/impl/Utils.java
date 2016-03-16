@@ -27,7 +27,8 @@ public class Utils {
         // find \n or \r
         if(lines.charAt(i) == '\n' || lines.charAt(i) == '\r')
         {
-            // look for \n after \r
+            // split the string lines into two
+            // look for \n after \r to split in the right place
             if(lines.length() > i+1 && lines.charAt(i+1) == '\n')
             {
                 res[0] += lines.substring(0,i+2);
