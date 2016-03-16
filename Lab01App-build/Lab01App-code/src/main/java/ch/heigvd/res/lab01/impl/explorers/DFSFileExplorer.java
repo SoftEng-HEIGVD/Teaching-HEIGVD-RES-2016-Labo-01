@@ -21,16 +21,17 @@ public class DFSFileExplorer implements IFileExplorer {
 
 	  // Visit the file
 	  visitor.visit(rootDirectory);
+	  File[] files = rootDirectory.listFiles();
 
 	  // If it's a directory, we need to explore it
 	  if (rootDirectory.isDirectory()) {
 		 // First we visit the files
-		 for (File f : rootDirectory.listFiles()) {
+		 for (File f : files) {
 			if (!f.isDirectory()) visitor.visit(f);
 		 }
 
 		 // Then we visit the directories
-		 for (File f : rootDirectory.listFiles()) {
+		 for (File f : files) {
 			if (f.isDirectory()) explore(f, visitor);
 		 }
 	  }

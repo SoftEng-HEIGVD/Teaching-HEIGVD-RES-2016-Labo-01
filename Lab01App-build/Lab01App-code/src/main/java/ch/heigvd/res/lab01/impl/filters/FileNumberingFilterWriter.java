@@ -19,7 +19,6 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
    private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
    private boolean endOfLine = true;
-   private boolean dirtyBit = true;
    private int line = 0;
 
    public FileNumberingFilterWriter(Writer out) {
@@ -41,17 +40,18 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
    @Override
    public void write(int c) throws IOException {
-	  if(dirtyBit || (endOfLine && c != '\n')){
+	  if ((endOfLine && c != '\n') || line == 0) {
 		 out.write(String.format("%d\t", ++line));
-		 dirtyBit = false;
 		 endOfLine = false;
 	  }
 
+	  // We write the char
 	  out.write(c);
 
-	  if(c == '\r'){
+	  // We check if we aren't at the end of a line
+	  if (c == '\r') {
 		 endOfLine = true;
-	  } else if(c == '\n') {
+	  } else if (c == '\n') {
 		 out.write(String.format("%d\t", ++line));
 		 endOfLine = false;
 	  }

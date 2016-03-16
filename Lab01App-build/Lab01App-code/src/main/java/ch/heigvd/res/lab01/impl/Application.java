@@ -28,7 +28,7 @@ public class Application implements IApplication {
    public static void main(String[] args) {
 
     /*
-     * I prefer to have LOG output on a single line, it's easier to read. Being able
+	 * I prefer to have LOG output on a single line, it's easier to read. Being able
      * to change the formatting of console outputs is one of the reasons why it is
      * better to use a Logger rather than using System.out.println
      */
@@ -45,7 +45,7 @@ public class Application implements IApplication {
 
 	  Application app = new Application();
 	  try {
-      /*
+	  /*
        * Step 1 : clear the output directory
        */
 		 app.clearOutputDirectory();
@@ -80,13 +80,9 @@ public class Application implements IApplication {
 	  QuoteClient client = new QuoteClient();
 	  for (int i = 0; i < numberOfQuotes; i++) {
 		 Quote quote = client.fetchQuote();
-      /* There is a missing piece here!
-       * As you can see, this method handles the first part of the lab. It uses the web service
-       * client to fetch quotes. We have removed a single line from this method. It is a call to
-       * one method provided by this class, which is responsible for storing the content of the
-       * quote in a text file (and for generating the directories based on the tags).
-       */
-		 storeQuote(quote, "quote-" +i + ".utf8");
+
+		 // Store the content of the quote
+		 storeQuote(quote, "quote-" + i + ".utf8");
 
 		 LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
 		 for (String tag : quote.getTags()) {
@@ -121,17 +117,18 @@ public class Application implements IApplication {
 	* @throws IOException
 	*/
    void storeQuote(Quote quote, String filename) throws IOException {
-	  File dir = new File(WORKSPACE_DIRECTORY, String.join("/",quote.getTags()));
-	  if(!dir.isDirectory()) // If is not a directory, we create it
-	  	if(!dir.mkdirs()){
-		   throw new IOException("Can't create the directory" + dir.getAbsolutePath());
-		}
+	  File dir = new File(WORKSPACE_DIRECTORY, String.join("/", quote.getTags()));
+	  if (!dir.isDirectory()) {// If is not a directory, we create it
+		 if (!dir.mkdirs())
+			throw new IOException("Can't create the directory" + dir.getAbsolutePath());
+	  }
 
 	  File file = new File(dir, filename);
 
 	  // We use a fileWriter because we write only one string and therefore we don't need the overhead of the buffered
 	  FileWriter fw = new FileWriter(file);
-	  fw.write(quote.getValue().getJoke());
+	  fw.write(quote.getQuote());
+	  fw.flush();
 	  fw.close();
 
    }
@@ -170,5 +167,4 @@ public class Application implements IApplication {
 	  IFileExplorer explorer = new DFSFileExplorer();
 	  explorer.explore(new File(WORKSPACE_DIRECTORY), new CompleteFileTransformer());
    }
-
 }
