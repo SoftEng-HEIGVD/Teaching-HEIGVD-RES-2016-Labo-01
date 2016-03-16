@@ -16,6 +16,7 @@ import java.io.Writer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
+import java.util.List;
 
 /**
  *
@@ -92,6 +93,7 @@ public class Application implements IApplication {
        * one method provided by this class, which is responsible for storing the content of the
        * quote in a text file (and for generating the directories based on the tags).
        */
+      storeQuote(quote, "quote-" + i + ".utf8");
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
       for (String tag : quote.getTags()) {
         LOG.info("> " + tag);
@@ -125,9 +127,33 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
-  
+    
+      //Obtains a list of folder to create
+      List<String> subFolder = quote.getTags();
+      String path = WORKSPACE_DIRECTORY;
+      
+      //Add all folder in the path
+      for(int i = 0 ; i < subFolder.size(); i++)
+      {
+          path += File.separator + subFolder.get(i);
+      }
+      
+      File file = new File(path);
+      //Create all directory
+      file.mkdirs();      
+      path += File.separator + filename;
+      
+      //Open the folder in UTF-8 mode
+      FileOutputStream fs = new FileOutputStream(path);
+      OutputStreamWriter outWriter = new OutputStreamWriter(fs,"UTF-8");
+      
+      //Write the text into the file
+      outWriter.write(quote.getQuote());
+      
+      outWriter.flush();
+      outWriter.close();
+      
+  }  
   /**
    * This method uses a IFileExplorer to explore the file system and prints the name of each
    * encountered file and directory.
@@ -142,13 +168,23 @@ public class Application implements IApplication {
          * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
          * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
          */
+          try
+            {
+                writer.write(file.getPath() + '\n');
+
+            }
+          catch(IOException e)
+            {
+                LOG.info(e.getMessage());
+            }
+          
       }
     });
   }
   
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    return "kevin.ponce@heig-vd.ch";
   }
 
   @Override
