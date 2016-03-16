@@ -1,3 +1,13 @@
+/*
+ -----------------------------------------------------------------------------------
+ Course       : RES
+ Laboratory   : 1
+ File         : IFileVisitor.java
+ Author       : Antoine Drabble
+ Date         : 10.03.2016
+ Goal         : Interface which defines what an FileVisitor class should do
+ -----------------------------------------------------------------------------------
+*/
 package ch.heigvd.res.lab01.interfaces;
 
 import java.io.File;

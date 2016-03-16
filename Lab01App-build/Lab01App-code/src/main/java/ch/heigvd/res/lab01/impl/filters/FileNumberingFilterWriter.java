@@ -1,10 +1,18 @@
+/*
+ -----------------------------------------------------------------------------------
+ Course       : RES
+ Laboratory   : 1
+ File         : FileNumberingFilterWriter.java
+ Author       : Antoine Drabble
+ Date         : 10.03.2016
+ Goal         : Add a line number to every line written by a decorated writer.
+ -----------------------------------------------------------------------------------
+*/
 package ch.heigvd.res.lab01.impl.filters;
 
-import ch.heigvd.res.lab01.impl.Utils;
 import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Arrays;
 import java.util.logging.Logger;
 
 /**
@@ -19,16 +27,24 @@ import java.util.logging.Logger;
  */
 public class FileNumberingFilterWriter extends FilterWriter {
 
-  private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
-  
-  private int lineNumber = 1;
-  
-  private boolean rReturnFound = false;
+    private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
 
-  public FileNumberingFilterWriter(Writer out) {
-    super(out);
-  }
+    private int lineNumber = 1;
 
+    private boolean rReturnFound = false;
+
+    public FileNumberingFilterWriter(Writer out) {
+      super(out);
+    }
+
+    /**
+     * Write the line numbers for a string
+     * 
+     * @param str
+     * @param off
+     * @param len
+     * @throws IOException 
+     */
     @Override
     public void write(String str, int off, int len) throws IOException {
         String s = str.substring(off, off + len);
@@ -51,11 +67,23 @@ public class FileNumberingFilterWriter extends FilterWriter {
         out.write(lines[1]);*/
     }
 
+    /**
+     * Write the line numbers for a char array
+     * @param cbuf
+     * @param off
+     * @param len
+     * @throws IOException 
+     */
     @Override
     public void write(char[] cbuf, int off, int len) throws IOException {
         write(new String(cbuf), off, len);
     }
 
+    /**
+     * Write the line numbers for a char
+     * @param c
+     * @throws IOException 
+     */
     @Override
     public void write(int c) throws IOException {
         // Always write the first line number

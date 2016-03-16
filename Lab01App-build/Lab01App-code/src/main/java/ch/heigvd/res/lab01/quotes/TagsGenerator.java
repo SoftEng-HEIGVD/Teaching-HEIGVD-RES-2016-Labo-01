@@ -1,3 +1,13 @@
+/*
+ -----------------------------------------------------------------------------------
+ Course       : RES
+ Laboratory   : 1
+ File         : TagsGenerator.java
+ Author       : Antoine Drabble
+ Date         : 10.03.2016
+ Goal         : Generate random tags for a quote
+ -----------------------------------------------------------------------------------
+*/
 package ch.heigvd.res.lab01.quotes;
 
 import java.util.ArrayList;
@@ -15,17 +25,17 @@ import java.util.List;
  */
 public class TagsGenerator {
 
-  private final static String[] availableTags = {"funny", "popular", "movie", "internet", "joke", "hilarious", "geek"};
+    private final static String[] availableTags = {"funny", "popular", "movie", "internet", "joke", "hilarious", "geek"};
 
-  public static String[] pickRandomTags() {
-    int numberToPick = (int) (Math.random() * (availableTags.length + 1)); // we will add between 0 and availableTags.length tags for this quote
-    String[] result = new String[numberToPick];
-    List<String> candidates = new ArrayList<>(Arrays.asList(availableTags));
-    for (int i = 0; i < numberToPick; i++) {
-      Collections.shuffle(candidates);
-      result[i] = candidates.remove(0);
+    public static String[] pickRandomTags() {
+        int numberToPick = (int) (Math.random() * (availableTags.length + 1)); // we will add between 0 and availableTags.length tags for this quote
+        String[] result = new String[numberToPick];
+        List<String> candidates = new ArrayList<>(Arrays.asList(availableTags));
+        for (int i = 0; i < numberToPick; i++) {
+          Collections.shuffle(candidates);
+          result[i] = candidates.remove(0);
+        }
+        return result;
     }
-    return result;
-  }
 
 }

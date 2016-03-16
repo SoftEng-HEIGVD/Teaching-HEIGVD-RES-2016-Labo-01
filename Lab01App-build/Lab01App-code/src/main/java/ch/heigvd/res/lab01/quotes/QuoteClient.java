@@ -1,3 +1,13 @@
+/*
+ -----------------------------------------------------------------------------------
+ Course       : RES
+ Laboratory   : 1
+ File         : QuoteClient.java
+ Author       : Antoine Drabble
+ Date         : 10.03.2016
+ Goal         : Allows quote retrieving from the server
+ -----------------------------------------------------------------------------------
+*/
 package ch.heigvd.res.lab01.quotes;
 
 import javax.ws.rs.client.Client;
@@ -19,28 +29,28 @@ import org.glassfish.jersey.jackson.JacksonFeature;
  */
 public class QuoteClient {
 
-  /*
-   * This has changed in the 2016 version of the lab. We were using the "itheardquotes" API, which is now down. We have
-   * replaced it with another API that generates random jokes.
-  */
+    /*
+     * This has changed in the 2016 version of the lab. We were using the "itheardquotes" API, which is now down. We have
+     * replaced it with another API that generates random jokes.
+    */
     static String WEB_SERVICE_ENDPOINT = "http://api.icndb.com/jokes/random?firstName=Olivier&lastName=Liechti&escape=javascript";
 
-  /**
-   * Use this method to invoke the iheartquotes.com web service and receive
-   * an instance of a Quote.
-   * 
-   * @return an instance of Quote, with values provided by the web service
-   */
-  public Quote fetchQuote() {
-    Client client = ClientBuilder.newBuilder()
-      .register(JacksonFeature.class)
-      .register(SimpleObjectMapperProvider.class)
-      .build();
-    WebTarget target = client.target(WEB_SERVICE_ENDPOINT);
-    Invocation.Builder invocationBuilder = target.request();
-    Response response = invocationBuilder.get();
-    Quote quote = response.readEntity(Quote.class);
-    return quote;
-  }
+    /**
+     * Use this method to invoke the iheartquotes.com web service and receive
+     * an instance of a Quote.
+     * 
+     * @return an instance of Quote, with values provided by the web service
+     */
+    public Quote fetchQuote() {
+        Client client = ClientBuilder.newBuilder()
+            .register(JacksonFeature.class)
+            .register(SimpleObjectMapperProvider.class)
+            .build();
+        WebTarget target = client.target(WEB_SERVICE_ENDPOINT);
+        Invocation.Builder invocationBuilder = target.request();
+        Response response = invocationBuilder.get();
+        Quote quote = response.readEntity(Quote.class);
+        return quote;
+    }
 
 }

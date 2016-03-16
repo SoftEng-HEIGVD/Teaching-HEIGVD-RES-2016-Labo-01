@@ -1,10 +1,20 @@
+/*
+ -----------------------------------------------------------------------------------
+ Course       : RES
+ Laboratory   : 1
+ File         : DFSFileExplorer.java
+ Author       : Antoine Drabble
+ Date         : 10.03.2016
+ Goal         : Explore a folder in DFS and apply the visit method of a class which
+                implements the IFileVisitor interface to every folder/file.
+ -----------------------------------------------------------------------------------
+*/
 package ch.heigvd.res.lab01.impl.explorers;
 
 import ch.heigvd.res.lab01.interfaces.IFileExplorer;
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
 import java.io.File;
 import java.util.Arrays;
-import sun.misc.VM;
 
 /**
  * This implementation of the IFileExplorer interface performs a depth-first
@@ -22,8 +32,9 @@ public class DFSFileExplorer implements IFileExplorer {
         vistor.visit(rootDirectory);
 
         // Return if root directory doesn't exists
-        if(!rootDirectory.exists())
+        if(!rootDirectory.exists()){
             return;
+        }
 
         // Get files/directories inside this directory and sort it
         File[] files = rootDirectory.listFiles();
@@ -31,14 +42,16 @@ public class DFSFileExplorer implements IFileExplorer {
 
         // Write files
         for(File f : files){
-            if(!f.isDirectory())
+            if(!f.isDirectory()){
                 vistor.visit(f);
+            }
         }
 
         // DFS explore directories
         for(File f : files){
-            if(f.isDirectory())
+            if(f.isDirectory()){
                 this.explore(f, vistor);
+            }
         }
     }
 }

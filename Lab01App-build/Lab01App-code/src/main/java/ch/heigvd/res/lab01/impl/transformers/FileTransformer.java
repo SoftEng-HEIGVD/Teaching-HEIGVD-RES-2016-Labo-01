@@ -1,3 +1,13 @@
+/*
+ -----------------------------------------------------------------------------------
+ Course       : RES
+ Laboratory   : 1
+ File         : FileTransformer.java
+ Author       : Antoine Drabble
+ Date         : 10.03.2016
+ Goal         : Abstract class which defines the default visit method 
+ -----------------------------------------------------------------------------------
+*/
 package ch.heigvd.res.lab01.impl.transformers;
 
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
@@ -45,6 +55,12 @@ public abstract class FileTransformer implements IFileVisitor {
    */
   public abstract Writer decorateWithFilters(Writer writer);
 
+  /**
+   * Decorate the writer with the filters and write the output file 
+   * with the decorated content of the utf-8 file (reader)
+   * 
+   * @param file 
+   */
   @Override
   public void visit(File file) {
     if (!file.isFile()) {
