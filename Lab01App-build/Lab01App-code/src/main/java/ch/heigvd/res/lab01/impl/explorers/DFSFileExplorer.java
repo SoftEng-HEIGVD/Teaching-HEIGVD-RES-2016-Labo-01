@@ -2,8 +2,11 @@ package ch.heigvd.res.lab01.impl.explorers;
 
 import ch.heigvd.res.lab01.interfaces.IFileExplorer;
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
+import org.apache.commons.io.filefilter.DirectoryFileFilter;
+import org.apache.commons.io.filefilter.FileFileFilter;
 
 import java.io.File;
+import java.io.FileFilter;
 
 /**
  * This implementation of the IFileExplorer interface performs a depth-first
@@ -19,12 +22,15 @@ public class DFSFileExplorer implements IFileExplorer {
         // always visit
         visitor.visit(rootDirectory);
 
-        // get list of files and/or subdirs
-        File[] af = rootDirectory.listFiles();
+        // if node is a directory
+        if (rootDirectory.isDirectory()) {
+            // explore the files first
+            for (File f : rootDirectory.listFiles((FileFilter) FileFileFilter.FILE)) {
+                explore(f, visitor);
+            }
 
-        // if list isn't empty then proceed to the first item in it until end
-        if (af != null) {
-            for (File f : af) {
+            // explore the folders
+            for (File f : rootDirectory.listFiles((FileFilter) DirectoryFileFilter.DIRECTORY)) {
                 explore(f, visitor);
             }
         }
