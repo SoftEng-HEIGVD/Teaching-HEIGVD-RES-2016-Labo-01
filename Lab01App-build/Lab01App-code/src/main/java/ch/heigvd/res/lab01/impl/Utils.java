@@ -52,7 +52,7 @@ public class Utils {
       }
     }
 
-    // if we do not have find a line separators
+    // if we do not have find a line separator
     result[0] = "";
     result[1] = lines;
 
