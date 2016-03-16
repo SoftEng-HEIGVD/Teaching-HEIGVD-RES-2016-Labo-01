@@ -118,8 +118,8 @@ public class Application implements IApplication {
     void storeQuote(Quote quote, String filename) throws IOException {
         File f = new File(WORKSPACE_DIRECTORY+"/"+String.join("/",quote.getTags()));
         f.mkdirs(); // create the directories specified in the filename
-        //FileWriter is a non buffered stream, but as we only write once and flush directly, it is
-        //unnecessary to use a buffered one.
+        /* FileWriter is a non buffered stream, but as we only write once and flush directly, it is
+           unnecessary to use a buffered one here. */
         FileWriter fw = new FileWriter(f.getPath()+"/"+filename+".utf8");
         fw.write(quote.getQuote());
         fw.close();
