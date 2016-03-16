@@ -7,8 +7,10 @@ import ch.heigvd.res.lab01.interfaces.IFileExplorer;
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
 import ch.heigvd.res.lab01.quotes.QuoteClient;
 import ch.heigvd.res.lab01.quotes.Quote;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
@@ -86,16 +88,21 @@ public class Application implements IApplication {
     QuoteClient client = new QuoteClient();
     for (int i = 0; i < numberOfQuotes; i++) {
       Quote quote = client.fetchQuote();
+      
       /* There is a missing piece here!
        * As you can see, this method handles the first part of the lab. It uses the web service
        * client to fetch quotes. We have removed a single line from this method. It is a call to
        * one method provided by this class, which is responsible for storing the content of the
        * quote in a text file (and for generating the directories based on the tags).
        */
+      
+       storeQuote(quote, "quote-" + i + ".utf8");
+      
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
       for (String tag : quote.getTags()) {
         LOG.info("> " + tag);
       }
+      
     }
   }
   
@@ -124,9 +131,23 @@ public class Application implements IApplication {
    * @param filename the name of the file to create and where to store the quote text
    * @throws IOException 
    */
-  void storeQuote(Quote quote, String filename) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
+   void storeQuote(Quote quote, String filename) throws IOException {
+      //construct the sub-folder route name
+      String subFolderRouteName = WORKSPACE_DIRECTORY + File.separator;
+      for (String tag : quote.getTags()) {
+         subFolderRouteName += tag + File.separator;
+      }
+      
+      
+      File subFolders = new File(subFolderRouteName);
+      subFolders.mkdirs(); //mkdirs enable the creation the unexisting parent directories
+        
+      Writer quoteWriter = new OutputStreamWriter(new FileOutputStream(subFolderRouteName + filename), "UTF-8");
+      quoteWriter.write(quote.getQuote());
+      quoteWriter.flush();
+      quoteWriter.close();
+      
+   }
   
   /**
    * This method uses a IFileExplorer to explore the file system and prints the name of each
@@ -142,13 +163,23 @@ public class Application implements IApplication {
          * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
          * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
          */
+         
+        try{
+           
+        writer.write(file.getPath() + "\n");
+        
+        }catch (IOException ex) {
+      LOG.log(Level.SEVERE, "Could not get the path . {0}", ex.getMessage());
+      ex.printStackTrace();
+    }
+         
       }
     });
   }
   
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    return "quiet-easy@heig-vd.ch";
   }
 
   @Override
