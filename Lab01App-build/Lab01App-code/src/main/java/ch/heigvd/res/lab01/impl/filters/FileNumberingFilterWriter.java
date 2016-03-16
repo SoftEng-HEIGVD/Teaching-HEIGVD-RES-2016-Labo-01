@@ -30,7 +30,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
         super(out);
         //We start with a '1' and a tab character
         try {
-            super.write(Character.forDigit(lineNumber, 10));
+            super.write(Integer.toString(lineNumber));
             super.write('\t');
             lineNumber++;
         } catch (IOException e) {
@@ -52,7 +52,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
                 } else {
                     super.write('\n');
                 }
-                super.write(Character.forDigit(lineNumber, 10));
+                super.write(Integer.toString(lineNumber));
                 lineNumber++;
                 super.write('\t');
             } else {
@@ -76,7 +76,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
                 } else {
                     super.write('\n');
                 }
-                super.write(Character.forDigit(lineNumber, 10));
+                super.write(Integer.toString(lineNumber));
                 lineNumber++;
                 super.write('\t');
             } else {
@@ -93,12 +93,12 @@ public class FileNumberingFilterWriter extends FilterWriter {
             if ((char) c == '\n') {
                 super.write('\r');
                 super.write('\n');
-                super.write(Character.forDigit(lineNumber, 10));
+                super.write(Integer.toString(lineNumber));
                 lineNumber++;
                 super.write('\t');
             } else { //We write '\r' and the received char
                 super.write('\r');
-                super.write(Character.forDigit(lineNumber, 10));
+                super.write(Integer.toString(lineNumber));
                 lineNumber++;
                 super.write('\t');
                 super.write(c);
@@ -111,7 +111,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
         if (!waitingForN) {
             if ((char) c == '\n') {
                 super.write(c);
-                super.write(Character.forDigit(lineNumber, 10));
+                super.write(Integer.toString(lineNumber));
                 lineNumber++;
                 super.write('\t');
             } else {
