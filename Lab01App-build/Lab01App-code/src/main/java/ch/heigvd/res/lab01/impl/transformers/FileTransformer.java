@@ -8,6 +8,8 @@ import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -53,12 +55,20 @@ public abstract class FileTransformer implements IFileVisitor {
       Writer writer = new OutputStreamWriter(new FileOutputStream(file.getPath()+ ".out"), "UTF-8"); // the bug fix by teacher
       writer = decorateWithFilters(writer);
 
-      /*
-       * There is a missing piece here: you have an input reader and an ouput writer (notice how the 
-       * writer has been decorated by the concrete subclass!). You need to write a loop to read the
-       * characters and write them to the writer.
-       */
-      
+      // We surround both the writer and the reader around
+      // buffered versions of them to increase performance
+      writer = new BufferedWriter(writer);
+      reader = new BufferedReader(reader);
+      // 1024 is arbitrarly chosen. We could have found an "ideal" value
+      // which is the  block size on the filesystembut that is cumbersome
+      // instead we use buffered Readers and Writers to take care of this
+      // for us
+      char[] buff = new char[1024];
+      int len;
+      while((len = reader.read(buff)) > 0) {
+        writer.write(buff, 0, len);
+      }
+
       reader.close();
       writer.flush();
       writer.close();
