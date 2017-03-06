@@ -15,8 +15,25 @@ import java.io.File;
 public class DFSFileExplorer implements IFileExplorer {
 
   @Override
-  public void explore(File rootDirectory, IFileVisitor vistor) {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+  public void explore(File rootDirectory, IFileVisitor visitor) {
+    File[] files;
+    visitor.visit(rootDirectory);
+    if (rootDirectory.isDirectory()) {
+      files = rootDirectory.listFiles();
+      for (File f: files) // Explore all the files first
+        if(f.isFile())
+          explore(f,visitor);
+      for (File f: files) // Explore all the subdirectories then
+        if(f.isDirectory())
+          explore(f,visitor);
+    }
+    /*
+     To match the theApplicationShouldBeAbleToGenerateTheListOfFileNames test, we have to guarantee that files
+     are visited before the subdirectories in a given directory. We therefore need to separate the listFiles() in two
+     groups: files and directories, which is done with the two for loops.
+      */
+
+
   }
 
 }
