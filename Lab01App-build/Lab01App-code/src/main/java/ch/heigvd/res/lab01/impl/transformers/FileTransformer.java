@@ -53,11 +53,20 @@ public abstract class FileTransformer implements IFileVisitor {
       Writer writer = new OutputStreamWriter(new FileOutputStream(file.getPath()+ ".out"), "UTF-8"); // the bug fix by teacher
       writer = decorateWithFilters(writer);
 
+      char c[] = new char[256]; //Set to 256 but may bug with strings longer than that
+      int size;
+
+
       /*
        * There is a missing piece here: you have an input reader and an ouput writer (notice how the 
        * writer has been decorated by the concrete subclass!). You need to write a loop to read the
        * characters and write them to the writer.
        */
+
+      while ((size = reader.read(c)) != -1) // It returns -1 whene it's reach the end
+      {
+        writer.write(c, 0, size);
+      }
       
       reader.close();
       writer.flush();
