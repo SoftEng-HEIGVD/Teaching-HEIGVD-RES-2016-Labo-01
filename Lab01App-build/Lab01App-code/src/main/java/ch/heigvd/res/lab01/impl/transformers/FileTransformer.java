@@ -59,9 +59,17 @@ public abstract class FileTransformer implements IFileVisitor {
        * characters and write them to the writer.
        */
       
+      int tmp = reader.read();
+      while(tmp != -1){
+         // Reads and writes the characters
+         writer.write(tmp);
+         tmp = reader.read();
+      }
+      
       reader.close();
       writer.flush();
       writer.close();
+      
     } catch (IOException ex) {
       LOG.log(Level.SEVERE, null, ex);
     }
