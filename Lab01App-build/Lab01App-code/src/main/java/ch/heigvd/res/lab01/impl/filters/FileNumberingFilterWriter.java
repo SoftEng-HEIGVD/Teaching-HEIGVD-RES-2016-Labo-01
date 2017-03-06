@@ -21,9 +21,13 @@ public class FileNumberingFilterWriter extends FilterWriter {
     private static boolean checkForBackslashR = false;
     private int number = 1;
 
-    public FileNumberingFilterWriter(Writer out) throws IOException {
+    public FileNumberingFilterWriter(Writer out) {
         super(out);
-        writeHeading();
+        try {
+            writeHeading();
+        } catch(IOException ioe) {
+            ioe.printStackTrace();
+        }
     }
 
     @Override
