@@ -54,7 +54,7 @@ public class FileNumberingFilterWriterTest {
     FileNumberingFilterWriter writer = new FileNumberingFilterWriter(stringWriter);
     writer.write(line1_1);
     writer.write(line1_2);
-    writer.write(line2);  
+    writer.write(line2); 
     Assert.assertEquals("1\t" + line1_1 + line1_2 + "2\t" + line2, stringWriter.toString());
   }
 
@@ -107,6 +107,8 @@ public class FileNumberingFilterWriterTest {
     String expected = "1\tThis is line 1\r\n2\tThis is line 2\r\n3\tThis is line 3";
     StringWriter stringWriter = new StringWriter();
     FileNumberingFilterWriter writer = new FileNumberingFilterWriter(stringWriter);
+    
+    
     writer.write(line);
     Assert.assertEquals(expected, stringWriter.toString());
   }

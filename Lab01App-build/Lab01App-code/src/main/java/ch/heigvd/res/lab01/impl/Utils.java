@@ -20,7 +20,64 @@ public class Utils {
    * contain any line separator, then the first element is an empty string.
    */
   public static String[] getNextLine(String lines) {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    
+    String tmp[] = new String[2];  
+    int i = -1;
+    int iR = 0;
+    int iN = 0;
+    int index = -1;
+    
+    if(lines.contains("\r\n")){
+        index = lines.indexOf("\r\n");
+    }
+    
+    if(lines.contains("\r") || lines.contains("\n")){
+        iR = lines.indexOf("\r");
+        iN = lines.indexOf("\n");
+
+        // Check if "\r" occur, or if "\n" occur or if both occur, if so check 
+        // wich one occur first.
+        if(iR == -1){
+            i = iN;
+        }
+        else if(iN == -1){
+            i = iR;
+        }
+        else{
+            if( iR > iN)
+                i = iN;
+            else
+                i = iR;
+        } 
+    }
+    
+    // If both "\r""\n" and "\r\n" occur in the string we check wich one occur first.
+    if(i != -1 && index != -1){
+        // Check if "\r" and "\n" occur before "\r\n".  
+        if(i < index){
+            tmp[0] = lines.substring(0, i + 1);
+            tmp[1] = lines.substring(i + 1);
+        }
+        else
+        {
+            tmp[0] = lines.substring(0, index + 2);
+            tmp[1] = lines.substring(index + 2);
+        }
+    }// If the string contain only "\r\n".
+    else if(index != -1){
+        tmp[0] = lines.substring(0, index + 2);
+        tmp[1] = lines.substring(index + 2);
+    }// If the string contain only "\r" or "\n".
+    else if(i != -1){
+        tmp[0] = lines.substring(0, i + 1);
+         tmp[1] = lines.substring(i + 1);
+    }// If the string containt no EOL.
+    else{
+        tmp[0] = "";
+        tmp[1] = lines;  
+    }
+    
+    return tmp;
   }
 
 }
