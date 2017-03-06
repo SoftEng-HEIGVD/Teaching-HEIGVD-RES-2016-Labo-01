@@ -1,5 +1,6 @@
 package ch.heigvd.res.lab01.impl;
 
+import java.util.Vector;
 import java.util.logging.Logger;
 
 /**
@@ -20,7 +21,44 @@ public class Utils {
    * contain any line separator, then the first element is an empty string.
    */
   public static String[] getNextLine(String lines) {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    Vector<String> tabString = new Vector<>();
+    int lastIndexOfNL = 0;
+
+
+    if(lines.contains("\r\n"))
+      for(int i=0;i<lines.length();i++){
+        if(lines.charAt(i) == '\r'){
+          tabString.add(lines.substring(lastIndexOfNL,i+1)+"\n");
+          lastIndexOfNL = i+2;
+          i++;
+        }
+      }
+    else if(lines.contains("\r"))
+      for(int i=0;i<lines.length();i++){
+        if(lines.charAt(i) == '\r'){
+          tabString.add(lines.substring(lastIndexOfNL,i)+"\r");
+          lastIndexOfNL = i+1;
+
+        }
+      }
+    else if(lines.contains("\n"))
+      for(int i=0;i<lines.length();i++){
+        if(lines.charAt(i) == '\n'){
+          tabString.add(lines.substring(lastIndexOfNL,i)+"\n");
+          lastIndexOfNL = i+1;
+
+        }
+      }
+    else{
+      tabString.add("");
+      tabString.add(lines);
+      return tabString.toArray(new String[0]);
+    }
+
+    if(tabString.size() == 1)
+      tabString.add("");
+
+    return tabString.toArray(new String[0]);
   }
 
 }
