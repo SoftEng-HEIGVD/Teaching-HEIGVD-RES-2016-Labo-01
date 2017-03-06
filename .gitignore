@@ -107,3 +107,8 @@ fabric.properties
 
 # Code Recommenders
 .recommenders/
+
+# Ignore idea
+.idea/
+*.bin
+*.xml
