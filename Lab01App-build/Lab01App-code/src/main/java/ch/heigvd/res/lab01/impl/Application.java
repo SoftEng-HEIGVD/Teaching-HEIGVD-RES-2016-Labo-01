@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -20,6 +21,7 @@ import org.apache.commons.io.FileUtils;
 /**
  *
  * @author Olivier Liechti
+ * @author Christopher Meier
  */
 public class Application implements IApplication {
 
@@ -92,6 +94,7 @@ public class Application implements IApplication {
        * one method provided by this class, which is responsible for storing the content of the
        * quote in a text file (and for generating the directories based on the tags).
        */
+      storeQuote(quote, "quote-" + (i + 1) + ".utf8");
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
       for (String tag : quote.getTags()) {
         LOG.info("> " + tag);
@@ -125,12 +128,28 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    // Go to correct folder (create if needed)
+    String dir = WORKSPACE_DIRECTORY;
+    for (String tag : quote.getTags()) {
+      dir += "/" + tag;
+    }
+    new File(dir).mkdirs();
+
+    // Create file
+    String filepath = dir + "/" + filename;
+    File quoteFile = new File(filepath);
+    quoteFile.createNewFile();
+
+    // Write quote
+    Writer w = new OutputStreamWriter(new FileOutputStream(quoteFile), "UTF-8");
+    w.append(quote.getQuote());
+
+    w.close();
   }
   
   /**
    * This method uses a IFileExplorer to explore the file system and prints the name of each
-   * encountered file and directory.
+   * encountered file and directory.ki
    */
   void printFileNames(final Writer writer) {
     IFileExplorer explorer = new DFSFileExplorer();
@@ -142,13 +161,20 @@ public class Application implements IApplication {
          * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
          * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
          */
+        try {
+          writer.append(file.getPath());
+          writer.append("\n");
+        } catch (IOException ex) {
+          LOG.log(Level.SEVERE, "Could not print filename. {0}", ex.getMessage());
+          ex.printStackTrace();
+        }
       }
     });
   }
   
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    return "christopher.meier@heig-vd.ch";
   }
 
   @Override
