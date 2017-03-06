@@ -1,15 +1,8 @@
 package ch.heigvd.res.lab01.impl.transformers;
 
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FilterWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.Writer;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -23,7 +16,7 @@ import java.util.logging.Logger;
  * The subclasses have to implement the decorateWithFilters method, which instantiates
  * a list of filters and decorates the output writer with them.
  * 
- * @author Olivier Liechti
+ * @author Olivier Liechti, Basile Vu
  */
 public abstract class FileTransformer implements IFileVisitor {
 
@@ -49,15 +42,20 @@ public abstract class FileTransformer implements IFileVisitor {
       return;
     }
     try {
-      Reader reader = new InputStreamReader(new FileInputStream(file), "UTF-8");
-      Writer writer = new OutputStreamWriter(new FileOutputStream(file.getPath()+ ".out"), "UTF-8"); // the bug fix by teacher
+      Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+      Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file.getPath()+ ".out"), "UTF-8")); // the bug fix by teacher
       writer = decorateWithFilters(writer);
 
       /*
-       * There is a missing piece here: you have an input reader and an ouput writer (notice how the 
+       * There is a missing piece here: you have an input reader and an output writer (notice how the
        * writer has been decorated by the concrete subclass!). You need to write a loop to read the
        * characters and write them to the writer.
        */
+      int read = reader.read();
+      while (read != -1) {
+        writer.write(read);
+        read = reader.read();
+      }
       
       reader.close();
       writer.flush();

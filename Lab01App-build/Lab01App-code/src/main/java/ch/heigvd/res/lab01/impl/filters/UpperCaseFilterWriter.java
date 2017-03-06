@@ -6,7 +6,7 @@ import java.io.Writer;
 
 /**
  *
- * @author Olivier Liechti
+ * @author Olivier Liechti, Basile Vu
  */
 public class UpperCaseFilterWriter extends FilterWriter {
   
@@ -16,17 +16,23 @@ public class UpperCaseFilterWriter extends FilterWriter {
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    // Writes the char array from the string using our write function to write char arrays.
+    write(str.toCharArray(), off, len);
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    // Writes 'len' chars, starting char at pos 'off', using our write method for chars.
+    // If the offset is not smaller than the buffer length, we stop.
+    for (int i = off; i < cbuf.length && i < off + len; ++i) {
+      write(cbuf[i]);
+    }
   }
 
   @Override
   public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    // Directly writes the character to upper case.
+    out.write(Character.toUpperCase(c));
   }
 
 }
