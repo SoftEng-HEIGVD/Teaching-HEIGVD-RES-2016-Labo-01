@@ -22,7 +22,7 @@ public class Utils {
     public static String[] getNextLine(String lines) {
         char[] standardDelimiters = new char[]{'\r', '\n'};
         String  currentDelimiter = "";
-        int index = 0;
+        int index = -1;
 
         for(char delim : standardDelimiters) {
             int i = lines.indexOf(delim);
