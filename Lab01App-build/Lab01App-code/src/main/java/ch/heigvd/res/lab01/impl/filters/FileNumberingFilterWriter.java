@@ -17,25 +17,36 @@ import java.util.logging.Logger;
  */
 public class FileNumberingFilterWriter extends FilterWriter {
 
-  private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
+    private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
+    private int number = 1;
 
-  public FileNumberingFilterWriter(Writer out) {
-    super(out);
-  }
+    public FileNumberingFilterWriter(Writer out) throws IOException {
+        super(out);
+        writeHeading();
+    }
 
-  @Override
-  public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
+    @Override
+    public void write(String str, int off, int len) throws IOException {
+        write(str.toCharArray(), off, len);
+    }
 
-  @Override
-  public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
+    @Override
+    public void write(char[] cbuf, int off, int len) throws IOException {
+        for(int i = off; i < off + len; i++)
+            write(cbuf[i]);
+    }
 
-  @Override
-  public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
+    @Override
+    public void write(int c) throws IOException {
+        out.write(c);
+
+        if(c == '\n')
+            writeHeading();
+    }
+
+    private void writeHeading() throws IOException {
+        out.write(String.valueOf(number++));
+        out.write('\t');
+    }
 
 }
