@@ -20,7 +20,30 @@ public class Utils {
    * contain any line separator, then the first element is an empty string.
    */
   public static String[] getNextLine(String lines) {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    String[] n = new String[2];
+
+    // Find line jumps
+    int macos = lines.indexOf("\r");
+    int unix = lines.indexOf("\n");
+    int win = lines.indexOf("\r\n");
+
+    // Test windows first (needs two chars)
+    if(win >= 0){
+      n[0] = lines.substring(0, win+2);
+      n[1] = lines.substring(win+2, lines.length());
+    } else if (macos >= 0){
+      n[0] = lines.substring(0, macos+1);
+      n[1] = lines.substring(macos+1, lines.length());
+    } else if (unix >= 0){
+      n[0] = lines.substring(0, unix+1);
+      n[1] = lines.substring(unix+1, lines.length());
+    } else {
+      // No line jumps, all in the second case of the array
+      n[0] = "";
+      n[1] = lines;
+    }
+
+    return n;
   }
 
 }
