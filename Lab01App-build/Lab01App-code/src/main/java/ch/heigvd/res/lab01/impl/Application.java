@@ -7,15 +7,13 @@ import ch.heigvd.res.lab01.interfaces.IFileExplorer;
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
 import ch.heigvd.res.lab01.quotes.QuoteClient;
 import ch.heigvd.res.lab01.quotes.Quote;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.StringWriter;
-import java.io.Writer;
+
+import java.io.*;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOExceptionWithCause;
 
 /**
  *
@@ -86,12 +84,7 @@ public class Application implements IApplication {
     QuoteClient client = new QuoteClient();
     for (int i = 0; i < numberOfQuotes; i++) {
       Quote quote = client.fetchQuote();
-      /* There is a missing piece here!
-       * As you can see, this method handles the first part of the lab. It uses the web service
-       * client to fetch quotes. We have removed a single line from this method. It is a call to
-       * one method provided by this class, which is responsible for storing the content of the
-       * quote in a text file (and for generating the directories based on the tags).
-       */
+      storeQuote(quote, "quote-" + i + ".utf8");
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
       for (String tag : quote.getTags()) {
         LOG.info("> " + tag);
@@ -125,7 +118,22 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    String path = WORKSPACE_DIRECTORY + "/";
+    List<String> quoteTags = quote.getTags();
+
+    for(String quoteTag : quoteTags)
+      path += quoteTag + "/";
+
+    path += filename;
+    File file = new File(path);
+
+    //should never be null with this working directory
+    if(file.getParentFile() != null)
+      file.getParentFile().mkdirs();
+
+    FileWriter fw = new FileWriter(file);
+    fw.write(quote.getQuote());
+    fw.close();
   }
   
   /**
@@ -142,13 +150,21 @@ public class Application implements IApplication {
          * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
          * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
          */
+        try {
+          String path = file.getPath();
+          //path.replace('\\', '/');
+          writer.write(path + "\n");
+        }
+        catch(IOException e){
+          System.out.println("Exception getting canonical path");
+        }
       }
     });
   }
   
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    return "christopher.browne@heig-vd.ch";
   }
 
   @Override
