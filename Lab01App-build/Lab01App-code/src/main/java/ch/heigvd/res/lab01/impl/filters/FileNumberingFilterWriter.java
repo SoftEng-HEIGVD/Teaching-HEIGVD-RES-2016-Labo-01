@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 public class FileNumberingFilterWriter extends FilterWriter {
 
     private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
+    private static boolean checkForBackslashR = false;
     private int number = 1;
 
     public FileNumberingFilterWriter(Writer out) throws IOException {
@@ -38,10 +39,17 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
     @Override
     public void write(int c) throws IOException {
+        if(checkForBackslashR && c != '\n')
+            writeHeading();
+
+        checkForBackslashR = false;
+
         out.write(c);
 
         if(c == '\n')
             writeHeading();
+        else if(c == '\r')
+            checkForBackslashR = true;
     }
 
     private void writeHeading() throws IOException {
