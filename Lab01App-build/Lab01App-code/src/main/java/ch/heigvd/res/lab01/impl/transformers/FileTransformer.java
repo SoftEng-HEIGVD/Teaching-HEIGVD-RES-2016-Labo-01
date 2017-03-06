@@ -1,3 +1,13 @@
+/*
+ -----------------------------------------------------------------------------------
+ Course       : RES
+ Laboratory   : 1
+ File         : FileTransformer.java
+ Author       : Antoine Drabble
+ Date         : 10.03.2016
+ Goal         : Abstract class which defines the default visit method 
+ -----------------------------------------------------------------------------------
+*/
 package ch.heigvd.res.lab01.impl.transformers;
 
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
@@ -10,10 +20,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.io.IOUtils;
 
 /**
  * This abstract class implements the IFileVisitor interface and has the responsibility
@@ -43,6 +55,12 @@ public abstract class FileTransformer implements IFileVisitor {
    */
   public abstract Writer decorateWithFilters(Writer writer);
 
+  /**
+   * Decorate the writer with the filters and write the output file 
+   * with the decorated content of the utf-8 file (reader)
+   * 
+   * @param file 
+   */
   @Override
   public void visit(File file) {
     if (!file.isFile()) {
@@ -58,6 +76,7 @@ public abstract class FileTransformer implements IFileVisitor {
        * writer has been decorated by the concrete subclass!). You need to write a loop to read the
        * characters and write them to the writer.
        */
+      writer.write(IOUtils.toCharArray(reader));
       
       reader.close();
       writer.flush();
