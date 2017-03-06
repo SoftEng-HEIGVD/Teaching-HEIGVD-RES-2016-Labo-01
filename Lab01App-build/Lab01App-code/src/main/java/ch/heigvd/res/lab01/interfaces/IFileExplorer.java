@@ -26,3 +26,4 @@ public interface IFileExplorer {
   public void explore(File rootDirectory, IFileVisitor vistor);
   
 }
+
