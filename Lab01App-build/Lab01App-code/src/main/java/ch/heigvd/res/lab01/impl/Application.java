@@ -1,3 +1,14 @@
+/*
+ -----------------------------------------------------------------------------------
+ Course       : RES
+ Laboratory   : Labo-01
+ File         : Application.java
+ Author       : Olivier Liechti, Guillaume Serneels
+ Date         : 13.03.2016
+ But          : Main application class of the quote fetching and treatment 
+                application implemented during Labo-01
+ -----------------------------------------------------------------------------------
+*/
 package ch.heigvd.res.lab01.impl;
 
 import ch.heigvd.res.lab01.impl.explorers.DFSFileExplorer;
@@ -7,6 +18,7 @@ import ch.heigvd.res.lab01.interfaces.IFileExplorer;
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
 import ch.heigvd.res.lab01.quotes.QuoteClient;
 import ch.heigvd.res.lab01.quotes.Quote;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -28,6 +40,8 @@ public class Application implements IApplication {
    * to where the Java application is invoked.
    */
   public static String WORKSPACE_DIRECTORY = "./workspace/quotes";
+  
+  //private static final int BUFFER_SIZE = 512;
   
   private static final Logger LOG = Logger.getLogger(Application.class.getName());
   
@@ -92,6 +106,8 @@ public class Application implements IApplication {
        * one method provided by this class, which is responsible for storing the content of the
        * quote in a text file (and for generating the directories based on the tags).
        */
+      
+      this.storeQuote(quote, "quote-" + i + ".utf8" );
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
       for (String tag : quote.getTags()) {
         LOG.info("> " + tag);
@@ -125,7 +141,34 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+        //Get complete path
+      String fullName = WORKSPACE_DIRECTORY + File.separator;
+      for(String tag : quote.getTags())
+          fullName+= tag + File.separator;
+      fullName += filename;
+      
+      try{        
+            //Create the file
+        File f = new File(fullName);
+            //Create the directories
+        f.getParentFile().mkdirs();
+        f.createNewFile();
+        
+        //Create the stream
+        OutputStreamWriter outWriter = new 
+            OutputStreamWriter(new FileOutputStream(f), "UTF-8");
+        
+        //Using a buffered writer for optimal performances
+        BufferedWriter bos = new BufferedWriter(outWriter);
+        //write the quote to the file
+        bos.write(quote.getQuote());
+        //Flush and close
+        bos.flush();
+        bos.close();
+        
+      }catch(Exception e){
+          e.printStackTrace();
+      }
   }
   
   /**
@@ -142,13 +185,19 @@ public class Application implements IApplication {
          * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
          * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
          */
+         try{
+            //Visiting the file is writing the file path and a new line feed to the writer passed in argument
+            writer.write(file.getPath() + '\n');
+         }catch(Exception e){
+            e.printStackTrace();
+         }  
       }
     });
   }
   
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+      return "guillaume.serneels@heig-vd.ch";
   }
 
   @Override
