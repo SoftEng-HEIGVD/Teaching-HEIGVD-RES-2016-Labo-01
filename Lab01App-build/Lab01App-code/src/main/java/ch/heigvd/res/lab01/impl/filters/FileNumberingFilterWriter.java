@@ -18,6 +18,9 @@ import java.util.logging.Logger;
 public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
+  
+  private int lineNumber = 1;
+  private char previous;
 
   public FileNumberingFilterWriter(Writer out) {
     super(out);
@@ -25,17 +28,49 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    write(str.toCharArray(), off, len);
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    int length = off + len;
+    
+    if(off < 0 || len < 0 || 
+       length < 0 || length > cbuf.length) {
+      
+      throw new IndexOutOfBoundsException();
+    }
+    
+    for(int i = off; i < off + len; i++) {
+      write(cbuf[i]);
+    }
   }
 
   @Override
   public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    
+    // For the first line
+    if(previous == '\u0000') {
+      header();
+    }
+    
+    // For MacOS9
+    if(previous == '\r' && c != '\n') {
+      header();
+    }
+    
+    super.write(c);
+
+    if (c == '\n') {
+      header();
+    }
+    
+    previous = (char)c;
+  }
+  
+  private void header() throws IOException {
+      super.out.write(Integer.toString(lineNumber++));
+      super.write('\t');
   }
 
 }
