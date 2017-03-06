@@ -13,20 +13,27 @@ public class UpperCaseFilterWriter extends FilterWriter {
   public UpperCaseFilterWriter(Writer wrappedWriter) {
     super(wrappedWriter);
   }
-
+  
   @Override
   public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+      /*Call the function write with char[] in param*/
+      write(str.toCharArray(),off,len);
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+      /*for each character from offset(off) and lenght(len) in cbuf,
+      we call the function write which convert one character*/
+      for(int i = off ; i < off + len ; i ++) 
+      {
+          write((int)cbuf[i]);
+      }      
   }
 
   @Override
   public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+      /*Convert one character lowercase in Uppercase*/
+      super.write(Character.toUpperCase(c));
   }
 
 }
