@@ -1,5 +1,6 @@
 package ch.heigvd.res.lab01.impl.filters;
 
+import static ch.heigvd.res.lab01.impl.Utils.getNextLine;
 import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -17,25 +18,49 @@ import java.util.logging.Logger;
  */
 public class FileNumberingFilterWriter extends FilterWriter {
 
-  private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
+   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
+   private int line = 1;
+   private boolean firstLine = true;
 
-  public FileNumberingFilterWriter(Writer out) {
-    super(out);
-  }
+   public FileNumberingFilterWriter(Writer out) {
+      super(out);
+   }
 
-  @Override
-  public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
+   @Override
+   public void write(String str, int off, int len) throws IOException {
+      String[] sTab = getNextLine(str.substring(off, off + len));
+      if (firstLine == true) {
+         out.write(line++ + "\t"); // this is a counter for current line we are working on
+         firstLine = false;
+      }
+      while (sTab[0].length() != 0) { // same thing with others lines
+         out.write(sTab[0] + line++ + "\t");
+         sTab = getNextLine(sTab[1]);
+      }
+      if (sTab[1].length() != 0) {
+         out.write(sTab[1]);
+      }
+   }
 
-  @Override
-  public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
+   @Override
+   public void write(char[] cbuf, int off, int len) throws IOException {
+      this.write(new String(cbuf), off, len);
+   }
 
-  @Override
-  public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
+   @Override
+   public void write(int c) throws IOException {
+     if (firstLine == true) {
+            if (c != '\n') {
+               firstLine = false;
+                out.write(line++ + "\t"); // this is a counter for current line we are working on
+                
+            }
+        }
+        out.write(c);
+        if (c == '\n' || c == '\r') { // on next separator, use firstline var to begin a new line
+            firstLine = true;
+        }
+
+   }
 
 }
