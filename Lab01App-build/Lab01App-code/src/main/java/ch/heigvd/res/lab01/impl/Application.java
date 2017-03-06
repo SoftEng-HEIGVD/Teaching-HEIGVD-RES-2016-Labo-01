@@ -96,6 +96,8 @@ public class Application implements IApplication {
             for (String tag : quote.getTags()) {
                 LOG.info("> " + tag);
             }
+
+            storeQuote(quote, "quote-" + (i + 1) + ".utf8");
         }
     }
 
@@ -125,7 +127,19 @@ public class Application implements IApplication {
      * @throws IOException
      */
     void storeQuote(Quote quote, String filename) throws IOException {
-        throw new UnsupportedOperationException("The student has not implemented this method yet.");
+        String path = WORKSPACE_DIRECTORY;
+
+        for(String tag : quote.getTags())
+            path += "/" + tag;
+
+        new File(path).mkdirs();
+
+        File file = new File(path + "/" + filename);
+        file.createNewFile();
+
+        Writer writer = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
+        writer.write(quote.getQuote());
+        writer.close();
     }
 
     /**
@@ -142,6 +156,13 @@ public class Application implements IApplication {
                  * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
                  * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
                  */
+                try {
+                    writer.write(file.getPath());
+                    writer.write('\n');
+                } catch(IOException ioe) {
+                    LOG.log(Level.SEVERE, "Error of file IO");
+                    ioe.printStackTrace();
+                }
             }
         });
     }
