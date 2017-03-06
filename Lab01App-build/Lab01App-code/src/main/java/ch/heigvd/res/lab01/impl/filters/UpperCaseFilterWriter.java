@@ -7,6 +7,7 @@ import java.io.Writer;
 /**
  *
  * @author Olivier Liechti
+ * @author Christopher Meier
  */
 public class UpperCaseFilterWriter extends FilterWriter {
   
