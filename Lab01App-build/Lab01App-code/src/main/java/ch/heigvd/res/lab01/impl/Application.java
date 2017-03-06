@@ -5,21 +5,22 @@ import ch.heigvd.res.lab01.impl.transformers.CompleteFileTransformer;
 import ch.heigvd.res.lab01.interfaces.IApplication;
 import ch.heigvd.res.lab01.interfaces.IFileExplorer;
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
-import ch.heigvd.res.lab01.quotes.QuoteClient;
 import ch.heigvd.res.lab01.quotes.Quote;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import ch.heigvd.res.lab01.quotes.QuoteClient;
 import org.apache.commons.io.FileUtils;
 
+import java.io.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
+ * Main class of the program that will fetch quotes from a server and written it in utf8 files.
+ * After that, the files are visited a second time to put its content to uppercase and write a line
+ * number and a \t before all lines. The original content is not overwritten. We create a second file
+ * for that.
  *
  * @author Olivier Liechti
+ * @modifiedBy Sebastien Boson
  */
 public class Application implements IApplication {
 
@@ -30,7 +31,10 @@ public class Application implements IApplication {
   public static String WORKSPACE_DIRECTORY = "./workspace/quotes";
   
   private static final Logger LOG = Logger.getLogger(Application.class.getName());
-  
+
+  /**
+   * This the main method of the program.
+   */
   public static void main(String[] args) {
     
     /*
@@ -80,12 +84,20 @@ public class Application implements IApplication {
     }
   }
 
+  /**
+   * This method will fetch quotes from a server and written it in utf8 files.
+   *
+   * @param numberOfQuotes the number of quotes to be fetched
+   */
   @Override
   public void fetchAndStoreQuotes(int numberOfQuotes) throws IOException {
     clearOutputDirectory();
     QuoteClient client = new QuoteClient();
     for (int i = 0; i < numberOfQuotes; i++) {
       Quote quote = client.fetchQuote();
+      // call to the storeQuote method with the quote and the name of the quote's file (that will be created)
+      // in parameters
+      storeQuote(quote, "quote-" + (i + 1) + ".utf8");
       /* There is a missing piece here!
        * As you can see, this method handles the first part of the lab. It uses the web service
        * client to fetch quotes. We have removed a single line from this method. It is a call to
@@ -125,18 +137,49 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    String path = WORKSPACE_DIRECTORY;
+
+    // to build the path of the file (the directories)
+    for (String tag : quote.getTags()) {
+      path += File.separator + tag;
+    }
+
+    // first test to know if the specified path of directories already exists
+    if (!new File(path).exists()) {
+      // second test to know if an error occurred when trying to create the directories of the path
+      if (!new File(path).mkdirs()) {
+        // exception for the creation of directories
+        throw new IOException("Error for creating the directories of the path : '" + path + "'.");
+      }
+    }
+
+    // we create the file in the directories
+    FileOutputStream fileOutputStream = new FileOutputStream(path + File.separator + filename);
+    Writer writer = new OutputStreamWriter(fileOutputStream, "UTF-8");
+    BufferedWriter bufferedWriter = new BufferedWriter(writer);
+
+    bufferedWriter.write(quote.getQuote());
+
+    bufferedWriter.close();
   }
   
   /**
    * This method uses a IFileExplorer to explore the file system and prints the name of each
    * encountered file and directory.
+   *
+   * @param writer the writer to explore
    */
   void printFileNames(final Writer writer) {
     IFileExplorer explorer = new DFSFileExplorer();
     explorer.explore(new File(WORKSPACE_DIRECTORY), new IFileVisitor() {
       @Override
       public void visit(File file) {
+        try {
+          // we write the path of the file
+          writer.write(file.getPath() + "\n");
+        } catch (IOException ex) {
+          LOG.log(Level.SEVERE, null, ex);
+        }
         /*
          * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
          * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
@@ -145,12 +188,19 @@ public class Application implements IApplication {
       }
     });
   }
-  
+
+  /**
+   * This method just return the author email.
+   * @return author email
+   */
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    return "sebastien.boson@heig-vd.ch";
   }
 
+  /**
+   * This method explore the files in the specified rootDirectory.
+   */
   @Override
   public void processQuoteFiles() throws IOException {
     IFileExplorer explorer = new DFSFileExplorer();
