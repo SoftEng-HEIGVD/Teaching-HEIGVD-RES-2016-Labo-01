@@ -1,6 +1,8 @@
 package ch.heigvd.res.lab01.impl;
 
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -20,7 +22,22 @@ public class Utils {
    * contain any line separator, then the first element is an empty string.
    */
   public static String[] getNextLine(String lines) {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+
+    // Use regular expressions to go throught the string and search for one of the three line separators.
+    // If the pattern matche, divides the string just after the end of the term found
+    // Pattern : \r\n OR \r OR \n, Windows \r\n must be matched first
+    Pattern pattern = Pattern.compile("(\r\n|\r|\n)");
+    Matcher matcher = pattern.matcher(lines);
+    if (matcher.find()) {
+      return new String[] {
+          lines.substring(0, matcher.end()),
+          lines.substring(matcher.end())
+      };
+    }
+
+    // There is no new line separtor.
+    // Returns the array with the full lines in second position.
+    return new String[] { "", lines };
   }
 
 }
