@@ -18,6 +18,9 @@ import java.util.logging.Logger;
 public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
+  private int lineNumber = 1;
+  // Check if has \r character
+  private boolean hasSlashR = true;
 
   public FileNumberingFilterWriter(Writer out) {
     super(out);
@@ -25,17 +28,41 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    // String to array and call the adequate method
+    write(str.toCharArray(), off, len);
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    // For every character in string, call method write
+    for(int i = off; i < (off + len); i++){
+      write(cbuf[i]);
+    }
   }
 
   @Override
   public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    if(hasSlashR && c != '\n'){
+      writeHeadLine();
+    }
+    // if has \r before, the next character might not be \r
+    hasSlashR = false;
+
+    // write character
+    out.write(c);
+
+    if(c == '\n'){
+      writeHeadLine();
+    }
+    else if(c == '\r'){
+      hasSlashR = true;
+    }
+  }
+
+  private void writeHeadLine() throws IOException {
+    // use variable then increment it
+    out.write(String.valueOf(lineNumber++));
+    out.write('\t');
   }
 
 }
