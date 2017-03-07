@@ -7,12 +7,9 @@ import ch.heigvd.res.lab01.interfaces.IFileExplorer;
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
 import ch.heigvd.res.lab01.quotes.QuoteClient;
 import ch.heigvd.res.lab01.quotes.Quote;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.StringWriter;
-import java.io.Writer;
+
+import java.io.*;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -20,6 +17,7 @@ import org.apache.commons.io.FileUtils;
 /**
  *
  * @author Olivier Liechti
+ * @author Pierre-Benjamin Monaco
  */
 public class Application implements IApplication {
 
@@ -28,7 +26,7 @@ public class Application implements IApplication {
    * to where the Java application is invoked.
    */
   public static String WORKSPACE_DIRECTORY = "./workspace/quotes";
-  
+
   private static final Logger LOG = Logger.getLogger(Application.class.getName());
   
   public static void main(String[] args) {
@@ -96,6 +94,8 @@ public class Application implements IApplication {
       for (String tag : quote.getTags()) {
         LOG.info("> " + tag);
       }
+
+      storeQuote(quote,"quote-" + i + ".utf8");
     }
   }
   
@@ -125,7 +125,25 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    //Looks for tags and make directory from them
+    List<String> tags = quote.getTags();
+    String filePath = WORKSPACE_DIRECTORY;
+    for(String tag : tags)
+    {
+      filePath += "/" + tag;
+    }
+
+    //Creates directories
+    new File(filePath).mkdirs();
+
+    //Write quote text into the newly created file
+    BufferedWriter outStream = new BufferedWriter(new OutputStreamWriter(
+            new FileOutputStream(filePath + "/" + filename), "UTF-8"));
+    try {
+      outStream.write(quote.getQuote());
+    } finally {
+      outStream.close();
+    }
   }
   
   /**

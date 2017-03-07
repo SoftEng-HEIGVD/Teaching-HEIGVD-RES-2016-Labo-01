@@ -16,7 +16,16 @@ public class DFSFileExplorer implements IFileExplorer {
 
   @Override
   public void explore(File rootDirectory, IFileVisitor vistor) {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    if(rootDirectory.isFile())
+    {
+      vistor.visit(rootDirectory);
+    }
+    else
+    {
+      for(File fileInDir : rootDirectory.listFiles())
+      {
+        explore(fileInDir,vistor);
+      }
+    }
   }
-
 }
