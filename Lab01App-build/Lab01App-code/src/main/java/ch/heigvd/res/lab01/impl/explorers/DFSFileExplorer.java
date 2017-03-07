@@ -13,12 +13,14 @@ import java.util.Comparator;
  * files in the directory and then moves into the subdirectories.
  * 
  * @author Olivier Liechti
+ * @modified Colin Lavanchy
  */
 public class DFSFileExplorer implements IFileExplorer {
 
   @Override
   public void explore(File rootDirectory, IFileVisitor visitor) {
 
+      //Visiting current node either way (file or directory)
       visitor.visit(rootDirectory);
 
       if(rootDirectory.isDirectory()){
@@ -27,6 +29,8 @@ public class DFSFileExplorer implements IFileExplorer {
           if(files==null)
               return;
 
+          //We declare an anonymous File comparator such as files and
+          // directories are sorted alphabetically but separately
           Arrays.sort(files, new Comparator<File>() {
               @Override
               public int compare(File o1, File o2) {
@@ -42,14 +46,10 @@ public class DFSFileExplorer implements IFileExplorer {
               }
           });
 
-
+          //We then explore all subFiles
           for(File file:files){
               explore(file,visitor);
           }
       }
-
-
-
   }
-
 }

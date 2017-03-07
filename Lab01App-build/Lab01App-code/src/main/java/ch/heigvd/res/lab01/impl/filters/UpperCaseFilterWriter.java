@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- *
+ * This class simply decorates a writer in a way that transforms all
+ * passing string into their upper case equivalent.
  * @author Olivier Liechti
+ * @modified Colin Lavanchy
  */
 public class UpperCaseFilterWriter extends FilterWriter {
   

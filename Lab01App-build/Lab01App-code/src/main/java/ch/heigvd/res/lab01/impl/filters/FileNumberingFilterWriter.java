@@ -1,7 +1,5 @@
 package ch.heigvd.res.lab01.impl.filters;
 
-import ch.heigvd.res.lab01.impl.Utils;
-
 import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -16,15 +14,16 @@ import java.util.logging.Logger;
  * Hello\n\World -> 1\Hello\n2\tWorld
  *
  * @author Olivier Liechti
+ * @modified Colin Lavanchy
  */
 public class FileNumberingFilterWriter extends FilterWriter {
 
   private int lineCount = 1;
   private STATE state = STATE.NEW_LINE;
 
+  //This enumeration is used for the FSM logic behind the filter
   public enum STATE{
       NEW_LINE,
-      END_LINE,
       R_READ,
       STANDARD
   }
@@ -56,7 +55,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
           out.write(lineCount++ + "\t");
       }
 
-      //If new line
+      //If new line has begun then we check if it is the very first one
       if (state.equals(STATE.NEW_LINE)) {
           if(lineCount==1)
               out.write(lineCount++ + "\t");
@@ -65,8 +64,9 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
       out.write(c);
 
-      //Check if \r was previously read and \n just written -> \r\n separator
-      //or \n single separator
+      //Check if '\r' was previously read and '\n' just written -> '\r\n' separator
+      //or '\n' single separator (Such way of proceeding is only possible because both
+      // '\r\n' and '\n' basically ends with '\n'
       if(c=='\n') {
           state = STATE.NEW_LINE;
           out.write(lineCount++ + "\t");

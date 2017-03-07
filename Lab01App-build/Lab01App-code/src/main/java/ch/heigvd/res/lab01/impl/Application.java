@@ -15,8 +15,10 @@ import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 
 /**
- *
+ * Main class possessing the main and implementing all the logic
+ * for managing the quotes
  * @author Olivier Liechti
+ * @modified Colin Lavanchys
  */
 public class Application implements IApplication {
 
@@ -88,18 +90,10 @@ public class Application implements IApplication {
     QuoteClient client = new QuoteClient();
     for (int i = 0; i < numberOfQuotes; i++) {
       Quote quote = client.fetchQuote();
-      /* There is a missing piece here!
-       * As you can see, this method handles the first part of the lab. It uses the web service
-       * client to fetch quotes. We have removed a single line from this method. It is a call to
-       * one method provided by this class, which is responsible for storing the content of the
-       * quote in a text file (and for generating the directories based on the tags).
-       *//* There is a missing piece here!
-       * As you can see, this method handles the first part of the lab. It uses the web service
-       * client to fetch quotes. We have removed a single line from this method. It is a call to
-       * one method provided by this class, which is responsible for storing the content of the
-       * quote in a text file (and for generating the directories based on the tags).
-       */
+
+      //We store the quote in the workspace directory
       storeQuote(quote,WORKSPACE_DIRECTORY);
+
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
       for (String tag : quote.getTags()) {
         LOG.info("> " + tag);
@@ -141,7 +135,12 @@ public class Application implements IApplication {
           quotePath+=("/"+tag);
       }
 
-      //Creation of directories
+      /*
+       * Creation of directories using mkdirs()
+       * Powerful tool in this case because it creates
+       * intermediaries folders needed for the creation
+       * of the file on which the method is called.
+       */
       if(!new File(quotePath).mkdirs())
           LOG.warning("Unable to create directory structure : "+quotePath);
 
@@ -149,6 +148,7 @@ public class Application implements IApplication {
 
       File quoteFile = new File(quotePath);
 
+      //We create a BufferedOutputStream and then we write the quote in it in UTF-8
       BufferedOutputStream bw = new BufferedOutputStream(new FileOutputStream(quoteFile));
       bw.write(quote.getQuote().getBytes("UTF-8"));
 
@@ -165,6 +165,11 @@ public class Application implements IApplication {
     explorer.explore(new File(WORKSPACE_DIRECTORY), new IFileVisitor() {
       @Override
       public void visit(File file) {
+          /*
+           * We declare the lambda function for it to
+           * simply write the path of all files visited
+           * to a writer.
+           */
           try {
               writer.write(file.getPath()+"\n");
           } catch (IOException e) {
