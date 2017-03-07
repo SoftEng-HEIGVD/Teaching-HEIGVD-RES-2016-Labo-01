@@ -4,6 +4,7 @@ import java.util.logging.Logger;
 
 /**
  * @author Olivier Liechti
+ * @author Lucas Elisei (@faku99)
  */
 public class Utils {
 
