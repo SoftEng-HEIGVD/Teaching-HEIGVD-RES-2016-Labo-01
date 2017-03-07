@@ -20,30 +20,29 @@ public class DFSFileExplorer implements IFileExplorer {
   @Override
   public void explore(File rootDirectory, IFileVisitor vistor)
   {
+     // Visit the directory itself
+     vistor.visit(rootDirectory);
 
-     // If the rootDirectory exists and vistor exists
-     if (rootDirectory != null && vistor != null)
+     // If the file is a directory
+     if (rootDirectory.isDirectory())
      {
-        //vistor.visit(rootDirectory);
-
+        // Create an array with all files and directories present in this directory
         File[] files = rootDirectory.listFiles();
 
-        if (files == null || files.length == 0)
-           return;
-
+        // Sort the list
         Arrays.sort(files);
 
-        // For each files found, execute the visit function
+        // Visit each file in the array
         for (File file : files)
         {
-           vistor.visit(file);
-
-           // If the file is a directory, go inside recursively
-           if (file.isDirectory())
+           if(file.isDirectory())
            {
               explore(file, vistor);
            }
+           else
+              vistor.visit(file);
         }
      }
+
   }
 }
