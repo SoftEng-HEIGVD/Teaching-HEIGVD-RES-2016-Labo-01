@@ -25,17 +25,23 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    String[] splittedStr = str.split("\n");
+    String newString = new String();
+    for(int i = 1; i <= str.length(); ++i)
+    {
+      newString += i + str.charAt(i);
+    }
+    str = newString;
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    super.write(cbuf,off,len);
   }
 
   @Override
   public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    super.write(c);
   }
 
 }
