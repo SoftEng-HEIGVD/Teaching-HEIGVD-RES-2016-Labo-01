@@ -18,6 +18,7 @@ public class DFSFileExplorer implements IFileExplorer {
    public void explore(File rootDirectory, IFileVisitor vistor) {
       File[] listOfFiles;
       try {
+         vistor.visit(rootDirectory);
          // Get root directory files list
          listOfFiles = rootDirectory.listFiles();
       } catch (NullPointerException e) {
