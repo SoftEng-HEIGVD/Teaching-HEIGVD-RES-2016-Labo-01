@@ -138,7 +138,7 @@ public class Application implements IApplication {
      
      new File(path).mkdirs();
      
-     File newQuote = new File(path,filename);
+     File newQuote = new File(path + "/" + filename);
      newQuote.createNewFile();
      
      
@@ -146,7 +146,6 @@ public class Application implements IApplication {
      OutputStreamWriter w = new OutputStreamWriter(os,"UTF-8");
      
      w.write(quote.getQuote());
-     w.flush();
      w.close();
      os.close();
   }
@@ -166,8 +165,7 @@ public class Application implements IApplication {
             * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
             */
          try {
-            writer.write(file.getPath());
-            writer.flush();
+            writer.write(file.getPath() + "\n");
          } catch (IOException ex) {
             Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
          }
