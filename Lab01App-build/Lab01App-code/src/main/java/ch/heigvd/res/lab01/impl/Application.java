@@ -9,10 +9,8 @@ import ch.heigvd.res.lab01.quotes.Quote;
 import ch.heigvd.res.lab01.quotes.QuoteClient;
 import org.apache.commons.io.FileUtils;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.io.*;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,6 +29,7 @@ public class Application implements IApplication
    private static final Logger LOG = Logger.getLogger(Application.class.getName());
 
    private String email;
+   private static int quoteNumber = 1;
 
    public Application()
    {
@@ -143,13 +142,41 @@ public class Application implements IApplication
     */
    void storeQuote(Quote quote, String filename) throws IOException
    {
+      String path = filename;
+      List<String> listTags = quote.getTags();
+      String q = quote.getQuote();
 
+      // Creating the root directory
+      new File(path).mkdir();
+      path += '/';
+
+      for (int i = 0; i < listTags.size(); i++)
+      {
+         path += listTags.get(i) + '/';
+         new File(path).mkdirs();
+      }
+
+      // Create the name for the new file
+      path += "quote-" + quoteNumber + ".utf8";
+
+      // Create the new file
+      new File(path).createNewFile();
+
+      // Write the content to the file
+      try (Writer writer = new BufferedWriter(new OutputStreamWriter(
+              new FileOutputStream(path), "utf-8")))
+      {
+         writer.write(q);
+      }
+
+      quoteNumber++;
    }
 
    /**
     * This method uses a IFileExplorer to explore the file system and prints the name of each
     * encountered file and directory.
     */
+   //TODO this PITA portion of code
    void printFileNames(final Writer writer)
    {
       IFileExplorer explorer = new DFSFileExplorer();
@@ -160,9 +187,13 @@ public class Application implements IApplication
          {
             try
             {
-               writer.write(file.getName() + file.getPath());
-            }
-            catch (IOException e)
+               if (file.isDirectory())
+                  writer.write(file.getPath());
+               else if (file.isFile())
+                  writer.write(file.getPath() + file.getName());
+
+               writer.write('\n');
+            } catch (IOException e)
             {
                e.printStackTrace();
             }
