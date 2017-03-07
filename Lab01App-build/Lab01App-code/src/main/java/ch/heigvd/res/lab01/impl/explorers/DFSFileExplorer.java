@@ -15,6 +15,7 @@ import java.util.List;
  * files in the directory and then moves into the subdirectories.
  *
  * @author Olivier Liechti
+ * @author Lucas Elisei (@faku99)
  */
 public class DFSFileExplorer implements IFileExplorer {
 
@@ -23,11 +24,20 @@ public class DFSFileExplorer implements IFileExplorer {
         // We visit the current directory.
         visitor.visit(rootDirectory);
 
+        // We check that the files list is not null.
+        File[] filesList = rootDirectory.listFiles();
+        if(filesList == null) {
+            return;
+        }
+
         // We store the directories so we can process them later.
         List<File> directories = new ArrayList<File>();
 
         // Then, we iterate over all the files in the current directory.
-        for(File file : rootDirectory.listFiles()) {
+        // We must do it this way so we are sure that we process the files before
+        // sub-folders because the behaviour of `File.listFiles()` can change
+        // depending of the operating system.
+        for(File file : filesList) {
             // If the file is indeed a file, we let the visitor visit it.
             if(file.isFile()) {
                 visitor.visit(file);
