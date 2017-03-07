@@ -19,8 +19,8 @@ public class FileNumberingFilterWriter extends FilterWriter
 {
 
    private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
-   private  int counter;
-   private  boolean firstCall;
+   private int counter;
+   private boolean firstCall;
    private boolean previousWasCR;
 
    public FileNumberingFilterWriter(Writer out)
@@ -62,7 +62,7 @@ public class FileNumberingFilterWriter extends FilterWriter
    public void write(int c) throws IOException
    {
       // Beginning of line because it's the first call to the write function
-      if(firstCall)
+      if (firstCall)
       {
          // Add the number and the tab at the beginning
          String str = counter++ + "\t";
@@ -81,7 +81,7 @@ public class FileNumberingFilterWriter extends FilterWriter
          super.write(str, 0, str.length());
       }
       // Otherwise if we have a \r new line and no previous \r
-      else if (c == '\r' && !previousWasCR)
+      else if (c == '\r')
       {
          str = "\r";
          previousWasCR = true;
@@ -90,7 +90,7 @@ public class FileNumberingFilterWriter extends FilterWriter
       else
       {
          // If the previous written char was a CR
-         if(previousWasCR)
+         if (previousWasCR)
          {
             str = counter++ + "\t";
             super.write(str, 0, str.length());

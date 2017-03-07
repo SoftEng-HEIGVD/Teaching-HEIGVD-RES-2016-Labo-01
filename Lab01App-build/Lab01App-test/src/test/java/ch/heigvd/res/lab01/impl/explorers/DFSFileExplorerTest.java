@@ -15,6 +15,7 @@ import org.junit.Test;
 /**
  *
  * @author Olivier Liechti
+ * @modified by :  Matthieu Chatelan
  */
 public class DFSFileExplorerTest {
 
