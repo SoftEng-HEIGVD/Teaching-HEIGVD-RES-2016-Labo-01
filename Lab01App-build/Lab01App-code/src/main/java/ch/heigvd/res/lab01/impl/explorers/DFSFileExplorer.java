@@ -30,14 +30,24 @@ public class DFSFileExplorer implements IFileExplorer {
           Arrays.sort(files, new Comparator<File>() {
               @Override
               public int compare(File o1, File o2) {
-                  return o1.getName().compareTo(o2.getName());
+                  if(o1.isFile()&&o2.isDirectory()){
+                      return -1;
+                  }
+                  else if(o1.isDirectory()&&o2.isFile()){
+                      return 1;
+                  }
+                  else{
+                      return o1.getName().compareTo(o2.getName());
+                  }
               }
           });
+
 
           for(File file:files){
               explore(file,visitor);
           }
       }
+
 
 
   }
