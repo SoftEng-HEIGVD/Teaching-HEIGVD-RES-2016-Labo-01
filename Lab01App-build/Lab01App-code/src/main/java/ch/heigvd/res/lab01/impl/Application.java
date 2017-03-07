@@ -131,7 +131,23 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    String textPath = WORKSPACE_DIRECTORY;
+    
+    // construction of the path
+    for(String s : quote.getTags()){
+        textPath += "/" + s; 
+    }
+    // add the name of the file
+    textPath += "/" + filename;
+    Path path = Paths.get(textPath);
+
+    Files.createDirectories(path.getParent());
+
+    try {
+      Files.createFile(path);
+    } catch (FileAlreadyExistsException e) {
+      System.err.println("already exists: " + e.getMessage());
+    }
   }
   
   /**
