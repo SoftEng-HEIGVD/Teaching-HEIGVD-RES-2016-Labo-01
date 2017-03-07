@@ -148,7 +148,8 @@ public class Application implements IApplication {
   
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+      return "aurelie.levy@heig-vd.ch";
+    //throw new UnsupportedOperationException("The student has not implemented this method yet.");
   }
 
   @Override
@@ -156,5 +157,6 @@ public class Application implements IApplication {
     IFileExplorer explorer = new DFSFileExplorer();
     explorer.explore(new File(WORKSPACE_DIRECTORY), new CompleteFileTransformer());    
   }
+
 
 }
