@@ -13,6 +13,10 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -30,6 +34,8 @@ public class Application implements IApplication {
   public static String WORKSPACE_DIRECTORY = "./workspace/quotes";
   
   private static final Logger LOG = Logger.getLogger(Application.class.getName());
+  
+  private final String authorEmail = "basile.chatillon@heig-vd.ch";
   
   public static void main(String[] args) {
     
@@ -148,7 +154,7 @@ public class Application implements IApplication {
   
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    return authorEmail;
   }
 
   @Override
