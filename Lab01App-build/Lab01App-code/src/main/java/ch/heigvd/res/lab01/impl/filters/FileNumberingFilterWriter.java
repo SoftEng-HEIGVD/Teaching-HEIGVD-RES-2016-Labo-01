@@ -45,7 +45,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
     if(hasSlashR && c != '\n'){
       writeHeadLine();
     }
-    // if has \r before, the next character might not be \r
+    // if has \r before, the next character will not be \r
     hasSlashR = false;
 
     // write character
@@ -59,6 +59,9 @@ public class FileNumberingFilterWriter extends FilterWriter {
     }
   }
 
+  /**
+   * This method write the heads characters of a line (the line number, then a tab character)
+   */
   private void writeHeadLine() throws IOException {
     // use variable then increment it
     out.write(String.valueOf(lineNumber++));

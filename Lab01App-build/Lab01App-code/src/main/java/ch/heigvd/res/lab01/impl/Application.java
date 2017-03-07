@@ -126,7 +126,7 @@ public class Application implements IApplication {
     // add the filename to the path
     path += "/" + filename;
 
-    // Create object file
+    // Create the object file
     File f = new File(path);
     // Create directory
     f.getParentFile().mkdirs();
@@ -154,7 +154,7 @@ public class Application implements IApplication {
           writer.write(file.getPath() + "\n");
         }
         catch(IOException e) {
-          LOG.log(Level.SEVERE, "Couldn't write quote !", e.getMessage());
+          LOG.log(Level.SEVERE, "Couldn't write path !", e.getMessage());
           e.printStackTrace();
         }
       }
