@@ -30,6 +30,13 @@ public class Application implements IApplication {
   public static String WORKSPACE_DIRECTORY = "./workspace/quotes";
   
   private static final Logger LOG = Logger.getLogger(Application.class.getName());
+
+  private String email;
+
+  public Application()
+  {
+     email = "matthieu.chatelan@heig-vd.ch";
+  }
   
   public static void main(String[] args) {
     
@@ -92,6 +99,8 @@ public class Application implements IApplication {
        * one method provided by this class, which is responsible for storing the content of the
        * quote in a text file (and for generating the directories based on the tags).
        */
+      storeQuote(quote, WORKSPACE_DIRECTORY);
+
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
       for (String tag : quote.getTags()) {
         LOG.info("> " + tag);
@@ -148,7 +157,7 @@ public class Application implements IApplication {
   
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+     return email;
   }
 
   @Override
