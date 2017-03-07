@@ -24,10 +24,12 @@ import java.util.logging.Logger;
  * a list of filters and decorates the output writer with them.
  * 
  * @author Olivier Liechti
+ * @modified Colin Lavanchy
  */
 public abstract class FileTransformer implements IFileVisitor {
 
   private static final Logger LOG = Logger.getLogger(FileTransformer.class.getName());
+  private static final int BUFFER_SIZE = 1000;
   private final List<FilterWriter> filters = new ArrayList<>();
   
   /**
@@ -53,11 +55,15 @@ public abstract class FileTransformer implements IFileVisitor {
       Writer writer = new OutputStreamWriter(new FileOutputStream(file.getPath()+ ".out"), "UTF-8"); // the bug fix by teacher
       writer = decorateWithFilters(writer);
 
-      /*
-       * There is a missing piece here: you have an input reader and an ouput writer (notice how the 
-       * writer has been decorated by the concrete subclass!). You need to write a loop to read the
-       * characters and write them to the writer.
-       */
+      /*We here simply read each characters from the stream.
+      * Note how we register the effective size of read data
+      * in order to write the exact number just after that.
+      */
+      char[] buffer = new char[BUFFER_SIZE];
+      int read;
+      while((read=reader.read(buffer))!=-1){
+        writer.write(buffer,0,read);
+      }
       
       reader.close();
       writer.flush();

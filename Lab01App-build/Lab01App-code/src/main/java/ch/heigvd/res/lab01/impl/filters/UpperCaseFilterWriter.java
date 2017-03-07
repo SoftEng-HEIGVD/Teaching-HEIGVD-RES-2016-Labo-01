@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- *
+ * This class simply decorates a writer in a way that transforms all
+ * passing string into their upper case equivalent.
  * @author Olivier Liechti
+ * @modified Colin Lavanchy
  */
 public class UpperCaseFilterWriter extends FilterWriter {
   
@@ -16,17 +18,24 @@ public class UpperCaseFilterWriter extends FilterWriter {
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    String upper = str.toUpperCase();
+    out.write(upper,off,len);
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+      char[] upper = new char[cbuf.length];
+
+      for(int i=0;i<cbuf.length;i++){
+          upper[i]=Character.toUpperCase(cbuf[i]);
+      }
+
+      out.write(upper,off,len);
   }
 
   @Override
   public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+      out.write(Character.toUpperCase(c));
   }
 
 }

@@ -14,8 +14,19 @@ import java.util.logging.Logger;
  * Hello\n\World -> 1\Hello\n2\tWorld
  *
  * @author Olivier Liechti
+ * @modified Colin Lavanchy
  */
 public class FileNumberingFilterWriter extends FilterWriter {
+
+  private int lineCount = 1;
+  private STATE state = STATE.NEW_LINE;
+
+  //This enumeration is used for the FSM logic behind the filter
+  public enum STATE{
+      NEW_LINE,
+      R_READ,
+      STANDARD
+  }
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
 
@@ -25,17 +36,43 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+        for(int i=off;i<off+len;i++)
+            write(str.charAt(i));
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+      for(int i=off;i<off+len;i++)
+          write(cbuf[i]);
   }
 
   @Override
   public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+
+      //Checking if previous \r was single separator
+      if(state.equals(STATE.R_READ)&&c!='\n'){
+            state = STATE.NEW_LINE;
+          out.write(lineCount++ + "\t");
+      }
+
+      //If new line has begun then we check if it is the very first one
+      if (state.equals(STATE.NEW_LINE)) {
+          if(lineCount==1)
+              out.write(lineCount++ + "\t");
+          state = STATE.STANDARD;
+      }
+
+      out.write(c);
+
+      //Check if '\r' was previously read and '\n' just written -> '\r\n' separator
+      //or '\n' single separator (Such way of proceeding is only possible because both
+      // '\r\n' and '\n' basically ends with '\n'
+      if(c=='\n') {
+          state = STATE.NEW_LINE;
+          out.write(lineCount++ + "\t");
+      }
+      else if(c=='\r')
+          state = STATE.R_READ;
   }
 
 }
