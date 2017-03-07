@@ -9,24 +9,37 @@ import java.io.Writer;
  * @author Olivier Liechti
  */
 public class UpperCaseFilterWriter extends FilterWriter {
-  
-  public UpperCaseFilterWriter(Writer wrappedWriter) {
-    super(wrappedWriter);
-  }
+    
+    public UpperCaseFilterWriter(Writer wrappedWriter) {
+        super(wrappedWriter);
+    }
+    
+    @Override
+    public void write(String str, int off, int len) throws IOException {
+        for (int i = off; i < off + len; i++) {
+            this.write(str.charAt(i));
+        }
 
-  @Override
-  public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
-
-  @Override
-  public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
-
-  @Override
-  public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
-
+        //throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    }
+    
+    @Override
+    public void write(char[] cbuf, int off, int len) throws IOException {
+        String str = "";
+        for(int i = 0; i < cbuf.length; i++){
+            str += cbuf[i];
+        }
+        write(str, off, len);
+        //throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    }
+    
+    @Override
+    public void write(int c) throws IOException {
+        if(c >= 97 && c <= 122){
+            c = c-32;
+        }
+        out.write(c);
+        //throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    }
+    
 }
