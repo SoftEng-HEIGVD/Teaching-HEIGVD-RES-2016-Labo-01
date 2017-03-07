@@ -9,6 +9,8 @@ import java.util.logging.Logger;
 public class Utils {
 
    private static final Logger LOG = Logger.getLogger(Utils.class.getName());
+   
+   private static final String[] DELIMITERS = {"\r\n", "\r", "\n"};
 
    /**
     * This method looks for the next new line separators (\r, \n, \r\n) to
@@ -22,19 +24,20 @@ public class Utils {
     */
    public static String[] getNextLine(String lines) {
       String[] output = {"", lines}; // Output array 
-      int index = 0; // Index at which we would find the delimiters
+      int index = -1; // Index at which we would find the delimiters
       
-      // Search for the first delimiter
-      index = lines.indexOf("\r\n");
       
-      if (index == -1) { // If not found, search for the other onw
-         index = lines.indexOf('\r');
-      } else { // If found, align index on last char of the delimiter
-         index += 1;
+      // Go through delimiters and continue while we haven't find one
+      for (int i = 0; i < DELIMITERS.length; ++i) {
+         if (index == -1) {
+            index = lines.indexOf(DELIMITERS[i]);
+            if (index != -1)
+               index += DELIMITERS[i].length() - 1; // place the index at the end
+         } else {
+            break;
+         }
       }
-      if (index == -1) { // If still not found, search for the last
-         index = lines.indexOf('\n');
-      }
+      
       if (index == -1) { // If not match found, return the default output
          return output;
       } 
