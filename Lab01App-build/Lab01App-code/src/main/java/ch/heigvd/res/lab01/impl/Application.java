@@ -19,7 +19,7 @@ import org.apache.commons.io.FileUtils;
 
 /**
  *
- * @author Olivier Liechti
+ * @author Olivier Liechti, Gabriel Luthier
  */
 public class Application implements IApplication {
 
@@ -148,7 +148,7 @@ public class Application implements IApplication {
   
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    return "gabriel.luthier@heig-vd.ch";
   }
 
   @Override
