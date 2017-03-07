@@ -20,7 +20,32 @@ public class Utils {
    * contain any line separator, then the first element is an empty string.
    */
   public static String[] getNextLine(String lines) {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+     String[] newLines = new String[2];
+     int index;
+     
+     //find the first occurence of a delimiter
+     for(index = 0; index < lines.length(); index++){
+        char currChar = lines.charAt(index);
+        if(currChar == '\r' || currChar == '\n')
+           break;
+     }
+     
+     //check if there is a second delimiter
+     if((index + 1 ) < lines.length() && lines.charAt(index + 1) == '\n' && lines.charAt(index) == '\r')
+        index++;
+     
+     //if there is a delim
+     if (index < lines.length()){
+        newLines[0] = lines.substring(0, index+1);
+        newLines[1] = lines.substring(index + 1);
+     }
+     // if not
+     else{
+        newLines[0] = "";
+        newLines[1] = lines;
+     }
+     
+     return newLines;
   }
 
 }
