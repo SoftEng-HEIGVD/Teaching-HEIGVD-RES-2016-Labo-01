@@ -3,6 +3,7 @@ package ch.heigvd.res.lab01.impl.filters;
 import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -19,20 +20,38 @@ import java.util.logging.Logger;
 public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
+  private int number;
+
+  private void numberingFile() throws IOException {
+        out.write(String.valueOf(++number));
+        out.write('\t');
+  }
 
   public FileNumberingFilterWriter(Writer out) {
     super(out);
+    
+    try
+    {
+        numberingFile();
+    }
+    catch(IOException ex)
+    {
+        LOG.log(Level.SEVERE, "Could not write file numbering. {0}", ex.getMessage());
+        ex.printStackTrace();
+    }
   }
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    write(str.toCharArray(), off, len);
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
+    for(int i = off; i < off + len; ++i)
+    {
+        write(cbuf[i]);
+    }
 
   @Override
   public void write(int c) throws IOException {
