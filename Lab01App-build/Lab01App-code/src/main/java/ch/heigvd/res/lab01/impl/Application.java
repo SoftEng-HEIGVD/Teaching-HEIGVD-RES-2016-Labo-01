@@ -134,7 +134,7 @@ public class Application implements IApplication {
     void storeQuote(Quote quote, String filename) throws IOException {
         // We retrieve the workspace directory and add all the tags to the file path.
         String path = WORKSPACE_DIRECTORY;
-        for(String tag : quote.getTags()) {
+        for (String tag : quote.getTags()) {
             path = path.concat("/" + tag);
         }
 
@@ -149,7 +149,8 @@ public class Application implements IApplication {
         Writer writer = new OutputStreamWriter(new FileOutputStream(quoteFile), CHARSET);
         writer.write(quote.getQuote());
 
-        // Finally, we close the writer.
+        // Finally, we flush the data and close the writer.
+        writer.flush();
         writer.close();
     }
 
@@ -164,8 +165,7 @@ public class Application implements IApplication {
             public void visit(File file) {
                 try {
                     writer.write(file.getPath() + "\n");
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }

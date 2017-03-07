@@ -21,23 +21,23 @@ public class Utils {
      */
     public static String[] getNextLine(String lines) {
         // We define the separators.
-        // WARNING: The order is important here ('\r\n' should be detected before
+        // WARNING: The order is important here ("\r\n" should be detected before
         // '\r' or '\n').
-        String[] separators = { "\r\n", "\n", "\r" };
+        String[] separators = {"\r\n", "\n", "\r"};
 
         // Max value.
         int minIndex = lines.length();
 
-        // Default values.
+        // Default return values.
         String leftString = "";
         String rightString = lines;
 
-        for(String separator : separators) {
+        for (String separator : separators) {
             // We search for the first separator.
             int index = lines.indexOf(separator);
 
             // If there is one, we update `minIndex`, `leftString` and `rightString`.
-            if(index >= 0 && index < minIndex) {
+            if (index >= 0 && index < minIndex) {
                 minIndex = index;
 
                 leftString = lines.substring(0, minIndex + separator.length());
@@ -45,7 +45,7 @@ public class Utils {
             }
         }
 
-        return new String[] { leftString, rightString };
+        return new String[]{leftString, rightString};
     }
 
 }

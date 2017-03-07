@@ -26,7 +26,7 @@ public class DFSFileExplorer implements IFileExplorer {
 
         // We check that the files list is not null.
         File[] filesList = rootDirectory.listFiles();
-        if(filesList == null) {
+        if (filesList == null) {
             return;
         }
 
@@ -37,9 +37,9 @@ public class DFSFileExplorer implements IFileExplorer {
         // We must do it this way so we are sure that we process the files before
         // sub-folders because the behaviour of `File.listFiles()` can change
         // depending of the operating system.
-        for(File file : filesList) {
+        for (File file : filesList) {
             // If the file is indeed a file, we let the visitor visit it.
-            if(file.isFile()) {
+            if (file.isFile()) {
                 visitor.visit(file);
             }
             // If the file is a directory, we add it to the list.
@@ -49,8 +49,8 @@ public class DFSFileExplorer implements IFileExplorer {
         }
 
         // After processing the files, we process the directories.
-        for(File directory : directories) {
-            this.explore(directory, visitor);
+        for (File directory : directories) {
+            explore(directory, visitor);
         }
     }
 

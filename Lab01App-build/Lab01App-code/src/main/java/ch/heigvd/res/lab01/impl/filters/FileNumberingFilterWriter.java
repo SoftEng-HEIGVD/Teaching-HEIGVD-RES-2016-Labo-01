@@ -36,14 +36,14 @@ public class FileNumberingFilterWriter extends FilterWriter {
     @Override
     public void write(String str, int off, int len) throws IOException {
         for (int i = off; i < off + len; ++i) {
-            this.write(str.charAt(i));
+            write(str.charAt(i));
         }
     }
 
     @Override
     public void write(char[] cbuf, int off, int len) throws IOException {
         for (int i = off; i < off + len; ++i) {
-            this.write(cbuf[i]);
+            write(cbuf[i]);
         }
     }
 
@@ -53,7 +53,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
         // and set the flag to false.
         if (isFirstChar) {
             isFirstChar = false;
-            this.printNewLineNumber();
+            printNewLineNumber();
         }
 
         // Every time we encounter the LF character, we start a new line.
@@ -67,7 +67,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
                 break;
 
             default:
-                if(previousChar == '\r') {
+                if (previousChar == '\r') {
                     printNewLineNumber();
                 }
 
