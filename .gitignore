@@ -107,3 +107,6 @@ fabric.properties
 
 # Code Recommenders
 .recommenders/
+
+#Test files
+Lab01App-build/Lab01App-test/
