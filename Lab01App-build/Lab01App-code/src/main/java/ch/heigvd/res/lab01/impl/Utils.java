@@ -1,6 +1,8 @@
 package ch.heigvd.res.lab01.impl;
 
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -20,7 +22,22 @@ public class Utils {
    * contain any line separator, then the first element is an empty string.
    */
   public static String[] getNextLine(String lines) {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+
+    Pattern pattern = Pattern.compile("\r\n|\r|\n");
+    Matcher matcher = pattern.matcher(lines);
+    if(matcher.find()){
+      int offset = 1;
+      if(lines.indexOf("\r\n") != -1)
+      {
+        ++offset;
+      }
+
+      return new String[]{lines.substring(0,matcher.start() + offset),lines.substring((matcher.start() + offset))};
+    }
+    else
+    {
+      return new String[]{"",lines};
+    }
   }
 
 }

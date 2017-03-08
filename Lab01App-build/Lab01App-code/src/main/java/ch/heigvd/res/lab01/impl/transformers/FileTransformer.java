@@ -10,6 +10,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.ByteOrder;
+import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -49,15 +51,18 @@ public abstract class FileTransformer implements IFileVisitor {
       return;
     }
     try {
+      //The file doesn't exists at the beginning
+      (new File(file.getPath()+ ".out")).createNewFile();
+
       Reader reader = new InputStreamReader(new FileInputStream(file), "UTF-8");
       Writer writer = new OutputStreamWriter(new FileOutputStream(file.getPath()+ ".out"), "UTF-8"); // the bug fix by teacher
       writer = decorateWithFilters(writer);
 
-      /*
-       * There is a missing piece here: you have an input reader and an ouput writer (notice how the 
-       * writer has been decorated by the concrete subclass!). You need to write a loop to read the
-       * characters and write them to the writer.
-       */
+      int cReader;
+      while((cReader = reader.read()) != -1)
+      {
+        writer.write(cReader);
+      }
       
       reader.close();
       writer.flush();

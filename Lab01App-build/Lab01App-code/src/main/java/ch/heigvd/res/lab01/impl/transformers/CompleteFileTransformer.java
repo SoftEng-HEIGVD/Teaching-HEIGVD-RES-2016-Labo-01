@@ -4,6 +4,7 @@ import ch.heigvd.res.lab01.impl.filters.FileNumberingFilterWriter;
 import ch.heigvd.res.lab01.impl.filters.UpperCaseFilterWriter;
 
 import java.io.Writer;
+import java.util.Random;
 
 /**
  * This class returns a writer decorated with two filters: an instance of
@@ -21,5 +22,4 @@ public class CompleteFileTransformer extends FileTransformer {
     writer = new FileNumberingFilterWriter(new UpperCaseFilterWriter(writer));
     return writer; 
   }
-
 }

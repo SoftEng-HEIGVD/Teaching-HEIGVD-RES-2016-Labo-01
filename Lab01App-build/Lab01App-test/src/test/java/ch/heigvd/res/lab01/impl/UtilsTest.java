@@ -1,5 +1,6 @@
 package ch.heigvd.res.lab01.impl;
 
+import java.util.Arrays;
 import java.util.logging.Logger;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -17,6 +18,8 @@ public class UtilsTest {
     String lines = "hello\r\nworld\r\n";
     String[] r1 = Utils.getNextLine(lines);
     String[] e1 = {"hello\r\n", "world\r\n"};
+    System.out.println(Arrays.toString(r1));
+    System.out.println(Arrays.toString(e1));
     assertArrayEquals(e1, r1);
     String[] r2 = Utils.getNextLine(r1[1]);
     String[] e2 = {"world\r\n", ""};
