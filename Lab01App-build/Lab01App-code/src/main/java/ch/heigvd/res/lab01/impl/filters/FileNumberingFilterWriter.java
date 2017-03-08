@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
+  private static boolean isCarriageReturn = false;
   private int number;
 
   private void numberingFile() throws IOException {
@@ -52,10 +53,27 @@ public class FileNumberingFilterWriter extends FilterWriter {
     {
         write(cbuf[i]);
     }
+  }
 
   @Override
   public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+        if(isCarriageReturn && c != '\n')
+        {
+            numberingFile();
+        }
+
+        isCarriageReturn = false;
+
+        out.write(c);
+
+        if(c == '\r')
+        {
+            isCarriageReturn = true;
+        }
+        else if(c == '\n')
+        {
+            numberingFile();
+        }
   }
 
 }
