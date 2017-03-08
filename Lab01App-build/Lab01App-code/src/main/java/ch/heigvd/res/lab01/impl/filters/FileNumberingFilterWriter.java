@@ -14,10 +14,13 @@ import java.util.logging.Logger;
  * Hello\n\World -> 1\Hello\n2\tWorld
  *
  * @author Olivier Liechti
+ * @author Julien Brêchet
  */
 public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
+  private int lineNumber = 1;
+  private boolean r = false; // used to detect \r before \n
 
   public FileNumberingFilterWriter(Writer out) {
     super(out);
@@ -25,17 +28,44 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    // We need to convert the String in an array of char if we want to use it with an offset and a length
+    this.write(str.toCharArray(), off, len);
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    for(int i = 0; i < len; ++i)
+      this.write(cbuf[off + i]);
   }
 
   @Override
   public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
 
+    // If we are at the first line, we directly write the line number with the tab
+    if(lineNumber == 1) {
+      out.write(lineNumber + "\t");
+      ++lineNumber;
+    }
+    // If the last character was a '\r', we check if it's followed by a '\n'
+    if(r == true) {
+      if((char)c != '\n') {
+        out.write(lineNumber + "\t");
+        ++lineNumber;
+      }
+    }
+
+    r = false;
+
+    // If we detect a '\r', we write it and we remember we have a '\r' --> r = true
+    if((char)c == '\r') {
+      out.write('\r');
+      r = true;
+    } else {
+      out.write((char)c);
+      if(c == '\n'){
+        out.write(lineNumber + "\t");
+        ++lineNumber;
+      }
+    }
+  }
 }
