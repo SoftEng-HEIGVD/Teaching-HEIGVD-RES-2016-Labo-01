@@ -30,6 +30,8 @@ public class Application implements IApplication {
   public static String WORKSPACE_DIRECTORY = "./workspace/quotes";
   
   private static final Logger LOG = Logger.getLogger(Application.class.getName());
+
+  private int cpt = 0;
   
   public static void main(String[] args) {
     
@@ -85,7 +87,10 @@ public class Application implements IApplication {
     clearOutputDirectory();
     QuoteClient client = new QuoteClient();
     for (int i = 0; i < numberOfQuotes; i++) {
+
       Quote quote = client.fetchQuote();
+      storeQuote(quote,WORKSPACE_DIRECTORY);
+
       /* There is a missing piece here!
        * As you can see, this method handles the first part of the lab. It uses the web service
        * client to fetch quotes. We have removed a single line from this method. It is a call to
@@ -125,7 +130,20 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+
+    //Creation of folders
+    String filePath = new String(filename+"/");
+
+    for (String tag : quote.getTags()) {
+      filePath += tag + "/";
+    }
+
+    new File(filePath).mkdirs();
+
+    //Creation of the utf8 file
+    cpt++;
+    filePath +="quote-"+cpt+".utf8";
+    new File(filePath).createNewFile();
   }
   
   /**
@@ -148,13 +166,15 @@ public class Application implements IApplication {
   
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    //throw new UnsupportedOperationException("The student has not implemented this method yet.");
+
+    return "test";
   }
 
   @Override
   public void processQuoteFiles() throws IOException {
-    IFileExplorer explorer = new DFSFileExplorer();
-    explorer.explore(new File(WORKSPACE_DIRECTORY), new CompleteFileTransformer());    
+    //IFileExplorer explorer = new DFSFileExplorer();
+    //explorer.explore(new File(WORKSPACE_DIRECTORY), new CompleteFileTransformer());
   }
 
 }
