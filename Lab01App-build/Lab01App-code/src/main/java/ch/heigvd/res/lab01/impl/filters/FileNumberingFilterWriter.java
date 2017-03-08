@@ -37,7 +37,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
   {
     try
     {
-      out.append(++lineNumber + "\t");
+      out.write(++lineNumber + "\t");
     }
     catch (IOException e)
     {
@@ -70,7 +70,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
       addNewLine();
       macOSDetection = false;
     }
-    out.append(cAsChar);
+    out.write(cAsChar);
 
     if(cAsChar == '\r')
     {
