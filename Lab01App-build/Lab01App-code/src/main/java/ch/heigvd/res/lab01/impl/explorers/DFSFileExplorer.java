@@ -19,10 +19,12 @@ public class DFSFileExplorer implements IFileExplorer {
 
     @Override
     public void explore(File rootDirectory, IFileVisitor visitor) {
+        // Visit current directory/file
         visitor.visit(rootDirectory);
 
         File[] list = rootDirectory.listFiles();
         if (list != null) {
+            // Sort files so files are visited before directories, then sorted by name
             Arrays.sort(list, new Comparator<File>() {
             @Override
             public int compare(File file, File t1) {
@@ -34,6 +36,7 @@ public class DFSFileExplorer implements IFileExplorer {
             }
         });
             for (final File fileEntry : list) {
+                // Explore recursively
                 explore(fileEntry, visitor);
             }
         }

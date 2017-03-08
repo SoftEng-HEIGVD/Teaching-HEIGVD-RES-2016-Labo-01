@@ -1,7 +1,5 @@
 package ch.heigvd.res.lab01.impl.filters;
 
-import ch.heigvd.res.lab01.impl.Utils;
-
 import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -21,8 +19,8 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
     private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
 
-    private int lineNumber = 0;
-    private boolean lastIsCarriageReturn = false;
+    private int lineNumber = 0; // remember the line's number
+    private boolean lastIsCarriageReturn = false; // rember if the last written char was a '\r' (MAC/DOS compatibility)
 
     public FileNumberingFilterWriter(Writer out) {
         super(out);
@@ -31,11 +29,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
     @Override
     public void write(String str, int off, int len) throws IOException {
         for (int i = off; i < len + off; i++) {
-//            if(i + 1 < len + off && str.charAt(i) == '\r' && str.charAt(i+1) == '\n') {
-//                out.write(str.charAt(i));
-//            } else {
-//                write(str.charAt(i));
-//            }
+            // write character by character
             write(str.charAt(i));
         }
     }
@@ -47,16 +41,20 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
     @Override
     public void write(int c) throws IOException {
+        // Number the first line or after a '\r' if it isn't followed by '\n' (DOS/MAC compatibility)
         if (lineNumber == 0 || (lastIsCarriageReturn && c != '\n')) {
             out.write(++lineNumber + "\t");
         }
 
+        // Write char
         out.write(c);
 
-        if(c == '\n') {
+        // Number the next line if there's a '\n'
+        if (c == '\n') {
             out.write(++lineNumber + "\t");
         }
 
+        // Remember if c is a '\r'
         lastIsCarriageReturn = (c == '\r');
     }
 }

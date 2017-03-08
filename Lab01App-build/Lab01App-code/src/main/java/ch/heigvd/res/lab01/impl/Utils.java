@@ -22,11 +22,16 @@ public class Utils {
         String[] result = new String[2];
         result[0] = "";
         result[1] = lines;
-        for (int i = 0; i < lines.length(); i++) {
+
+        for (int i = 0; i < lines.length(); i++) { // for each char ...
+
+            // if the character is either '\n', '\r' or '\r' followed by '\n' ...
             if (lines.charAt(i) == '\n' || lines.charAt(i) == '\r') {
                 if (i + 1 < lines.length() && lines.charAt(i) == '\r' && lines.charAt(i + 1) == '\n') {
                     i++;
                 }
+
+                // split the string into the result array
                 result[0] = lines.substring(0, i+1);
                 result[1] = lines.substring(i+1);
                 return result;

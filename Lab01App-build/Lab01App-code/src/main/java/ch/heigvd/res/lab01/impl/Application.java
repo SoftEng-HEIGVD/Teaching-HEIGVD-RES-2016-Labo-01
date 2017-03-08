@@ -8,14 +8,7 @@ import ch.heigvd.res.lab01.interfaces.IFileVisitor;
 import ch.heigvd.res.lab01.quotes.QuoteClient;
 import ch.heigvd.res.lab01.quotes.Quote;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
+import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -91,7 +84,10 @@ public class Application implements IApplication {
             Quote quote = client.fetchQuote();
 
             LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
+
+            // Store quote in a file
             storeQuote(quote, "quote-" + i + ".utf8");
+
             for (String tag : quote.getTags()) {
                 LOG.info("> " + tag);
             }
@@ -125,18 +121,23 @@ public class Application implements IApplication {
      */
     void storeQuote(Quote quote, String filename) throws IOException {
         String path = WORKSPACE_DIRECTORY;
+
+        // Appends tags to the file's path
         for (String tag : quote.getTags()) {
             path += "/" + tag;
         }
         path += "/" + filename;
+
         File file = new File(path);
         File parent = file.getParentFile();
-        if (!parent.exists() && !parent.mkdirs()) {
-            throw new IllegalStateException("Couldn't create dir: " + parent);
-        }
 
-        file.createNewFile();
-        Files.write(file.toPath(), quote.getTags(), Charset.forName("UTF-8"));
+        // Creates parent directories
+        parent.mkdirs();
+
+        // Writes the quote to the target file
+        BufferedWriter bWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path)));
+        bWriter.write(quote.getQuote());
+        bWriter.close();
     }
 
     /**
@@ -149,6 +150,7 @@ public class Application implements IApplication {
             @Override
             public void visit(File file) {
                 try {
+                    // Write file path on a new line
                     writer.write(file.getPath() + '\n');
                 } catch (IOException e) {
                     e.printStackTrace();

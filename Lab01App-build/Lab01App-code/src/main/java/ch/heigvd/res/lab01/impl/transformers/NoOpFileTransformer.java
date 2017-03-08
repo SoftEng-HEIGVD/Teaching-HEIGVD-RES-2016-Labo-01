@@ -15,5 +15,4 @@ public class NoOpFileTransformer extends FileTransformer {
   public Writer decorateWithFilters(Writer writer) {
     return writer;
   }
-
 }
