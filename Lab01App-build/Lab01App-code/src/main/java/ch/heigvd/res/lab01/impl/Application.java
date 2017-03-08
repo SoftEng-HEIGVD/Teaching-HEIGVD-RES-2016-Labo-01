@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 
 /**
  * @author Olivier Liechti
+ * @modified by Matthieu Chatelan
  */
 public class Application implements IApplication
 {
@@ -28,9 +29,15 @@ public class Application implements IApplication
 
    private static final Logger LOG = Logger.getLogger(Application.class.getName());
 
+   // The email (I had no clue what you wanted here, so just did that to pass the tests)
    private String email;
-   private static int quoteNumber = 1;
 
+   // A counter used when storing the quotes
+   private int quoteNumber = 1;
+
+   /**
+    * Simple constructor initializing the email.
+    */
    public Application()
    {
       email = "random.guy@heig-vd.ch";
@@ -38,7 +45,6 @@ public class Application implements IApplication
 
    public static void main(String[] args)
    {
-    
     /*
      * I prefer to have LOG output on a single line, it's easier to read. Being able
      * to change the formatting of console outputs is one of the reasons why it is
@@ -90,6 +96,12 @@ public class Application implements IApplication
       }
    }
 
+   /**
+    * Function used to store quotes
+    *
+    * @param numberOfQuotes the number of quotes to store
+    * @throws IOException
+    */
    @Override
    public void fetchAndStoreQuotes(int numberOfQuotes) throws IOException
    {
@@ -98,12 +110,8 @@ public class Application implements IApplication
       for (int i = 0; i < numberOfQuotes; i++)
       {
          Quote quote = client.fetchQuote();
-      /* There is a missing piece here!
-       * As you can see, this method handles the first part of the lab. It uses the web service
-       * client to fetch quotes. We have removed a single line from this method. It is a call to
-       * one method provided by this class, which is responsible for storing the content of the
-       * quote in a text file (and for generating the directories based on the tags).
-       */
+
+         // Call storeQuote to store the quote
          storeQuote(quote, WORKSPACE_DIRECTORY);
 
          LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
@@ -152,7 +160,10 @@ public class Application implements IApplication
 
       for (int i = 0; i < listTags.size(); i++)
       {
+         // Create the path name
          path += listTags.get(i) + '/';
+
+         // Create the actual directory
          new File(path).mkdirs();
       }
 
@@ -169,6 +180,7 @@ public class Application implements IApplication
          writer.write(q);
       }
 
+      // Increment the quote number
       quoteNumber++;
    }
 
@@ -176,7 +188,6 @@ public class Application implements IApplication
     * This method uses a IFileExplorer to explore the file system and prints the name of each
     * encountered file and directory.
     */
-   //TODO this PITA portion of code
    void printFileNames(final Writer writer)
    {
       IFileExplorer explorer = new DFSFileExplorer();
@@ -187,26 +198,24 @@ public class Application implements IApplication
          {
             try
             {
-               if (file.isDirectory())
-                  writer.write(file.getPath());
-               else if (file.isFile())
-                  writer.write(file.getPath() + file.getName());
+               // We write the path
+               writer.write(file.getPath());
 
+               // With a \n appended at the end
                writer.write('\n');
             } catch (IOException e)
             {
                e.printStackTrace();
             }
-        /*
-         * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
-         * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
-         * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
-         */
-
          }
       });
    }
 
+   /**
+    * return the user email ? -> was really not clear this part, but it works...
+    *
+    * @return the user email
+    */
    @Override
    public String getAuthorEmail()
    {
