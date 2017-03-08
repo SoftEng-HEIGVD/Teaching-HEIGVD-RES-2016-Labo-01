@@ -3,7 +3,8 @@ package ch.heigvd.res.lab01.impl.explorers;
 import ch.heigvd.res.lab01.interfaces.IFileExplorer;
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
 import java.io.File;
-import java.io.FileFilter;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * This implementation of the IFileExplorer interface performs a depth-first
@@ -15,34 +16,36 @@ import java.io.FileFilter;
  */
 public class DFSFileExplorer implements IFileExplorer {
 
-    private boolean firstVisit = true;
-
     @Override
     public void explore(File rootDirectory, IFileVisitor vistor) {
+        
+        if (rootDirectory == null) {
+            throw new UnsupportedOperationException("rootDirectory not existing");
 
-        if (firstVisit == true) {
-            vistor.visit(rootDirectory);
-            firstVisit = false;
         }
+        vistor.visit(rootDirectory);
+        if (rootDirectory.isDirectory()) {
+            ArrayList<File> arrayDirectories = new ArrayList<>();
+            File[] filesAndDirectories = rootDirectory.listFiles();
+            Arrays.sort(filesAndDirectories);
+            
+            if (filesAndDirectories != null) {
 
-        File[] filesAndDirectories = rootDirectory.listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File pathname) {
-                return pathname.isDirectory();
-
-            }
-        });
-
-        if (filesAndDirectories != null) {
-            for (File f : filesAndDirectories) {//subdirectories
-                vistor.visit(f);
-                if (f.isDirectory()) {
-                    explore(f, vistor);
+                for (File f : filesAndDirectories) {//subdirectories
+                    //vistor.visit(f);
+                    if (f.isDirectory()) {
+                        arrayDirectories.add(f);
+                        //explore(f, vistor);
+                    } else {
+                        explore(f, vistor);
+                    }
+                }
+                for (File af : arrayDirectories) {
+                    explore(af, vistor);
                 }
             }
-        }
 
-        //throw new UnsupportedOperationException("The student has not implemented this method yet.");
+        }   //throw new UnsupportedOperationException("The student has not implemented this method yet.");
     }
 
 }
