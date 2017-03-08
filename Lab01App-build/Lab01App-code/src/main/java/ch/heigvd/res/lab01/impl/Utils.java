@@ -21,7 +21,29 @@ public class Utils
      */
     public static String[] getNextLine(String lines)
     {
+        String[] returnArray = new String[2];
+        String[] stringsToFind = {"\r", "\n", "\r\n"};
+        int indexOfSeparator = lines.length() -1 ;
+        int currentIndex = -1;
 
+        // get the minimum index
+        for (String currentSeparator : stringsToFind) {
+            currentIndex = lines.indexOf(currentSeparator);
+            if (currentIndex != -1 && currentIndex <= indexOfSeparator) {
+                indexOfSeparator = currentIndex;
+            }
+        }
+
+        if (indexOfSeparator != -1) {
+            returnArray[0] = lines.substring(0, indexOfSeparator + 1);
+
+        } else {
+            returnArray[0] = "";
+        }
+        returnArray[1] = lines.substring(indexOfSeparator + 1);
+
+
+        return returnArray;
     }
 
 }
