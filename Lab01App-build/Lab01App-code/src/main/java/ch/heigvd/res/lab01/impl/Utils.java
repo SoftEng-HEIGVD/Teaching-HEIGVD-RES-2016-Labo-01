@@ -4,7 +4,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Olivier Liechti
+ * @author Abass Mahdavi
  */
 public class Utils {
 
@@ -53,12 +53,7 @@ public class Utils {
           }
 
       }
-      
-
-      
       return result;
-     
-    //throw new UnsupportedOperationException("The student has not implemented this method yet.");
   }
 
 }
