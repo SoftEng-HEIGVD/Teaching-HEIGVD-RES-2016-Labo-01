@@ -28,15 +28,6 @@ public class FileNumberingFilterWriter extends FilterWriter {
   @Override
   public void write(String str, int off, int len) throws IOException {
     write(str.toCharArray(), off, len);
-    /*
-    String sub = str.substring(off, len);
-    String splits[] = sub.split("\\r?\\n");
-    for(int i=0; i<splits.length; i++) {
-      String prefix = (lineNo == 1 ? "" : "\n");
-      prefix += "" + lineNo++ + "\t";
-      super.write(prefix, 0, prefix.length());
-      super.write(splits[i], 0, splits[i].length());
-    }*/
   }
 
   @Override
@@ -48,7 +39,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
       super.write(prefix, 0, prefix.length());
     }
     for (int i = off; i < len; i++) {
-      // \r unix
+      // \r mac os
       super.write(cbuf[i]);
       if (cbuf[i] == '\n') {
         String prefix = "" + lineNo++ + "\t";
