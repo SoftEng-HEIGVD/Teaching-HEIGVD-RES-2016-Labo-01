@@ -16,10 +16,16 @@ import java.io.Writer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
+import java.io.BufferedWriter;
 
 /**
+ * This app clean the output directory and fecth quotes from the web then store each
+ * quote in a new file. New output directories are done like a tree. Finally, taking
+ * each file one by one, we apply two transformations on the content (uppercase and
+ * line numbers with tabulations)
  *
  * @author Olivier Liechti
+ * @author adrien marco
  */
 public class Application implements IApplication {
 
@@ -80,19 +86,21 @@ public class Application implements IApplication {
     }
   }
 
+  
+  
+  /*
+  *we use the web service client to fetch quotes then we store the content in a file
+  (text). The file will be in a subdirectory called as the tag of the quote
+  */
   @Override
   public void fetchAndStoreQuotes(int numberOfQuotes) throws IOException {
     clearOutputDirectory();
     QuoteClient client = new QuoteClient();
     for (int i = 0; i < numberOfQuotes; i++) {
       Quote quote = client.fetchQuote();
-      /* There is a missing piece here!
-       * As you can see, this method handles the first part of the lab. It uses the web service
-       * client to fetch quotes. We have removed a single line from this method. It is a call to
-       * one method provided by this class, which is responsible for storing the content of the
-       * quote in a text file (and for generating the directories based on the tags).
-       */
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
+      //we store the quote by identifying it in the name (id number)
+      storeQuote(quote, "quote-"+quote.getValue().getId()+".utf8");
       for (String tag : quote.getTags()) {
         LOG.info("> " + tag);
       }
@@ -125,7 +133,26 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    //throw new UnsupportedOperationException("The student has not implemented this method yet.");
+     
+     //building the path depending of the tags of the quote
+     String path = WORKSPACE_DIRECTORY;
+     
+     for(String tag : quote.getTags()){
+        path += "/"+tag;
+     }
+     
+     //the subdirectories are created so if they do not exist, there is no problem
+     File dir = new File(path);
+     dir.mkdirs();
+     
+     //building of the file path
+     path+="/"+filename;
+     
+     //let's write the content of the quote in the utf8 file
+     BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path)));
+     bw.write(quote.getQuote());
+     bw.close();
   }
   
   /**
@@ -135,22 +162,27 @@ public class Application implements IApplication {
   void printFileNames(final Writer writer) {
     IFileExplorer explorer = new DFSFileExplorer();
     explorer.explore(new File(WORKSPACE_DIRECTORY), new IFileVisitor() {
+      /*
+      *write the filename, including the path, to the writer passed in argument
+      */
       @Override
       public void visit(File file) {
-        /*
-         * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
-         * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
-         * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
-         */
+        try{
+          writer.write(file.getPath()+'\n');
+        }catch(IOException e){
+          e.printStackTrace();
+        }
       }
     });
   }
   
+  //returns the email from the author
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    return "adrien.marco@heig-vd.ch";
   }
 
+  //exploring the file system putting filter to the files
   @Override
   public void processQuoteFiles() throws IOException {
     IFileExplorer explorer = new DFSFileExplorer();

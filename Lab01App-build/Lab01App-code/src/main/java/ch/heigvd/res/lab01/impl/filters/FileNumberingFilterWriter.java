@@ -14,28 +14,64 @@ import java.util.logging.Logger;
  * Hello\n\World -> 1\Hello\n2\tWorld
  *
  * @author Olivier Liechti
+ *  @author Adrien Marco
  */
 public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
-
+  private int lineNumber = 1; 
+  private boolean foundR = false;
+  
   public FileNumberingFilterWriter(Writer out) {
     super(out);
   }
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+     //we calle the fucntion with char[] parameter
+     write(str.toCharArray(), off, len);
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    //we call the write function for each character
+     for(int i = 0; i < len; ++i){
+        write(cbuf[off+i]);
+     }
   }
 
-  @Override
+  //build the header of a line with the number and the tab
+  public void writeHeaderLine()throws IOException {
+     out.write(lineNumber+"\t");
+     lineNumber++;
+  }
+  
+ @Override
   public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
+     
+    //when we are on the fisrt line
+    if(lineNumber == 1){
+       writeHeaderLine();
+    }
+    //if we found a return then we can now to write the header line
+    if(foundR == true){
+       //but the character must be different as return character '\n'
+       if((char)c != '\n'){
+          writeHeaderLine();
+       }
+    }
+    
+    //if no return characters found
+    foundR = false;
 
+    out.write((char)c);
+    
+    //if we found now a return character, write the header or remember it
+    if((char)c == '\r'){
+     foundR = true;
+    }
+    else if (c == '\n'){
+         writeHeaderLine();
+    }
+  }
 }

@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 /**
  *
  * @author Olivier Liechti
+ * @author Adrien Marco
  */
 public class Utils {
 
@@ -20,7 +21,38 @@ public class Utils {
    * contain any line separator, then the first element is an empty string.
    */
   public static String[] getNextLine(String lines) {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+
+    String lineFile[] = new String[2];
+
+    //types of seperators
+    String sep1 = "\r";
+    String sep2 = "\n";
+    String sep3 = "\r\n";
+
+    //stocks the place of the separator in the string
+    int index;
+
+    //if we find the separator \r\n
+    if((index = lines.indexOf(sep3))!= -1){
+      lineFile[0] = lines.substring(0, index + sep3.length());
+      lineFile[1] = lines.substring(index + sep3.length(), lines.length());
+    }
+    //or if we find the separator \n
+    else if((index = lines.indexOf(sep2))!= -1){
+      lineFile[0] = lines.substring(0, index + sep2.length());
+      lineFile[1] = lines.substring(index + sep2.length(), lines.length());
+    }
+    //or if we find the separator \r
+    else if((index = lines.indexOf(sep1))!= -1){
+      lineFile[0] = lines.substring(0, index + sep1.length());
+      lineFile[1] = lines.substring(index + sep1.length(), lines.length());
+    }
+    //or finally if there is no sepatator
+    else{
+      lineFile[0] = "";
+      lineFile[1] = lines;
+    }
+    return lineFile;
   }
 
 }
