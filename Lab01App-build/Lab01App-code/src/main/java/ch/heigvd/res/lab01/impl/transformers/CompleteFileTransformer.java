@@ -1,6 +1,7 @@
 package ch.heigvd.res.lab01.impl.transformers;
 
 import java.io.Writer;
+import ch.heigvd.res.lab01.impl.filters.*;
 
 /**
  * This class returns a writer decorated with two filters: an instance of
