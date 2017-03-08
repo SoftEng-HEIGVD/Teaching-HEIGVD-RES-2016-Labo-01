@@ -32,8 +32,6 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    /*String s = new String(cbuf);
-    write(s, off, len);*/
     if (lineNo == 1) {
       String prefix = "" + lineNo++ + "\t";
       super.write(prefix, 0, prefix.length());
