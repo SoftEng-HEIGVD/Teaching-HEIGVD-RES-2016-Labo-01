@@ -38,10 +38,10 @@ public class FileNumberingFilterWriter extends FilterWriter {
       String prefix = "" + lineNo++ + "\t";
       super.write(prefix, 0, prefix.length());
     }
-    for (int i = off; i < len; i++) {
+    for (int i = off; i < off+len; i++) {
       // \r mac os
       super.write(cbuf[i]);
-      if (cbuf[i] == '\n') {
+      if (cbuf[i] == '\n' || cbuf[i] == '\r' && i<off+len-1 && cbuf[i+1] != '\n') {
         String prefix = "" + lineNo++ + "\t";
         super.write(prefix, 0, prefix.length());
       }
@@ -50,7 +50,8 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(int c) throws IOException {
-    super.write(c);
+    char[] b = {(char) c};
+    write(b, 0, 1);
   }
 
 }
