@@ -129,16 +129,19 @@ public class Application implements IApplication {
   void storeQuote(Quote quote, String filename) throws IOException {
          String path = WORKSPACE_DIRECTORY;
 
+         // Gets tags of quote for creation of sub-folders
          for(String tag : quote.getTags())
          {
-             path += "/" + tag;
+             path += File.separator + tag;
          }
 
          new File(path).mkdirs();
 
-         File file = new File(path + "/" + filename);
+         // Creates quote file
+         File file = new File(path + File.separator + filename);
          file.createNewFile();
 
+         // Stores the quote text
          Writer writer = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
          writer.write(quote.getQuote());
          writer.close();
@@ -160,8 +163,8 @@ public class Application implements IApplication {
          */
          try
          {
-            writer.write(file.getPath());
-            writer.write('\n');
+            // Writes filename's path to the writer
+            writer.write(file.getPath() + System.lineSeparator());
          }
          catch (IOException ex)
          {

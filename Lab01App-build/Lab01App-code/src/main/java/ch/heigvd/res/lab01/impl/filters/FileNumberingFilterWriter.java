@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 /**
  * This class transforms the streams of character sent to the decorated writer.
  * When filter encounters a line separator, it sends it to the decorated writer.
@@ -20,26 +19,15 @@ import java.util.logging.Logger;
 public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
-  private static boolean isCarriageReturn = false;
-  private int number;
+  private boolean isCarriageReturn;
+  private int lineNumber;
 
-  private void numberingFile() throws IOException {
-        out.write(String.valueOf(++number));
-        out.write('\t');
+  private void lineNumbering() throws IOException {
+        out.write(String.valueOf(++lineNumber) + '\t');
   }
 
   public FileNumberingFilterWriter(Writer out) {
     super(out);
-    
-    try
-    {
-        numberingFile();
-    }
-    catch(IOException ex)
-    {
-        LOG.log(Level.SEVERE, "Could not write file numbering. {0}", ex.getMessage());
-        ex.printStackTrace();
-    }
   }
 
   @Override
@@ -57,23 +45,18 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(int c) throws IOException {
-        if(isCarriageReturn && c != '\n')
-        {
-            numberingFile();
-        }
-
-        isCarriageReturn = false;
-
-        out.write(c);
-
-        if(c == '\r')
-        {
-            isCarriageReturn = true;
-        }
-        else if(c == '\n')
-        {
-            numberingFile();
-        }
+    if(lineNumber == 0 || isCarriageReturn && c != '\n')
+    {
+        lineNumbering();
+    }
+    
+    out.write(c);
+    isCarriageReturn = c == '\r';
+    
+    if(c == '\n')
+    {
+        lineNumbering();
+    }
   }
 
 }

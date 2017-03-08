@@ -19,14 +19,17 @@ public class DFSFileExplorer implements IFileExplorer {
 
   @Override
   public void explore(File rootDirectory, IFileVisitor visitor) {
+      // Saves the current file's name
       visitor.visit(rootDirectory);
       
+      // Explores the directory
       if (rootDirectory.isDirectory())
       {
           File[] files = rootDirectory.listFiles();
           ArrayList<File> subDirectories = new ArrayList<>();
           Arrays.sort(files);
           
+          // Lists subDirectories and saves file' names
           for (File file : files)
           {
               if (file.isDirectory())
@@ -39,6 +42,7 @@ public class DFSFileExplorer implements IFileExplorer {
               }
           }
           
+          // Explores subDirectories
           for (File file : subDirectories)
           {
               explore(file, visitor);

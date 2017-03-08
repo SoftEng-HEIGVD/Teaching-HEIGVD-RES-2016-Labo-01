@@ -22,10 +22,13 @@ public class Utils {
    */
   public static String[] getNextLine(String lines) {
     String[] splitedLines = new String[2];
+    
+    // Detects new line on Windows or Unix
     int newLinePosition = lines.indexOf('\n');
     
     if (newLinePosition == -1)
     {
+        // Detects new line on macOS9
         newLinePosition = lines.indexOf('\r');
     }
     
