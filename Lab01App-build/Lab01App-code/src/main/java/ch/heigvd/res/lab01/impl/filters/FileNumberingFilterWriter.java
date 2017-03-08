@@ -37,7 +37,6 @@ public class FileNumberingFilterWriter extends FilterWriter {
       super.write(prefix, 0, prefix.length());
     }
     for (int i = off; i < off+len; i++) {
-      // \r mac os
       super.write(cbuf[i]);
       if (cbuf[i] == '\n' || cbuf[i] == '\r' && i<off+len-1 && cbuf[i+1] != '\n') {
         String prefix = "" + lineNo++ + "\t";
