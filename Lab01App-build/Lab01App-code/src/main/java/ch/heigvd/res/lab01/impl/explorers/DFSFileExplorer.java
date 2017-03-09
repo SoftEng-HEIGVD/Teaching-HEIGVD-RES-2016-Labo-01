@@ -16,22 +16,35 @@ public class DFSFileExplorer implements IFileExplorer {
 
   @Override
   public void explore(File rootDirectory, IFileVisitor vistor) {
-    
+
     //Add the node
     vistor.visit(rootDirectory);
 
-    //List of the files in the directory
+    //List of the all the files in the directory
     File[] files = rootDirectory.listFiles();
+
+    //if the root  is a directory
+    if (rootDirectory.isDirectory()) {
 
     if(files !=null) {
 
+      //Check first the files
       for (File f : files) {
 
-        //Visit the first node to have the DFS algo
-        if (f.isDirectory()) {
+        if(f.isFile()) {
           explore(f, vistor);
         }
       }
+
+      //Check the directories
+      for (File f : files) {
+
+        if(f.isDirectory()) {
+          //Visit the first node to have the DFS algo
+          explore(f, vistor);
+        }
+      }
+    }
     }
   }
 }
