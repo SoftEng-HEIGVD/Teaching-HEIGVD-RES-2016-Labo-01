@@ -21,40 +21,59 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
   private int nbLine = 0;
+  private boolean firstCHar = true;
 
   public FileNumberingFilterWriter(Writer out) {
     super(out);
   }
 
   @Override
-  public void write(String str, int off, int len) throws IOException {
-    String strTransformed = str.substring(off, off + len);
-    String[] tmp;
-
-    tmp = Utils.getNextLine(strTransformed);
+  public void write(String str) throws IOException {
+    String strOutput;
+    String out[];
 
     if (nbLine == 0)
-      strTransformed = ++nbLine + "\t";
+      strOutput = ++nbLine + "\t";
+    else
+      strOutput = "";
 
-    while (!tmp[0].isEmpty()) {
+    out = Utils.getNextLine(str);
 
-      strTransformed += tmp[0] + ++nbLine + "\t";
-      tmp = Utils.getNextLine(tmp[1]);
+    while (!out[0].isEmpty()) {
+      if(!out[0].isEmpty()) {
+        strOutput += out[0] + ++nbLine + "\t";
+      } else {
+        strOutput += out[1] + "\n" + ++nbLine + "\t";
+      }
+
+      out = Utils.getNextLine(out[1]);
     }
 
-    super.write(strTransformed, 0, strTransformed.length());
+    strOutput += out[1];
+
+    super.write(strOutput, 0, strOutput.length());
+  }
+
+  @Override
+  public void write(String str, int off, int len) throws IOException {
+    String strOutput = str.substring(off, off + len);
+
+    write(strOutput);
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    super.write(cbuf, off, len);
+    for (int i = off; i < off + len; ++i)
+      write(cbuf[i]);
   }
 
   @Override
   public void write(int c) throws IOException {
-    int nbLine = 1;
+    if (c != '\r')
+      write(Character.toString((char) c));
+    else
+      super.write(c);
 
-    super.write(nbLine++ + "\t" + c);
   }
 
 }
