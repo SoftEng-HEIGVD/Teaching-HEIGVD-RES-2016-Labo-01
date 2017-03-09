@@ -22,30 +22,25 @@ public class Utils {
      */
     public static String[] getNextLine(String lines) {
         String[] charNextLine = {"\r\n", "\n", "\r"};
-        String[] result = new String[2];
 
-        int firstOccurence = Integer.MAX_VALUE;
+        int firstOccurence = lines.length();
 
         for (String token : charNextLine) {
 
             if (lines.indexOf(token) != -1 && lines.indexOf(token) < firstOccurence) {
                 firstOccurence = lines.indexOf(token);
-                if(token == "\r\n") {
-                  firstOccurence++;
-                  break;
+                if (token == "\r\n") {
+                    firstOccurence++;
+                    break;
                 }
             }
         }
 
-        if (firstOccurence != Integer.MAX_VALUE) {
-            result[0] = lines.substring(0, firstOccurence + 1);
-            result[1] = lines.substring(firstOccurence + 1);
+        if (firstOccurence != lines.length()) {
+            return new String[]{lines.substring(0, firstOccurence + 1), lines.substring(firstOccurence + 1)};
         } else {
-            result[0] = "";
-            result[1] = lines;
+            return new String[]{"", lines};
         }
-
-        return result;
     }
 
 }

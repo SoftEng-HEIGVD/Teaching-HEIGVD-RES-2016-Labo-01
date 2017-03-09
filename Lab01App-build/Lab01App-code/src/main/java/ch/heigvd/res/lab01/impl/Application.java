@@ -92,7 +92,7 @@ public class Application implements IApplication {
         QuoteClient client = new QuoteClient();
         for (int i = 1; i <= numberOfQuotes; i++) {
             Quote quote = client.fetchQuote();
-
+            
             storeQuote(quote, "quote-" + i + ".utf8");
             LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
             for (String tag : quote.getTags()) {
@@ -129,23 +129,20 @@ public class Application implements IApplication {
      * @throws IOException
      */
     void storeQuote(Quote quote, String filename) throws IOException {
+        
+        // we create the path with the tag and the filename
         String path = Application.WORKSPACE_DIRECTORY;
         for (String tag : quote.getTags()) {
             path = path.concat("/" + tag);
         }
         path = path.concat("/" + filename);
-        
+
         System.out.println(path);
         File f = new File(path);
 
+        // we make the parent directories if needed and we create the file
         f.getParentFile().mkdirs();
         f.createNewFile();
-/*
-        FileWriter fw = new FileWriter(filename);
-        BufferedWriter bw = new BufferedWriter(fw);
-        bw.write(quote.getQuote());
-        bw.flush();
-        bw.close();*/
     }
 
     /**
@@ -157,6 +154,7 @@ public class Application implements IApplication {
         explorer.explore(new File(WORKSPACE_DIRECTORY), new IFileVisitor() {
             @Override
             public void visit(File file) {
+                // we just write the file's path into the writer
                 try {
                     writer.write(file.getPath() + "\n");
                 } catch (IOException e) {
