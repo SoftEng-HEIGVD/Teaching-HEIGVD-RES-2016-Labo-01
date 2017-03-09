@@ -56,23 +56,6 @@ public class FileNumberingFilterWriter extends FilterWriter {
         out.write(cbuf[i]);
         prevIsCR = false;
       }
-
-//      out.write(cbuf[i]);
-//
-//      /* Reading carriage return '\r' (CR) is a special case where we must be
-//       * very careful.
-//       */
-//      if(cbuf[i] == '\r') {
-//        if(((i+1) < (off + len)) && (cbuf[i+1] == '\n')) {
-//          i++;
-//          out.write(cbuf[i]); // write line feed after carriage return
-//        }
-//
-//        writeNewLineNumber();
-//      }
-//      else if(cbuf[i] == '\n') {
-//        writeNewLineNumber();
-//      }
     }
   }
 
