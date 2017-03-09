@@ -16,10 +16,16 @@ import java.io.Writer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
+import java.io.BufferedWriter;
 
 /**
+ * This app clean the output directory and fecth quotes from the web then store each
+ * quote in a new file. New output directories are done like a tree. Finally, taking
+ * each file one by one, we apply two transformations on the content (uppercase and
+ * line numbers with tabulations)
  *
  * @author Olivier Liechti
+ * @author Dany Simo
  */
 public class Application implements IApplication {
 
@@ -80,19 +86,23 @@ public class Application implements IApplication {
     }
   }
 
+  
+  
+  /*
+  *we use the web service client to fetch quotes then we store the content in a file
+  (text). The file will be in a subdirectory called as the tag of the quote
+  */
   @Override
   public void fetchAndStoreQuotes(int numberOfQuotes) throws IOException {
     clearOutputDirectory();
     QuoteClient client = new QuoteClient();
     for (int i = 0; i < numberOfQuotes; i++) {
       Quote quote = client.fetchQuote();
-      /* There is a missing piece here!
-       * As you can see, this method handles the first part of the lab. It uses the web service
-       * client to fetch quotes. We have removed a single line from this method. It is a call to
-       * one method provided by this class, which is responsible for storing the content of the
-       * quote in a text file (and for generating the directories based on the tags).
-       */
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
+      
+      // stores the quote who is fetched in the utf8's file
+      storeQuote(quote, "quote-" + (i+1) + ".utf8");
+      
       for (String tag : quote.getTags()) {
         LOG.info("> " + tag);
       }
@@ -114,7 +124,7 @@ public class Application implements IApplication {
    * 2 responsibilities: 
    * 
    * - with quote.getTags(), it gets a list of tags and uses
-   *   it to create sub-folders (for instance, if a quote has three tags "A", "B" and
+   *   it to create sub-files (for instance, if a quote has three tags "A", "B" and
    *   "C", it will be stored in /quotes/A/B/C/quotes-n.utf8.
    * 
    * - with quote.getQuote(), it has access to the text of the quote. It stores
@@ -125,7 +135,33 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+      // initializes the path with "./workspace/quotes"
+      String path = WORKSPACE_DIRECTORY;
+
+      // build the path with the tags
+      for (String s : quote.getTags()) 
+         path += "/" + s;
+      
+      // creates a new file by converting the string path to an abstract path
+      File file = new File(path);
+     
+      // creates the folder's file. mkdirs() is used instead of mkdir() to also create parent directories
+      file.mkdirs();
+     
+     // introduces the file's path in the path
+     path+="/"+filename;
+     
+     // declares the 'out' that will be used to write into the file
+     // forces to write in a utf-8 files and encode into bytes
+     BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path), "utf-8"));
+     // if writing fail throw an IOexception
+     try{
+        out.write(quote.getQuote());
+     }catch(IOException ex){
+        ex.getMessage();
+     }finally{
+        out.close();
+     }
   }
   
   /**
@@ -135,22 +171,27 @@ public class Application implements IApplication {
   void printFileNames(final Writer writer) {
     IFileExplorer explorer = new DFSFileExplorer();
     explorer.explore(new File(WORKSPACE_DIRECTORY), new IFileVisitor() {
+      /*
+      *write the filename, including the path, to the writer passed in argument
+      */
       @Override
       public void visit(File file) {
-        /*
-         * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
-         * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
-         * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
-         */
+        try{
+          writer.write(file.getPath()+'\n');
+        }catch(IOException e){
+          e.printStackTrace();
+        }
       }
     });
   }
   
+  // return the author's email
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    return "dany.tchentesimo@heig-vd.ch";
   }
 
+  // explore the file system and apply filter to the files
   @Override
   public void processQuoteFiles() throws IOException {
     IFileExplorer explorer = new DFSFileExplorer();
