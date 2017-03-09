@@ -13,6 +13,7 @@ import java.util.Arrays;
  * files in the directory and then moves into the subdirectories.
  * 
  * @author Olivier Liechti
+ * @author Daniel Palumbo
  */
 public class DFSFileExplorer implements IFileExplorer {
 
@@ -27,10 +28,10 @@ public class DFSFileExplorer implements IFileExplorer {
 
       // check if the file is a directory
       if(rootDirectory.isDirectory()){
-          // Create table that contains file in the directory
+          // Create table which contains the files in the directory
           File[] files = rootDirectory.listFiles();
 
-          // Create and sort table that contains the list of subdirectory
+          // Create and sort table which contains the list of subdirectory
           ArrayList<File> subDirectories = new ArrayList<>();
           Arrays.sort(files);
 

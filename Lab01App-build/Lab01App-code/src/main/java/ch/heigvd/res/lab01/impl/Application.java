@@ -9,7 +9,6 @@ import ch.heigvd.res.lab01.quotes.QuoteClient;
 import ch.heigvd.res.lab01.quotes.Quote;
 
 import java.io.*;
-import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -17,6 +16,7 @@ import org.apache.commons.io.FileUtils;
 /**
  *
  * @author Olivier Liechti
+ * @author Daniel Palumbo
  */
 public class Application implements IApplication {
 
@@ -36,8 +36,7 @@ public class Application implements IApplication {
      * better to use a Logger rather than using System.out.println
      */
     System.setProperty("java.util.logging.SimpleFormatter.format", "%4$s: %5$s%6$s%n");
-    
-       
+
     int numberOfQuotes = 0;
     try {
       numberOfQuotes = Integer.parseInt(args[0]);
@@ -128,10 +127,8 @@ public class Application implements IApplication {
 
     // Create the object file
     File f = new File(path);
-    // Create directory
+    // Create directory and file
     f.getParentFile().mkdirs();
-    // Create file
-    f.createNewFile();
 
     // Write content
     BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path)));
