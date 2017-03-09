@@ -14,8 +14,6 @@ import java.io.File;
  */
 public class DFSFileExplorer implements IFileExplorer {
 
-  private boolean isFirstDirectory = true;
-
   @Override
   public void explore(File rootDirectory, IFileVisitor vistor) {
     File[] nodesCurrentDirectory = rootDirectory.listFiles();
@@ -24,11 +22,15 @@ public class DFSFileExplorer implements IFileExplorer {
 
     if (nodesCurrentDirectory != null) {
       for (File currentNode : nodesCurrentDirectory) {
-
-        if (currentNode.isDirectory())
-          explore(currentNode, vistor);
-        else
+        if (!currentNode.isDirectory())
           vistor.visit(currentNode);
+      }
+
+      for (File currentNode : nodesCurrentDirectory) {
+
+        if (currentNode.isDirectory()) {
+          explore(currentNode, vistor);
+        }
       }
     }
   }
