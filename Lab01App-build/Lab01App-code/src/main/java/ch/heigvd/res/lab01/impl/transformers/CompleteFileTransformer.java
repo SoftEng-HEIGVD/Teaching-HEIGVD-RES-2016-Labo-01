@@ -14,11 +14,14 @@ import java.util.Random;
  * beginning of each line.
  * 
  * @author Olivier Liechti
+ * @author Pierre-Benjamin Monaco
  */
 public class CompleteFileTransformer extends FileTransformer {
 
   @Override
   public Writer decorateWithFilters(Writer writer) {
+
+    //Adding decoration filters to the Writer
     writer = new FileNumberingFilterWriter(new UpperCaseFilterWriter(writer));
     return writer; 
   }

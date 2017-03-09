@@ -10,8 +10,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
-import java.nio.ByteOrder;
-import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -26,6 +24,7 @@ import java.util.logging.Logger;
  * a list of filters and decorates the output writer with them.
  * 
  * @author Olivier Liechti
+ * @author Pierre-Benjamin Monaco
  */
 public abstract class FileTransformer implements IFileVisitor {
 
@@ -51,16 +50,18 @@ public abstract class FileTransformer implements IFileVisitor {
       return;
     }
     try {
-      //The file doesn't exists at the beginning
+      //The file doesn't exists at the beginning so i create it
       (new File(file.getPath()+ ".out")).createNewFile();
 
       Reader reader = new InputStreamReader(new FileInputStream(file), "UTF-8");
       Writer writer = new OutputStreamWriter(new FileOutputStream(file.getPath()+ ".out"), "UTF-8"); // the bug fix by teacher
       writer = decorateWithFilters(writer);
 
+      //Reads chars one by one from the InputStreamReader
       int cReader;
       while((cReader = reader.read()) != -1)
       {
+        //Write read char into OutputStreamWriter
         writer.write(cReader);
       }
       

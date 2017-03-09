@@ -16,6 +16,7 @@ import java.util.logging.Logger;
  * Hello\n\World -> 1\Hello\n2\tWorld
  *
  * @author Olivier Liechti
+ * @author Pierre-Benjamin Monaco
  */
 public class FileNumberingFilterWriter extends FilterWriter {
 
@@ -26,7 +27,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   public FileNumberingFilterWriter(Writer out) {
     super(out);
-    addNewLine();
+    addNewLine(); //Always add a first line (even if write is never called)
   }
 
   /*
@@ -48,6 +49,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
   @Override
   public void write(String str, int off, int len) throws IOException {
 
+    //Changes the string into charArray and send it to write(char[] cbuf, ...)
     write(str.toCharArray(),off,len);
 
   }
@@ -55,6 +57,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
 
+    //Reads the char array and write char by char with write(int c)
     for(int reader = off; reader < off + len; ++reader)
     {
       write(cbuf[reader]);
@@ -65,21 +68,27 @@ public class FileNumberingFilterWriter extends FilterWriter {
   public void write(int c) throws IOException {
     char cAsChar = (char)c;
 
+    //Checks if the last char was \r with macOSDetection. Also verify is actual char
+    //is not \n to avoid double new line
     if(macOSDetection && cAsChar != '\n')
     {
       addNewLine();
-      macOSDetection = false;
+      macOSDetection = false; //Disable MacOsDetection signal
     }
+
+    //Writes the char in the output
     out.write(cAsChar);
 
+    //Detect \r char in case of mac encoding
     if(cAsChar == '\r')
     {
       macOSDetection = true;
     }
+    //Add new line in case of windows or unix encoding
     else if(cAsChar == '\n')
     {
       addNewLine();
-      macOSDetection = false;
+      macOSDetection = false; //Disable MacOsDetection signal
     }
   }
 

@@ -84,17 +84,12 @@ public class Application implements IApplication {
     QuoteClient client = new QuoteClient();
     for (int i = 0; i < numberOfQuotes; i++) {
       Quote quote = client.fetchQuote();
-      /* There is a missing piece here!
-       * As you can see, this method handles the first part of the lab. It uses the web service
-       * client to fetch quotes. We have removed a single line from this method. It is a call to
-       * one method provided by this class, which is responsible for storing the content of the
-       * quote in a text file (and for generating the directories based on the tags).
-       */
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
       for (String tag : quote.getTags()) {
         LOG.info("> " + tag);
       }
 
+      //Calling the storeQuote method in the loop
       storeQuote(quote,"quote-" + i + ".utf8");
     }
   }
@@ -125,24 +120,31 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
+
     //Looks for tags and make directory from them
     List<String> tags = quote.getTags();
+
+    //Setting the root dir as WORKSPACE_DIRECTORY
     String filePath = WORKSPACE_DIRECTORY;
+
+    //Makes the file path by concatenating all tags with and / separator
     for(String tag : tags)
     {
       filePath += "/" + tag;
     }
 
-    //Creates directories
+    //Creates directories from path
     new File(filePath).mkdirs();
 
     //Write quote text into the newly created file
     BufferedWriter outStream = new BufferedWriter(new OutputStreamWriter(
-            new FileOutputStream(filePath + "/" + filename), "UTF-8"));
+    new FileOutputStream(filePath + "/" + filename), "UTF-8"));
+
+    //Tries to write the text of the quote into stream
     try {
       outStream.write(quote.getQuote());
     } finally {
-      outStream.close();
+      outStream.close(); //Using finally allows to close stream in any situation
     }
   }
   
@@ -152,17 +154,20 @@ public class Application implements IApplication {
    */
   void printFileNames(final Writer writer) {
     IFileExplorer explorer = new DFSFileExplorer();
+
+    //Using explore method with a new anonym class from IFileVisitor
+    // (visit needs to be defined)
     explorer.explore(new File(WORKSPACE_DIRECTORY), new IFileVisitor() {
       @Override
       public void visit(File file) {
         try
         {
-          writer.append(file.getPath());
-          writer.append('\n');
+          //Writing file path and \n (new line)
+          writer.write(file.getPath() + '\n');
         }
         catch (IOException e)
         {
-          LOG.info(e.toString());
+          LOG.warning("Exception in Application#printFileNames : " + e.toString());
         }
       }
     });

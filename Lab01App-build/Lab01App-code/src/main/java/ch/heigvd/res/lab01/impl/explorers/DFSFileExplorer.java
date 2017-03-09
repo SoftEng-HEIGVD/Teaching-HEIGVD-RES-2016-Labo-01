@@ -13,6 +13,7 @@ import java.io.FileWriter;
  * files in the directory and then moves into the subdirectories.
  * 
  * @author Olivier Liechti
+ * @author Pierre-Benjamin Monaco
  */
 public class DFSFileExplorer implements IFileExplorer {
 
@@ -59,6 +60,8 @@ public class DFSFileExplorer implements IFileExplorer {
       }
     }
   }
+
+  The new code is more complex
 
 
   As f character from "file1" is higher than B or C the DFS goes into B and C first.
