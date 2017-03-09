@@ -1,6 +1,7 @@
 package ch.heigvd.res.lab01.impl;
 
 import java.util.logging.Logger;
+import java.lang.Math;
 
 /**
  *
@@ -20,7 +21,30 @@ public class Utils {
    * contain any line separator, then the first element is an empty string.
    */
   public static String[] getNextLine(String lines) {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
 
+    //Creation of an array with 2 elements
+    String[] newLines = new String[2];
+
+    //Find the firsts 'next new line separators' (indexOf can't have multiple string)
+    int findN = lines.indexOf("\n");
+    int findR = lines.indexOf("\r");
+    int findRN = lines.indexOf("\r\n");
+
+    //Choose the first one
+    int findFirst = Math.min(findN,findR);
+    findFirst= Math.min(findFirst,findRN);
+
+    //If a character is find
+    if(findFirst !=1) {
+
+      newLines[0] = lines.substring(0, findFirst);
+      newLines[1] = lines.substring(findFirst + 1);
+    }
+    else
+    {
+      newLines[0] = lines;
+      newLines[1] = "";
+    }
+    return newLines;
+  }
 }
