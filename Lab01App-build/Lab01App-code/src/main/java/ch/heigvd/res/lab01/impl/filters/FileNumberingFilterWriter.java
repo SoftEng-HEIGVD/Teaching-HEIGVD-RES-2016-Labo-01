@@ -37,7 +37,9 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    for(int i = off; i < off + len; ++i)
+    final int maxLength = off + len;
+    
+    for(int i = off; i < maxLength; ++i)
     {
         write(cbuf[i]);
     }
