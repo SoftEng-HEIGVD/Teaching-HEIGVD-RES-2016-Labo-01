@@ -14,10 +14,15 @@ import java.util.logging.Logger;
  * Hello\n\World -> 1\Hello\n2\tWorld
  *
  * @author Olivier Liechti
+ * @author Daniel Palumbo
  */
 public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
+  // variable used to know the line's number
+  private int lineNumber = 1;
+  // variable used to know the line has a \r character
+  private boolean hasSlashR = true;
 
   public FileNumberingFilterWriter(Writer out) {
     super(out);
@@ -25,17 +30,44 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    // String to array and write method below
+    write(str.toCharArray(), off, len);
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    // For every character in string, call method write below
+    for(int i = off; i < (off + len); i++){
+      write(cbuf[i]);
+    }
   }
 
   @Override
   public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    if(hasSlashR && c != '\n'){
+      writeHeadLine();
+    }
+    // if has \r before, the next character will not be \r
+    hasSlashR = false;
+
+    // write character
+    out.write(c);
+
+    if(c == '\n'){
+      writeHeadLine();
+    }
+    else if(c == '\r'){
+      hasSlashR = true;
+    }
+  }
+
+  /**
+   * This method write the heads characters of a line (the line number, then a tab character)
+   */
+  private void writeHeadLine() throws IOException {
+    // use variable lineNumber then increment it
+    out.write(String.valueOf(lineNumber++));
+    out.write('\t');
   }
 
 }

@@ -1,15 +1,8 @@
 package ch.heigvd.res.lab01.impl.transformers;
 
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FilterWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.Writer;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -24,6 +17,7 @@ import java.util.logging.Logger;
  * a list of filters and decorates the output writer with them.
  * 
  * @author Olivier Liechti
+ * @author Daniel Palumbo
  */
 public abstract class FileTransformer implements IFileVisitor {
 
@@ -53,12 +47,12 @@ public abstract class FileTransformer implements IFileVisitor {
       Writer writer = new OutputStreamWriter(new FileOutputStream(file.getPath()+ ".out"), "UTF-8"); // the bug fix by teacher
       writer = decorateWithFilters(writer);
 
-      /*
-       * There is a missing piece here: you have an input reader and an ouput writer (notice how the 
-       * writer has been decorated by the concrete subclass!). You need to write a loop to read the
-       * characters and write them to the writer.
-       */
-      
+      // read & write the characters
+      int c;
+      while ((c = reader.read()) != -1){
+        writer.write(c);
+      }
+
       reader.close();
       writer.flush();
       writer.close();
