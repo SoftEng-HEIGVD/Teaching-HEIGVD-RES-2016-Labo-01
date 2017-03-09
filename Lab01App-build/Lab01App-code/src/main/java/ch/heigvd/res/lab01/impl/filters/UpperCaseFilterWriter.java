@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * Note : my intention is to only use the "basic" this.write(int) method below for the actual conversion and writing,
- * having the code written only once
+ * Note : my intention is to only use the "basic" write(int) method below for the actual conversion and writing,
+ * having the code written only once and calling this method in the other write(...)
  * @author Olivier Liechti, Camilo Pineda Serna
  */
 public class UpperCaseFilterWriter extends FilterWriter
@@ -16,6 +16,7 @@ public class UpperCaseFilterWriter extends FilterWriter
     {
         super(wrappedWriter);
     }
+
 
     /**
      * Converts a character (as an int) to upper case and writes it with FilterWriter.
@@ -29,21 +30,6 @@ public class UpperCaseFilterWriter extends FilterWriter
         // This FilterWrite's decorator(?) is only responsible for "upper casing" the char.
         // The writing part is done by the super-class.
         super.write(Character.toUpperCase(c));
-    }
-
-    /**
-     * Uses this.write(int) to convert a String to upper case and writes it with FilterWriter.
-     * @param str the String to convert to upper case
-     * @param off the offsef of the first char to convert
-     * @param len the number of char to convert
-     * @throws IOException
-     */
-    @Override
-    public void write(String str, int off, int len) throws IOException
-    {
-        for (int currentCharPos = off; currentCharPos < off + len; ++currentCharPos) {
-            this.write(str.codePointAt(currentCharPos));
-        }
     }
 
     /**
@@ -63,5 +49,23 @@ public class UpperCaseFilterWriter extends FilterWriter
             this.write((int) cbuf[currentCharPos]);
         }
     }
+
+
+    /**
+     * Uses this.write(int) to convert a String to upper case and writes it with FilterWriter.
+     * @param str the String to convert to upper case
+     * @param off the offsef of the first char to convert
+     * @param len the number of char to convert
+     * @throws IOException
+     */
+    @Override
+    public void write(String str, int off, int len) throws IOException
+    {
+        for (int currentCharPos = off; currentCharPos < off + len; ++currentCharPos) {
+            this.write(str.codePointAt(currentCharPos));
+        }
+    }
+
+
 
 }
