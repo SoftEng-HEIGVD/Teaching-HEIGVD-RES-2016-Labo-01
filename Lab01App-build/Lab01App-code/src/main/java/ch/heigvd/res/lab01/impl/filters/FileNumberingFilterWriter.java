@@ -30,13 +30,12 @@ public class FileNumberingFilterWriter extends FilterWriter
 
 
     /**
-     * We check each char (int) passed as parameter, and :
+     * We check each char (int) passed as parameter, and use a flag :
      * 1) if it's the first line : decorate.
-     * 2) if it's a \r, wait for next char
-     * 3) if it's a \n,
-     * if it's not a separator (not \r, neither \n, nor \r\n), writes it
-     * 2) if it's a separator, writes it, then the line number, then a <tab>
-     * to check the second, we made a pseudo FSM :
+     * 2) if it's a \r, flag and wait for next char
+     * 3) if it's a \n, check the flag and decorate
+     * 4) if it's something else, check the flag and decorate
+     * 5) else juste write
      *
      * @param c the char (as an int) to check and write
      * @throws IOException
@@ -89,6 +88,15 @@ public class FileNumberingFilterWriter extends FilterWriter
 
     }
 
+    /**
+     * decorates using the write(int) method
+     * @param cbuf the source chars (between \u0000 and \uffff) to write and decorate if necessary.
+     * The "restriction" is not that strong, because the whole range of the basic char can be converted
+     * see : http://stackoverflow.com/a/2006544
+     * @param off offset of the first char to write
+     * @param len number of char to write
+     * @throws IOException
+     */
     @Override
     public void write(char[] cbuf, int off, int len) throws IOException
     {
@@ -99,10 +107,18 @@ public class FileNumberingFilterWriter extends FilterWriter
     }
 
 
+    /**
+     * decorates using the write(int) method
+     * @param str the source String to write and decorate if necessary
+     * @param off offset of the first char to write
+     * @param len number of char to write
+     * @throws IOException
+     */
     @Override
     public void write(String str, int off, int len) throws IOException
     {
         for (int currentCharPos = off; currentCharPos < off + len; ++currentCharPos) {
+            //
             this.write(str.codePointAt(currentCharPos));
         }
     }
