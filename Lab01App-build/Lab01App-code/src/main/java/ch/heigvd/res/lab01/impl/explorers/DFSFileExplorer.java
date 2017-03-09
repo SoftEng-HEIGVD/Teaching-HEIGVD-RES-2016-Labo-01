@@ -21,6 +21,9 @@ public class DFSFileExplorer implements IFileExplorer {
                 
         // for this method use the same method that i described in the google form
         // to perform the exploration of the file system
+        // FIX : this is not exactly a dfs, but an exploration that treats files
+        //       first and then explore all sub-folders. That's why a second for
+        //       loop is necessary.
         vistor.visit(rootDirectory);
         
         // Stop condition of the recursion, if we aren't in a directory, we visit
@@ -34,7 +37,20 @@ public class DFSFileExplorer implements IFileExplorer {
             
             for(File f : files) {
                 
-                explore(f, vistor); // recursive call on all subfiles
+                // FIX : in a first time we treat only files
+                if(f.isFile()) {
+                 
+                    vistor.visit(f); 
+                }
+            }
+            
+            for(File d : files) {
+                
+                // FIX : in a second time we treat directories
+                if(d.isDirectory()) {
+                    
+                    explore(d, vistor); // recursive call on all sub-folders
+                }
             }
         }
     }
