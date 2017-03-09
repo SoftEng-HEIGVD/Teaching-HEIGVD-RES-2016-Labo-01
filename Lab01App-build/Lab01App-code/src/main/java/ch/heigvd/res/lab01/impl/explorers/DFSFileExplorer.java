@@ -14,9 +14,23 @@ import java.io.File;
  */
 public class DFSFileExplorer implements IFileExplorer {
 
+  private boolean isFirstDirectory = true;
+
   @Override
   public void explore(File rootDirectory, IFileVisitor vistor) {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    File[] nodesCurrentDirectory = rootDirectory.listFiles();
+
+    vistor.visit(rootDirectory);
+
+    if (nodesCurrentDirectory != null) {
+      for (File currentNode : nodesCurrentDirectory) {
+
+        if (currentNode.isDirectory())
+          explore(currentNode, vistor);
+        else
+          vistor.visit(currentNode);
+      }
+    }
   }
 
 }
