@@ -128,7 +128,7 @@ public class Application implements IApplication {
   void storeQuote(Quote quote, String filename) throws IOException {
 
     //Creation of folders
-    String filePath = new String(filename+"/");
+    String filePath = filename+"/";
 
     for (String tag : quote.getTags()) {
       filePath += tag + "/";
@@ -139,7 +139,6 @@ public class Application implements IApplication {
     //Creation of the utf8 file
     cpt++;
     filePath +="quote-"+cpt+".utf8";
-    new File(filePath).createNewFile();
 
     //Write the joke into the file
     OutputStream outputStream = new FileOutputStream(filePath);
@@ -147,7 +146,6 @@ public class Application implements IApplication {
 
     outputStreamWriter.write(quote.getQuote());
     outputStreamWriter.close();
-
   }
   
   /**
