@@ -18,24 +18,76 @@ import java.util.logging.Logger;
 public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
+  private int count = 1;
+  private boolean prevIsCR = false; // Previous character is carriage return
 
-  public FileNumberingFilterWriter(Writer out) {
+  public FileNumberingFilterWriter(Writer out) throws IOException {
     super(out);
+    writeNewLineNumber();
   }
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    write(str.toCharArray(), off, len);
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    for(int i = off; i < off + len; i++) {
+      if(cbuf[i] == '\r') {
+        if(prevIsCR) {
+          writeNewLineNumber();
+        }
+
+        out.write(cbuf[i]);
+        prevIsCR = true;
+      }
+      else if(cbuf[i] == '\n') {
+        out.write(cbuf[i]);
+        writeNewLineNumber();
+
+        prevIsCR = false;
+      }
+      else {
+        if(prevIsCR) {
+          writeNewLineNumber();
+        }
+
+        out.write(cbuf[i]);
+        prevIsCR = false;
+      }
+
+//      out.write(cbuf[i]);
+//
+//      /* Reading carriage return '\r' (CR) is a special case where we must be
+//       * very careful.
+//       */
+//      if(cbuf[i] == '\r') {
+//        if(((i+1) < (off + len)) && (cbuf[i+1] == '\n')) {
+//          i++;
+//          out.write(cbuf[i]); // write line feed after carriage return
+//        }
+//
+//        writeNewLineNumber();
+//      }
+//      else if(cbuf[i] == '\n') {
+//        writeNewLineNumber();
+//      }
+    }
   }
 
   @Override
   public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    write(new char[] {(char)c}, 0, 1);
   }
 
+  /**
+   * Writes new line number appended with tab space.
+   * Auto-increments state of line number at each call.
+   *
+   * @throws IOException
+   */
+  private void writeNewLineNumber() throws IOException {
+    out.write((count++) + "\t");
+  }
 }
