@@ -7,6 +7,7 @@ import ch.heigvd.res.lab01.interfaces.IFileExplorer;
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
 import ch.heigvd.res.lab01.quotes.QuoteClient;
 import ch.heigvd.res.lab01.quotes.Quote;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -86,12 +87,10 @@ public class Application implements IApplication {
     QuoteClient client = new QuoteClient();
     for (int i = 0; i < numberOfQuotes; i++) {
       Quote quote = client.fetchQuote();
-      /* There is a missing piece here!
-       * As you can see, this method handles the first part of the lab. It uses the web service
-       * client to fetch quotes. We have removed a single line from this method. It is a call to
-       * one method provided by this class, which is responsible for storing the content of the
-       * quote in a text file (and for generating the directories based on the tags).
-       */
+      
+      // Store the quote on the filesystem
+      storeQuote(quote, "quote-" + i + ".utf8");
+      
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
       for (String tag : quote.getTags()) {
         LOG.info("> " + tag);
@@ -120,12 +119,33 @@ public class Application implements IApplication {
    * - with quote.getQuote(), it has access to the text of the quote. It stores
    *   this text in UTF-8 file.
    * 
+   * @author Ludovic Delafontaine
    * @param quote the quote object, with tags and text
    * @param filename the name of the file to create and where to store the quote text
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+      
+      // Get the base directory
+      String path = WORKSPACE_DIRECTORY + "/"; 
+      
+      // Construct all the path for the file
+      for (String tag : quote.getTags()) {
+          path += tag + "/";
+      }
+      
+      // Make the path directories (don't store the result to save memory)
+      new File(path).mkdirs();
+      
+      // Open the output file in UTF-8
+      Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path + filename), "UTF-8"));
+      
+      // Write the quote to the file
+      out.write(quote.getQuote());
+      
+      // Close the file
+      out.close();
+      
   }
   
   /**
@@ -148,7 +168,7 @@ public class Application implements IApplication {
   
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    return "ludovic.delafontaine@heig-vd.ch";
   }
 
   @Override
