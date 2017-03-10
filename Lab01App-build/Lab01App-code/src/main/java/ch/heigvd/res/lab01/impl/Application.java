@@ -135,10 +135,14 @@ public class Application implements IApplication
 	void storeQuote(Quote quote, String filename) throws IOException
 	{
 		String path = WORKSPACE_DIRECTORY;
+
+		//obtain the tag and put the tags in the path
 		for (String currentTag : quote.getTags())
 		{
 			path += File.separator + currentTag;
 		}
+
+		//create a new directory
 		File currentDirectory = new File(path);
 		currentDirectory.mkdirs();
 
