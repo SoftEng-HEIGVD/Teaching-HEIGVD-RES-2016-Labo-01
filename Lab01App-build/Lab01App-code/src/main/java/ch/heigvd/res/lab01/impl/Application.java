@@ -83,8 +83,10 @@ public class Application implements IApplication {
     QuoteClient client = new QuoteClient();
     for (int i = 0; i < numberOfQuotes; i++) {
       Quote quote = client.fetchQuote();
+
       // Call the storeQuote method and specifie the quote file name with its number.
       storeQuote(quote, "quote-" + i + ".utf8");
+
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
       for (String tag : quote.getTags()) {
         LOG.info("> " + tag);
@@ -131,8 +133,9 @@ public class Application implements IApplication {
       dir.mkdirs();
 
       // The output stream to create and write the quote file.
-      BufferedWriter out = new BufferedWriter(new OutputStreamWriter(
-              new FileOutputStream(quotePath + filename), "UTF-8"));
+      BufferedWriter out = new BufferedWriter(
+              new OutputStreamWriter(new FileOutputStream(quotePath + filename), "UTF-8")
+      );
 
       // Writing the quote in the file.
       out.write(quote.getQuote());
@@ -161,7 +164,6 @@ public class Application implements IApplication {
   @Override
   public String getAuthorEmail() {
      return "gaetan.othenin-girard@heig-vd.ch";
-    //throw new UnsupportedOperationException("The student has not implemented this method yet.");
   }
 
   @Override
