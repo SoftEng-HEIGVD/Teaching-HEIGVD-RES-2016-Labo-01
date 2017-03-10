@@ -22,10 +22,13 @@ public class DFSFileExplorer implements IFileExplorer {
     if(list != null) {
       Arrays.sort(list);
       for(File f : list) {
-        if (f.isDirectory()) {
-          explore(f, visitor);
-        } else {
+        if (!f.isDirectory()) {
           visitor.visit(f);
+        }
+      }
+      for(File f : list) {
+        if(f.isDirectory()) {
+          explore(f, visitor);
         }
       }
     }

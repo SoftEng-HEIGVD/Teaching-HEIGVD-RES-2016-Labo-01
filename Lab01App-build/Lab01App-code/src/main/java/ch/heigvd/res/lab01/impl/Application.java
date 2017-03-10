@@ -133,8 +133,24 @@ public class Application implements IApplication {
 
     PrintWriter writer = new PrintWriter(f, "UTF-8");
     writer.print(quote.getQuote());
+    writer.close();
+
+    /*
+    String filePath = WORKSPACE_DIRECTORY + "/";
+    for(String tag : quote.getTags())
+      filePath += tag + "/";
+
+    File f = new File(filePath);
+    f.mkdirs();
+
+    filePath += filename;
+
+    Writer writer = new OutputStreamWriter(new FileOutputStream(filePath + ".out"), "UTF-8");
+    writer.write(quote.getQuote());
+    writer.close();
+    */
   }
-  
+
   /**
    * This method uses a IFileExplorer to explore the file system and prints the name of each
    * encountered file and directory.
@@ -150,7 +166,7 @@ public class Application implements IApplication {
          * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
          */
         try {
-          writer.write(file.getPath());
+          writer.write(file.getPath() + "\n");
         } catch (IOException e) {
           e.printStackTrace();
         }
