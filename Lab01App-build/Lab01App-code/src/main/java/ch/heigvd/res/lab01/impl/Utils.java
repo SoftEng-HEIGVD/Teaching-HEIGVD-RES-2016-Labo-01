@@ -20,19 +20,25 @@ public class Utils {
     * not contain any line separator, then the first element is an empty string.
     */
    public static String[] getNextLine(String lines) {
+      // creates a new Array of 2 string
       String[] nextLine = new String[2];
 
+      // iterates over all chars
       for (int i = 0; i < lines.length(); i++) {
          char c = lines.charAt(i);
+
          if (c == '\n' || c == '\r') {
             if ((i + 1) < lines.length() && lines.charAt(i + 1) == '\n') {
                i++;
             }
+            // creates the 2 string correctly cut
             nextLine[0] = lines.substring(0, i + 1);
             nextLine[1] = lines.substring(i + 1);
             return nextLine;
          }
       }
+
+      // if nothing was found
       nextLine[0] = "";
       nextLine[1] = lines;
       return nextLine;

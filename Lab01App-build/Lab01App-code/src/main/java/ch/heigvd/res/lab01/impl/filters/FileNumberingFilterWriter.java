@@ -17,8 +17,8 @@ import java.util.logging.Logger;
 public class FileNumberingFilterWriter extends FilterWriter {
 
    private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
-   private boolean wasPreviouslyR = false;
-   private int nbOfLines = 0;
+   private boolean wasPreviouslyR = false; // indicates if the previous char was a CR
+   private int nbOfLines = 0;             // current line number
 
    public FileNumberingFilterWriter(Writer out) {
       super(out);
@@ -38,23 +38,26 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
    @Override
    public void write(int c) throws IOException {
+      // at the beginning writes a new line
       if (nbOfLines == 0) {
-
          out.write("1\t");
          nbOfLines++;
       }
+
+      // writes new line if previously it was a CR and now not a LF
       if (wasPreviouslyR && c != '\n') {
          out.write(Integer.toString(++nbOfLines) + '\t');
-
       }
 
+      // writes the char 
       out.write(c);
-      wasPreviouslyR = false;
+
+      // checks if it is a CR char
+      wasPreviouslyR = (c == '\r');
+
+      // finally writes a new line if it is a LF
       if (c == '\n') {
          out.write(Integer.toString(++nbOfLines) + '\t');
-         //wasPreviouslyR = false;
-      } else if (c == '\r') {
-         wasPreviouslyR = true;
       }
 
    }
