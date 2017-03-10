@@ -28,6 +28,10 @@ public class Application implements IApplication {
   public static String WORKSPACE_DIRECTORY = "./workspace/quotes";
   
   private static final Logger LOG = Logger.getLogger(Application.class.getName());
+
+  private final String quoteFileName = "quote-";
+  private final String encoding = ".utf8";
+  private int quoteNumber = 0;
   
   public static void main(String[] args) {
     
@@ -123,10 +127,6 @@ public class Application implements IApplication {
    * @param filename the name of the file to create and where to store the quote text
    * @throws IOException 
    */
-
-  private final String quoteFileName = "quote-";
-  private final String encoding = ".utf8";
-  private int quoteNumber = 0;
   void storeQuote(Quote quote, String filename) throws IOException {
 
     List<String> listOfQuotes = quote.getTags();
