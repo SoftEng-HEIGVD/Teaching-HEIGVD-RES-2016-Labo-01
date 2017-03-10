@@ -7,11 +7,8 @@ import ch.heigvd.res.lab01.interfaces.IFileExplorer;
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
 import ch.heigvd.res.lab01.quotes.QuoteClient;
 import ch.heigvd.res.lab01.quotes.Quote;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -23,6 +20,7 @@ import org.apache.commons.io.FileUtils;
 /**
  *
  * @author Olivier Liechti
+ * @author Denise Gemesio
  */
 public class Application implements IApplication {
 
@@ -89,13 +87,10 @@ public class Application implements IApplication {
     QuoteClient client = new QuoteClient();
     for (int i = 0; i < numberOfQuotes; i++) {
       Quote quote = client.fetchQuote();
+      
+      // We send the quote and the name of the file to the storeQuote function
       storeQuote(quote, "quote-" + i + ".utf8");
-      /* There is a missing piece here!
-       * As you can see, this method handles the first part of the lab. It uses the web service
-       * client to fetch quotes. We have removed a single line from this method. It is a call to
-       * one method provided by this class, which is responsible for storing the content of the
-       * quote in a text file (and for generating the directories based on the tags).
-       */
+      
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
       for (String tag : quote.getTags()) {
         LOG.info("> " + tag);
@@ -129,14 +124,23 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-     List<String> tags = quote.getTags();
+     
+     // Thanks to the function mkdirs(), we can easily create a hierarchy of directories.
+     // But this function needs a file which needs a path. We will then create the path
+     // of the quote using the tags and beginning by the workspace directory.
+     
      String path = WORKSPACE_DIRECTORY + "/";
+     List<String> tags = quote.getTags();
      
      for (String tag : tags)
         path += tag + "/";
      
      File directory = new File(path);
+     
      directory.mkdirs();
+     
+     // We can finally create the actual file which will contain the quote. We then
+     // add the filename to the path and create a new file from it. 
      
      path += filename;
      
@@ -144,10 +148,16 @@ public class Application implements IApplication {
      
      file.createNewFile();
      
+     // We create a PrintWriter which allows us to use the file just created as the 
+     // destination when using this writer. The second parameter defines the supported
+     // charset which is UTF-8 for us.
+     
      PrintWriter pw = new PrintWriter(file, "UTF-8");
      
+     // We can finally write the quote in the file
      pw.write(quote.getQuote());
      
+     // And we close the stream!
      pw.close();
      
   }
@@ -163,11 +173,8 @@ public class Application implements IApplication {
       @Override
       public void visit(File file) {
          try {
-            /*
-            * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
-            * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
-            * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
-            */
+            // We just get the path and add a '\n' at the end to imitate the expected
+            // output
             writer.write(file.getPath() + '\n');
          } catch (IOException e) {
             e.printStackTrace();
