@@ -32,7 +32,9 @@ public class Utils {
       
       //Check if the string given is containing one of the separators
       for (String separator : separators) {
+         
          if (lines.contains(separator)) {
+            
             index = lines.indexOf(separator);
             //Create the next line
             lineTab[0] = lines.substring(0,index + 1);

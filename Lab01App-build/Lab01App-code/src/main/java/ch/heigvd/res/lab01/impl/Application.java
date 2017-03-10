@@ -29,8 +29,8 @@ public class Application implements IApplication {
     * This constant defines where the quotes will be stored. The path is relative to
     * where the Java application is invoked.
     */
-   public static String WORKSPACE_DIRECTORY = "."+ File.separator + "workspace" + 
-                                             File.separator + "quotes";
+   public static String WORKSPACE_DIRECTORY = "." + File.separator + "workspace"
+           + File.separator + "quotes";
 
    private static final Logger LOG = Logger.getLogger(Application.class.getName());
 
@@ -84,9 +84,12 @@ public class Application implements IApplication {
 
    @Override
    public void fetchAndStoreQuotes(int numberOfQuotes) throws IOException {
+
       clearOutputDirectory();
       QuoteClient client = new QuoteClient();
+
       for (int i = 0; i < numberOfQuotes; i++) {
+
          Quote quote = client.fetchQuote();
          /* There is a missing piece here!
        * As you can see, this method handles the first part of the lab. It uses the web service
@@ -129,33 +132,29 @@ public class Application implements IApplication {
     * @throws IOException
     */
    void storeQuote(Quote quote, String filename) throws IOException {
-
-      List<String> tags = quote.getTags();
-      String quoteToCopy = quote.getQuote();
-      String directory = WORKSPACE_DIRECTORY;
       
-      // Create the directory where to find the file
-      for (int i = 0; i < tags.size(); ++i) {
-
-         String tag = tags.get(i);
-         directory = directory.concat(File.separator);
-         directory = directory.concat(tag);
+      //Get the tags
+      List<String> tagsList = quote.getTags();
+      
+      //Get the quote's text
+      String text = quote.getQuote();
+      
+      //Manage the extension
+      if(!filename.contains(".utf8")) {
+         filename = filename.concat(".utf8");
       }
+      //Create the file in utf-8
+      File fileToCreate = new File(filename);
       
-      filename = directory.concat(filename);
-      
-      File file = new File(filename);
-      
-      //Check if this file alredy exists, create it otherwise
-      if (!file.exists()) {
-
-         if (file.createNewFile()) {
-
-            // Store the quote in the file 
-            FileWriter storedQuote = new FileWriter(file);
-            storedQuote.write(quoteToCopy);
-            storedQuote.close();
-         }
+      // if we succeed to create file, we write into it
+      if (fileToCreate.exists()) {
+         
+         FileWriter writer = new FileWriter(fileToCreate);
+         writer.write(text);
+         
+         
+         //Don't forget to close the writer after using it
+         writer.close();
       }
    }
 
@@ -164,15 +163,19 @@ public class Application implements IApplication {
     * of each encountered file and directory.
     */
    void printFileNames(final Writer writer) {
+      
       IFileExplorer explorer = new DFSFileExplorer();
       explorer.explore(new File(WORKSPACE_DIRECTORY), new IFileVisitor() {
+         
          @Override
          public void visit(File file) {
             /*
-         * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
-         * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
-         * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
+             * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
+             * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
+             * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
              */
+            
+            
             try {
                writer.write(file.toString());
             } catch (IOException e) {
