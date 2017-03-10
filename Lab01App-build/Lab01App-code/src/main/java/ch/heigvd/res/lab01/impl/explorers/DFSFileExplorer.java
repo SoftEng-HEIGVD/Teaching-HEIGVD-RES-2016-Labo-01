@@ -1,3 +1,4 @@
+
 package ch.heigvd.res.lab01.impl.explorers;
 
 import ch.heigvd.res.lab01.interfaces.IFileExplorer;
@@ -11,16 +12,19 @@ import java.io.File;
  * in the directory and then moves into the subdirectories.
  *
  * @author Olivier Liechti
+ * @author Denise Gemesio
  */
 public class DFSFileExplorer implements IFileExplorer {
 
-   /* for each file in the rootDirectory directory, we will:
-    *    - If the file is a directory, visit the directory and then call the
-    *      explore() function recursively with this directory
-    *    - If the fils is not a directory, visit the file
+   /* 
+    * First, we have to visit de rootDirectory itself. Then, if the directory isn't
+    * empty, first, we will visit every file and then, we will explore every 
+    * directory. Warning! This has to be made in that specific ordre! First all the
+    * files and THEN explore the directory!
     */
    @Override
    public void explore(File rootDirectory, IFileVisitor vistor) {
+      
       vistor.visit(rootDirectory);
 
       if (rootDirectory.listFiles() != null) {
@@ -41,3 +45,4 @@ public class DFSFileExplorer implements IFileExplorer {
       }
    }
 }
+
