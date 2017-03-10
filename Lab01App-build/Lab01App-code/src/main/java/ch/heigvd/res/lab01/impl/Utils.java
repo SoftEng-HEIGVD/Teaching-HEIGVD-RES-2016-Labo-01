@@ -31,6 +31,10 @@ public class Utils {
            break;
         } else if (actualChar == '\r') {
            separator = '\r';
+           // If the end of line isn't \r\n, we end the loop.
+           if (i + 1 < lines.length() && lines.charAt(i + 1) != '\n') {
+              break;
+           }
          }
      }
 
