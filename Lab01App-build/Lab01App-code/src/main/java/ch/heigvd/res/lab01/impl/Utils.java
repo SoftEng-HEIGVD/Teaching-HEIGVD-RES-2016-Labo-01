@@ -1,5 +1,6 @@
 package ch.heigvd.res.lab01.impl;
 
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 /**
@@ -20,7 +21,43 @@ public class Utils {
    * contain any line separator, then the first element is an empty string.
    */
   public static String[] getNextLine(String lines) {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    String[] array = new String[2];
+    String first_elem = "";
+    String second_elem = "";
+    boolean windows = false;
+
+    int i = 0;
+    while(i < lines.length() && lines.charAt(i) != '\r' && lines.charAt(i) != '\n') {
+      first_elem += lines.charAt(i);
+      i++;
+    }
+
+    if(i + 1 < lines.length() && lines.charAt(i) == '\r' && lines.charAt(i + 1) == '\n') {
+      windows = true;
+    }
+
+    if(i == lines.length()) {
+      first_elem = "";
+      second_elem = lines;
+    } else if(i != 0) {
+      first_elem += lines.charAt(i);
+      if(windows) {
+        i++;
+        first_elem += lines.charAt(i);
+      }
+      i++;
+    }
+    array[0] = first_elem;
+
+    while(i < lines.length()) {
+      second_elem += lines.charAt(i);
+      i++;
+    }
+
+    array[0] = first_elem;
+    array[1] = second_elem;
+
+    return array;
   }
 
 }
