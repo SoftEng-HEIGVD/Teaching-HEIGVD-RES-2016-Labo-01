@@ -32,98 +32,52 @@ public class FileNumberingFilterWriter extends FilterWriter {
   @Override
   public void write(String str, int off, int len) throws IOException {
 
-    str = str.substring(off,off+len); //With that, it can be used by a part of a string
-
-    StringBuffer newStr = new StringBuffer();
-    String[] newLines;
-
-    //The first time ( Because every text has at least one line)
-    if(firstLine)
-    {
-        newStr.append(cpt+"\t");
-        firstLine = false;
-    }
-
-    while(true)
-    {
-        newLines = Utils.getNextLine(str);
-
-        //There are no more lines
-        if(newLines[1].equals(str))
-        {
-            newStr.append(newLines[1]);
-            break;
-        }
-
-        //There are still lines
-        else
-        {
-            newStr.append(newLines[0]);
-
-            cpt++;
-            newStr.append(""+cpt+"\t");
-
-            str = newLines[1];
-        }
-    }
-
-    super.write(newStr.toString(), 0, newStr.length());
+      write(str.toCharArray(),off,len);
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
 
-      String test = new String(cbuf);
-      write(test,off,len);
+      for(int x = off; x<(off+len);x++)
+      {
+          write(cbuf[x]);
+      }
   }
 
   @Override
   public void write(int c) throws IOException {
 
-      //At first, i thought i can used the write function which have a string in parameter
-      //but it was difficult with the line separator. \r\n it's note a character
-      //but two  '\r' and '\n'. So it was impossible for me to make the difference.
-
       //The firstTime
-      if(firstLine)
-      {
-          cpt = 49; //It's the 1 in ASCII
-          super.write(cpt);
-          super.write('\t');
+      if(firstLine) {
+          out.write(cpt +"\t");
           firstLine = false;
       }
 
-      if(previousCharacter=='\r')
-      {
+      if(previousCharacter=='\r') {
+
+          cpt++;
+
          if((char)c=='\n')
          {
-             super.write('\n');
-             cpt++;
-             super.write(cpt);
-             super.write('\t');
+             out.write("\n"+cpt + "\t");
              previousCharacter = '\n';
          }
 
          else if((char)c!='\n')
          {
-             cpt++;
-             super.write(cpt);
-             super.write('\t');
-             super.write(c);
+             out.write(cpt+"\t"+(char)c);
              previousCharacter = (char)c;
          }
       }
 
       else if((char)c=='\n')
       {
-          super.write('\n');
           cpt++;
-          super.write(cpt);
-          super.write('\t');
+          out.write("\n"+cpt+"\t");
           previousCharacter = (char)c;
       }
       else{
-          super.write(c);
+          out.write(c);
           previousCharacter = (char)c;
       }
   }
