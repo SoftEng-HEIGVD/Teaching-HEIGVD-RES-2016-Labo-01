@@ -4,6 +4,8 @@ import ch.heigvd.res.lab01.interfaces.IFileExplorer;
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * This implementation of the IFileExplorer interface performs a depth-first
@@ -27,6 +29,10 @@ public class DFSFileExplorer implements IFileExplorer {
             return;
         }
 
+        //It seems that we have to order the files to pass all of the tests
+        File[] files = rootDirectory.listFiles();
+        Arrays.sort(files);
+        
         for (File f : rootDirectory.listFiles()) {
             explore(f, vistor);
         }

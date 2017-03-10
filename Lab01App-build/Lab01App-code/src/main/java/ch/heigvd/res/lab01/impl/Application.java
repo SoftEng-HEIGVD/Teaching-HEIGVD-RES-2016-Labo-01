@@ -159,7 +159,7 @@ public class Application implements IApplication {
             @Override
             public void visit(File file) {
                 try {
-                    writer.write(file.getPath() + System.lineSeparator());
+                    writer.write(file.getPath() + "\n");
 
                     /*
               * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
