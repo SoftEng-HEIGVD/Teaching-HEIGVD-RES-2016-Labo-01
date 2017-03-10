@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 /**
  *
  * @author Olivier Liechti
+ * @author Denise Gemesio
  */
 public class Utils {
 
@@ -20,46 +21,53 @@ public class Utils {
     * not contain any line separator, then the first element is an empty string.
     */
    public static String[] getNextLine(String lines) {
-
+      
+      // We create the array of length 2
       String[] e = new String[2];
 
+      // If there is no return sign, we put an empty string in the first entry and the
+      // line in the second entry and we return it
       if (!(lines.contains("\r") || lines.contains("\n") || lines.contains("\r\n"))) {
          e[0] = "";
          e[1] = lines;
          return e;
       }
 
+      // We create a counter to know the position of the return character and a boolean
+      // to know when we can stop searching
       int counter = 0;
+      boolean foundChar = false;
 
+      // If it contains a "\r\n", then the substring from the index in which the counter
+      // found the return character will be increased by one to cover the '\n'. We will
+      // then store the line until the '\n' in the first entry of the array and the rest
+      // of the line in the second entry.
+      // Testing the same for the '\r' and '\n' separatedly doesn't change much a part
+      // from the fact that we will not increase the counter.
       if (lines.contains("\r\n")) {
-         while (counter < lines.length()) {
-            if (lines.charAt(counter) == '\r') break;
+         while (counter < lines.length() && !foundChar) {
+            if (lines.charAt(counter) == '\r') {
+               foundChar = true;
+            }
             ++counter;
          }
-         
-         e[0] = lines.substring(0, counter + 2);
-         e[1] = lines.substring(counter + 2);
-
-      } else if (lines.contains("\r")) {
-         while (counter < lines.length()) {
-            if (lines.charAt(counter) == '\r') break;
-            ++counter;
-         }
-         
          e[0] = lines.substring(0, counter + 1);
          e[1] = lines.substring(counter + 1);
 
-      } else {
-         while (counter < lines.length()) {
-            if (lines.charAt(counter) == '\n') break;
+      } else if (lines.contains("\r") || lines.contains("\n")) {
+         while (counter < lines.length() && !foundChar) {
+            if (lines.charAt(counter) == '\r' || lines.charAt(counter) == '\n') {
+               foundChar = true;
+            }
             ++counter;
          }
-         
-         e[0] = lines.substring(0, counter + 1);
-               e[1] = lines.substring(counter + 1);
-      }
+         e[0] = lines.substring(0, counter);
+         e[1] = lines.substring(counter);
 
-      return e;
+      }
       
+      foundChar = false;
+      return e;
+
    }
 }
