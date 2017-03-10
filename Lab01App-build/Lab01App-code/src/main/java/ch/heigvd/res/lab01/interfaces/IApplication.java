@@ -12,7 +12,7 @@ public interface IApplication {
    * This method must return YOUR e-mail address.
    * @return your e-mail addresse, with the format firstname.lastname@heig-vd.ch
    */
-  public String getAuthorEmail();
+  String getAuthorEmail();
   
   /**
    * This method uses the QuoteClient and invokes it method several times to retrieve
@@ -41,7 +41,7 @@ public interface IApplication {
    * @param numberOfQuotes
    * @throws IOException
    */
-  public void fetchAndStoreQuotes(int numberOfQuotes) throws IOException;
+  void fetchAndStoreQuotes(int numberOfQuotes) throws IOException;
 
-  public void processQuoteFiles() throws IOException;
+  void processQuoteFiles() throws IOException;
 }

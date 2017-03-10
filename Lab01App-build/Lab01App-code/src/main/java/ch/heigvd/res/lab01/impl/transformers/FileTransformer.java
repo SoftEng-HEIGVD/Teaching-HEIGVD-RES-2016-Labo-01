@@ -24,6 +24,7 @@ import java.util.logging.Logger;
  * a list of filters and decorates the output writer with them.
  * 
  * @author Olivier Liechti
+ * @author Pierre-Benjamin Monaco
  */
 public abstract class FileTransformer implements IFileVisitor {
 
@@ -49,15 +50,20 @@ public abstract class FileTransformer implements IFileVisitor {
       return;
     }
     try {
+      //The file doesn't exists at the beginning so i create it
+      (new File(file.getPath()+ ".out")).createNewFile();
+
       Reader reader = new InputStreamReader(new FileInputStream(file), "UTF-8");
       Writer writer = new OutputStreamWriter(new FileOutputStream(file.getPath()+ ".out"), "UTF-8"); // the bug fix by teacher
       writer = decorateWithFilters(writer);
 
-      /*
-       * There is a missing piece here: you have an input reader and an ouput writer (notice how the 
-       * writer has been decorated by the concrete subclass!). You need to write a loop to read the
-       * characters and write them to the writer.
-       */
+      //Reads chars one by one from the InputStreamReader
+      int cReader;
+      while((cReader = reader.read()) != -1)
+      {
+        //Write read char into OutputStreamWriter
+        writer.write(cReader);
+      }
       
       reader.close();
       writer.flush();

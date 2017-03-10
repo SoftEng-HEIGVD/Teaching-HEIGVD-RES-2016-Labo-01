@@ -1,5 +1,6 @@
 package ch.heigvd.res.lab01.impl;
 
+import java.util.Arrays;
 import java.util.logging.Logger;
 import static org.junit.Assert.*;
 import org.junit.Test;
