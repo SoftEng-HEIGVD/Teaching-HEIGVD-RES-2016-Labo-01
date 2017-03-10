@@ -20,7 +20,30 @@ public class Utils {
    * contain any line separator, then the first element is an empty string.
    */
   public static String[] getNextLine(String lines) {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+     String[] out = {"", lines};
+     char separator = 0;
+
+     // We check each character and check if it's an end of line.
+     for (int i = 0; i < lines.length(); i++) {
+        char actualChar = lines.charAt(i);
+        if (actualChar == '\n') {
+           separator = '\n';
+           break;
+        } else if (actualChar == '\r') {
+           separator = '\r';
+         }
+     }
+
+     // We get the position of the end of line character we found.
+     int separatorPos = lines.indexOf(separator);
+
+     // If it was an end of line character, we cut the string in the two parts.
+     if (separatorPos >= 0) {
+        out[0] = lines.substring(0, separatorPos + 1);
+        out[1] = lines.substring(separatorPos + 1);
+     }
+
+     return out;
   }
 
 }
