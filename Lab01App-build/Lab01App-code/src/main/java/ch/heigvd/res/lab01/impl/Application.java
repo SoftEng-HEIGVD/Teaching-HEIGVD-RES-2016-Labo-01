@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 
 /**
- *
+ * @author Myszkorowski wojciech
  * @author Olivier Liechti
  */
 public class Application implements IApplication {
@@ -86,6 +86,7 @@ public class Application implements IApplication {
     QuoteClient client = new QuoteClient();
     for (int i = 0; i < numberOfQuotes; i++) {
       Quote quote = client.fetchQuote();
+        storeQuote(quote, "quote-" + (i + 1) + ".utf8");
       /* There is a missing piece here!
        * As you can see, this method handles the first part of the lab. It uses the web service
        * client to fetch quotes. We have removed a single line from this method. It is a call to
@@ -125,7 +126,25 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+      
+      String directory = WORKSPACE_DIRECTORY;
+      //implementation of the directory
+      for (String str : quote.getTags()) {
+          directory += File.separator + str;
+      }
+      
+      new File(directory).mkdirs();
+      
+      // file creation
+      File file = new File(directory + File.separator + filename);
+      file.createNewFile();
+ 
+      
+      //Write the quote in file
+      Writer writer = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
+      writer.write(quote.getQuote());
+      writer.close();
+      
   }
   
   /**
@@ -137,6 +156,13 @@ public class Application implements IApplication {
     explorer.explore(new File(WORKSPACE_DIRECTORY), new IFileVisitor() {
       @Override
       public void visit(File file) {
+          //adding the body of the path to visit
+          try {
+              //Writing the  filename path to the writer
+              writer.write(file.getPath() + '\n');
+          } catch(IOException e) {
+              e.printStackTrace();
+          }
         /*
          * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
          * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
@@ -148,7 +174,7 @@ public class Application implements IApplication {
   
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    return "wojciech.myszkorowski@heig-vd.ch";
   }
 
   @Override
@@ -156,5 +182,4 @@ public class Application implements IApplication {
     IFileExplorer explorer = new DFSFileExplorer();
     explorer.explore(new File(WORKSPACE_DIRECTORY), new CompleteFileTransformer());    
   }
-
 }
