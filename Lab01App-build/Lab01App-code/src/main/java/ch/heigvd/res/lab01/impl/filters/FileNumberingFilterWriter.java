@@ -11,14 +11,15 @@ import java.util.logging.Logger;
  * filter encounters a line separator, it sends it to the decorated writer. It then
  * sends the line number and a tab character, before resuming the write process.
  *
- * Hello\n\World -> 1\Hello\n2\tWorld
+ * Hello\nWorld -> 1\Hello\n2\tWorld
  *
  * @author Olivier Liechti
+ * @author Denise Gemesio
  */
 public class FileNumberingFilterWriter extends FilterWriter {
 
    private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
-   
+
    private int number = 1;
    private boolean thereWasABackR = false;
 
@@ -28,12 +29,14 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
    @Override
    public void write(String str, int off, int len) throws IOException {
+      // The string is divided in chars inside an array and calls the function which
+      // takes a chars array as parameter
       write(str.toCharArray(), off, len);
-
    }
 
    @Override
    public void write(char[] cbuf, int off, int len) throws IOException {
+      // chars are sent one by one to the function which takes integers as parameter
       for (int i = 0; i < len; ++i) {
          write(cbuf[i + off]);
       }
@@ -41,6 +44,8 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
    @Override
    public void write(int c) throws IOException {
+      // if it is the first char, then we first place the number, the tab and then the
+      // char and we increase number
       if (number == 1) {
          out.write(Integer.toString(number));
          out.write("\t");
@@ -49,6 +54,11 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
       } else {
 
+         // If there is a '\r' we can be in two situations:
+         //    1. it's a solitary \r : after it, we will add the number and the tab
+         //    2. it's a \r followed by a \n : after the \r, we write the \n, the
+         //       number and the tab
+         // So that's why we keep a track of the appearences of the \r!
          if (c == '\r') {
             thereWasABackR = true;
             out.write(c);
