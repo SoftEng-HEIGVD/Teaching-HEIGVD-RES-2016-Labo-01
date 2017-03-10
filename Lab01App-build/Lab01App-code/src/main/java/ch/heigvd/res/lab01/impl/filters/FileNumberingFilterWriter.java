@@ -19,11 +19,10 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
   private int count = 1;
-  private boolean prevIsCR = false; // Previous character is carriage return
+  private boolean prevIsCR = true; // Previous character is carriage return
 
-  public FileNumberingFilterWriter(Writer out) throws IOException {
+  public FileNumberingFilterWriter(Writer out) {
     super(out);
-    writeNewLineNumber();
   }
 
   @Override
