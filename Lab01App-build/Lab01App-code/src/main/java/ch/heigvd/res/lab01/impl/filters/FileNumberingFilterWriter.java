@@ -14,6 +14,7 @@ import java.util.logging.Logger;
  * Hello\n\World -> 1\Hello\n2\tWorld
  *
  * @author Olivier Liechti
+            Modified by Tano Iannetta
  */
 public class FileNumberingFilterWriter extends FilterWriter {
 
@@ -35,7 +36,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    for(int i = 0; i < len; i++)
+    for(int i = 0; i < len; i++) // course
     {
         write(cbuf[i + off]);
     }
@@ -49,6 +50,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
         out.write(line + "\t");
         line++;
     }
+    carriageReturn = c == '\r' ? true : false; // flag for \r
 
     out.write(c);
 
@@ -57,9 +59,6 @@ public class FileNumberingFilterWriter extends FilterWriter {
         out.write(line + "\t");
         line++;
     }
-
-    carriageReturn = c == '\r' ? true : false; // flag for \r
-
   }
 
 }

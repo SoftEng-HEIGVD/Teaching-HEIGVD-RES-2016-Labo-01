@@ -21,6 +21,7 @@ import java.io.OutputStreamWriter;
 /**
  *
  * @author Olivier Liechti
+            Modified by Tano Iannetta
  */
 public class Application implements IApplication {
 
@@ -40,7 +41,6 @@ public class Application implements IApplication {
      * better to use a Logger rather than using System.out.println
      */
     System.setProperty("java.util.logging.SimpleFormatter.format", "%4$s: %5$s%6$s%n");
-
 
     int numberOfQuotes = 0;
     try {
@@ -137,6 +137,7 @@ public class Application implements IApplication {
           path += "/" + tag;
       }
 
+
       // parent directories
       File dir = new File(path);
       dir.mkdirs();
@@ -146,8 +147,6 @@ public class Application implements IApplication {
 
       Writer out = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
       out.write(quote.getQuote());
-
-
       out.close();
   }
 

@@ -2,14 +2,13 @@ package ch.heigvd.res.lab01.impl;
 
 import java.util.logging.Logger;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+
 import java.lang.String;
 
 /**
  *
  * @author Olivier Liechti
+            Modified by Tano Iannetta
  */
 public class Utils {
 
@@ -36,7 +35,7 @@ public class Utils {
           // windows
           if(pos < lines.length() && lines.charAt(pos) == '\n')
           {
-              ArrayLines[0] += '\n';//lines.substring(pos+1, pos+2);
+              ArrayLines[0] += '\n';
               pos++;
           }
 
@@ -48,7 +47,7 @@ public class Utils {
           {
               ArrayLines[0] = lines.substring(0, ++pos);
           }
-          else // no other line
+          else // no separators
           {
              ArrayLines[0] = "";
              ArrayLines[1] = lines;
@@ -56,7 +55,7 @@ public class Utils {
           }
       }
 
-      ArrayLines[1] = lines.substring(pos); // rest of the lines
+      ArrayLines[1] = lines.substring(pos); // rest of lines
       return ArrayLines;
   }
 
