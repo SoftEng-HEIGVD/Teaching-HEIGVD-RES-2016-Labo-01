@@ -137,14 +137,10 @@ public class Application implements IApplication {
 
          new File(path).mkdirs();
 
-         // Creates quote file
-         File file = new File(path + File.separator + filename);
-         file.createNewFile();
-
          // Stores the quote text
-         Writer writer = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
-         writer.write(quote.getQuote());
-         writer.close();
+         FileOutputStream fos = new FileOutputStream(path + File.separator + filename);
+         fos.write(quote.getQuote().getBytes());
+         fos.close();
   }
   
   /**
