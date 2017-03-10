@@ -6,7 +6,8 @@ import java.io.Writer;
 
 /**
  * Note : my intention is to only use the "basic" write(int) method below for the actual conversion and writing,
- * having the code written only once and calling this method in the other write(...)
+ * having the code written only once and calling this method in the other write()
+ *
  * @author Olivier Liechti, Camilo Pineda Serna
  */
 public class UpperCaseFilterWriter extends FilterWriter
@@ -37,15 +38,17 @@ public class UpperCaseFilterWriter extends FilterWriter
      * and writes it with FilterWriter.
      * The "restriction" is not that strong, because the whole range of the basic char can be converted
      * see : http://stackoverflow.com/a/2006544
+     *
      * @param cbuf the array of char to convert to upper case
-     * @param off the offset of the first char in cbuf to convert
-     * @param len the number of char to convert
+     * @param off  the offset of the first char in cbuf to convert
+     * @param len  the number of char to convert
      * @throws IOException
      */
     @Override
     public void write(char[] cbuf, int off, int len) throws IOException
     {
-        for (int currentCharPos = off; currentCharPos < off + len; ++currentCharPos) {
+        for (int currentCharPos = off; currentCharPos < off + len; ++currentCharPos)
+        {
             this.write((int) cbuf[currentCharPos]);
         }
     }
@@ -53,6 +56,7 @@ public class UpperCaseFilterWriter extends FilterWriter
 
     /**
      * Uses this.write(int) to convert a String to upper case and writes it with FilterWriter.
+     *
      * @param str the String to convert to upper case
      * @param off the offsef of the first char to convert
      * @param len the number of char to convert
@@ -61,11 +65,11 @@ public class UpperCaseFilterWriter extends FilterWriter
     @Override
     public void write(String str, int off, int len) throws IOException
     {
-        for (int currentCharPos = off; currentCharPos < off + len; ++currentCharPos) {
+        for (int currentCharPos = off; currentCharPos < off + len; ++currentCharPos)
+        {
             this.write(str.codePointAt(currentCharPos));
         }
     }
-
 
 
 }

@@ -9,10 +9,8 @@ import ch.heigvd.res.lab01.quotes.Quote;
 import ch.heigvd.res.lab01.quotes.QuoteClient;
 import org.apache.commons.io.FileUtils;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.io.*;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,6 +22,8 @@ public class Application implements IApplication
 
     private static final Logger LOG = Logger.getLogger(Application.class.getName());
     private static final String authorEmail = "camilo.pinedaserna@heig-vd.ch";
+    private static final String beforeFilename = "quote-";
+    private static final String afterFilename = ".utf8";
     /**
      * This constant defines where the quotes will be stored. The path is relative
      * to where the Java application is invoked.
@@ -89,15 +89,17 @@ public class Application implements IApplication
     {
         clearOutputDirectory();
         QuoteClient client = new QuoteClient();
-        for (int i = 0; i < numberOfQuotes; i++)
+        for (int currentQuoteNumber = 0; currentQuoteNumber < numberOfQuotes; currentQuoteNumber++)
         {
             Quote quote = client.fetchQuote();
-      /* There is a missing piece here!
-       * As you can see, this method handles the first part of the lab. It uses the web service
-       * client to fetch quotes. We have removed a single line from this method. It is a call to
-       * one method provided by this class, which is responsible for storing the content of the
-       * quote in a text file (and for generating the directories based on the tags).
-       */
+            /* There is a missing piece here!
+            * As you can see, this method handles the first part of the lab. It uses the web service
+            * client to fetch quotes. We have removed a single line from this method. It is a call to
+            * one method provided by this class, which is responsible for storing the content of the
+            * quote in a text file (and for generating the directories based on the tags).
+            */
+
+            storeQuote(quote, beforeFilename + currentQuoteNumber + afterFilename); // this is our custom filename
 
             LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
             for (String tag : quote.getTags())
@@ -135,7 +137,32 @@ public class Application implements IApplication
      */
     void storeQuote(Quote quote, String filename) throws IOException
     {
-        throw new UnsupportedOperationException("The student has not implemented this method yet.");
+        // we get the lists of tags
+        List<String> tagsOfQuote = quote.getTags();
+
+        // we build the complete path
+        String pathOfQuote = WORKSPACE_DIRECTORY + "/"; // path of the destination and appended /
+        for (String currentTag : tagsOfQuote)
+        {
+            pathOfQuote += currentTag + "/"; // they all need the / because we are going to make directories
+        }
+
+        // we prepare the file for the quote
+        File fileForQuote = new File(pathOfQuote);
+
+        boolean dirsCreated = fileForQuote.mkdirs();
+        // beware : false if part of the path already exists, so we also need to check if the file doesn't exist.
+        if (!dirsCreated && !fileForQuote.exists()) // test if something really wrong happened
+        {
+            throw new IOException();
+        }
+
+        // prepare the stream for writing the quote in the file
+        BufferedOutputStream streamForWriting = new BufferedOutputStream(new FileOutputStream(pathOfQuote + filename));
+        streamForWriting.write(quote.getQuote().getBytes("UTF-8")); // writing here
+        streamForWriting.close();
+
+
     }
 
     /**
@@ -155,14 +182,13 @@ public class Application implements IApplication
          * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
          * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
          */
-        try
-        {
-            writer.write(file.getName());
-        }
-        catch (IOException exception)
-        {
-            exception.printStackTrace();
-        }
+                try
+                {
+                    writer.write(file.getPath() + "\n");
+                } catch (IOException exception)
+                {
+                    exception.printStackTrace();
+                }
             }
         });
     }

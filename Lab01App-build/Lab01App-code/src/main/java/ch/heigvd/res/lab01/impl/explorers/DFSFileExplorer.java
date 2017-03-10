@@ -4,6 +4,7 @@ import ch.heigvd.res.lab01.interfaces.IFileExplorer;
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
 
 import java.io.File;
+import java.util.Arrays;
 
 /**
  * This implementation of the IFileExplorer interface performs a depth-first
@@ -17,9 +18,11 @@ public class DFSFileExplorer implements IFileExplorer
 {
     /**
      * explores (DFS pre-order) the file system from a specific node
-     * and invokes the visitor.visit() methode to each node (even if it doesn't exist)
+     * and invokes the visitor.visit() method to each node (even if it doesn't exist)
+     * first on the files, then on the directories
+     *
      * @param rootDirectory the directory where to start the traversal
-     * @param vistor defines the operation to be performed on each file
+     * @param vistor        defines the operation to be performed on each file
      */
     @Override
     public void explore(File rootDirectory, IFileVisitor vistor)
@@ -33,23 +36,32 @@ public class DFSFileExplorer implements IFileExplorer
             return;
         }
 
-        // visit current node
+        // visit the node
         vistor.visit(rootDirectory);
 
-        // recursion
-        // 1) if a file was reached, halt recursion
-        if (rootDirectory.isFile())
+        // listing of all the nodes inside of the current rootFile
+        File[] nodesInsideRoot = rootDirectory.listFiles();
+        Arrays.sort(nodesInsideRoot); // because listFiles() doesn't sort nor guarantee a specific order
+
+        // first the files (not the directories) are visited)
+        for (File currentNode : nodesInsideRoot)
         {
-            return;
-        }
-        else // 2) else, continue recursion
-        {
-            File[] currentFiles = rootDirectory.listFiles();
-            // we must go deeper
-            for (File currentFile : currentFiles)
+            if (currentNode.isFile())
             {
-                explore(currentFile, vistor);
+                vistor.visit(currentNode);
             }
+
+        }
+
+        // then the directories  are explored. they will be visited by the recursive explore() call
+        for (File currentNode : nodesInsideRoot)
+        {
+            if (currentNode.isDirectory())
+            {
+                // we must go deeper
+                explore(currentNode, vistor);
+            }
+
         }
     }
 }
