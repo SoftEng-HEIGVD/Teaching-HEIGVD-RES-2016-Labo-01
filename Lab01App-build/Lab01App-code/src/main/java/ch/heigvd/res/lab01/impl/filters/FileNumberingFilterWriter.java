@@ -19,23 +19,52 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
 
+  private int lineNo = 1;
+  private boolean readBackslashR = false;
+
   public FileNumberingFilterWriter(Writer out) {
     super(out);
   }
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    write(str.toCharArray(), off, len);
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    if (lineNo == 1) {
+      String prefix = "" + lineNo++ + "\t";
+      super.write(prefix, 0, prefix.length());
+    }
+    for (int i = off; i < off+len; i++) {
+      if(cbuf[i] == '\r') {
+        readBackslashR = true;
+      }
+      else if (cbuf[i] == '\n') {
+        if(readBackslashR)
+          super.write('\r');
+        super.write('\n');
+        String prefix = "" + lineNo++ + "\t";
+        super.write(prefix, 0, prefix.length());
+      }
+      else {
+        if(readBackslashR) {
+          super.write('\r');
+          String prefix = "" + lineNo++ + "\t";
+          super.write(prefix, 0, prefix.length());
+        }
+        super.write(cbuf[i]);
+      }
+      if(cbuf[i] != '\r')
+        readBackslashR = false;
+    }
   }
 
   @Override
   public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    char[] b = {(char) c};
+    write(b, 0, 1);
   }
 
 }
