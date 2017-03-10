@@ -184,11 +184,7 @@ public class Application implements IApplication {
   @Override
   public void processQuoteFiles() throws IOException {
 
-
-   Utils.getNextLine("comment\nsaodsad\rsddasdasda\r\n");
-
     //IFileExplorer explorer = new DFSFileExplorer();
    // explorer.explore(new File(WORKSPACE_DIRECTORY), new CompleteFileTransformer());
   }
-
 }

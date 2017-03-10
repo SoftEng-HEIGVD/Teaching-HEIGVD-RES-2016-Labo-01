@@ -22,29 +22,53 @@ public class Utils {
    */
   public static String[] getNextLine(String lines) {
 
-    //Creation of an array with 2 elements
-    String[] newLines = new String[2];
+    String[] newLines = new String[2];      //Creation of an array with 2 elements
+    int findPositionFirst = lines.length(); // By default, the first position is the size of the string
+    int adjustment = 0;
 
-    //Find the firsts 'next new line separators' (indexOf can't have multiple string)
-    int findN = lines.indexOf("\n");
-    int findR = lines.indexOf("\r");
-    int findRN = lines.indexOf("\r\n");
+    final String  LF = "\n"; //Line Feed
+    final String  CR = "\r"; //Carriage Return
+    final String  CRLF = "\r\n"; //CR+LF
 
-    //Choose the first one
-    int findFirst = Math.min(findN,findR);
-    findFirst= Math.min(findFirst,findRN);
+    //Find the firsts 'next new line separators' (indexOf can't have multiple string in parameters)
+    if(lines.contains(CRLF))
+    {
+      findPositionFirst = Math.min(findPositionFirst,lines.indexOf(CRLF));
+      adjustment = 2;
+    }
+
+    else if(lines.contains(LF))
+    {
+      findPositionFirst = Math.min(findPositionFirst,lines.indexOf(LF));
+      adjustment = 1;
+    }
+
+    else if(lines.contains(CR))
+    {
+      findPositionFirst = Math.min(findPositionFirst,lines.indexOf(CR));
+      adjustment = 1;
+    }
 
     //If a character is find
-    if(findFirst !=1) {
+    if((findPositionFirst)!=lines.length()){
 
-      newLines[0] = lines.substring(0, findFirst);
-      newLines[1] = lines.substring(findFirst + 1);
+      //first element is the next line
+      newLines[0] = lines.substring(0, findPositionFirst+adjustment);
+
+      //the remaining text
+      newLines[1] = lines.substring(findPositionFirst + adjustment);
     }
+
+    //If there are no new lines
     else
     {
-      newLines[0] = lines;
-      newLines[1] = "";
+      //the first element is an empty string
+      newLines[0] = "";
+
+      //The same string
+      newLines[1] = lines;
     }
+
     return newLines;
   }
 }

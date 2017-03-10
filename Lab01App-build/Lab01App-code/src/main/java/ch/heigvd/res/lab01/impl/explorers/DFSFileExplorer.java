@@ -24,27 +24,26 @@ public class DFSFileExplorer implements IFileExplorer {
     File[] files = rootDirectory.listFiles();
 
     //if the root  is a directory
-    if (rootDirectory.isDirectory()) {
+    if (rootDirectory.isDirectory())
+    {
+      if(files !=null)
+      {
+        //Check first the files
+        for (File f : files) {
 
-    if(files !=null) {
+          if(f.isFile()) {
+            explore(f, vistor);
+          }
+        }
+        //Check the directories
+        for (File f : files) {
 
-      //Check first the files
-      for (File f : files) {
-
-        if(f.isFile()) {
-          explore(f, vistor);
+          if(f.isDirectory()) {
+            //Visit the first node to have the DFS algo
+            explore(f, vistor);
+          }
         }
       }
-
-      //Check the directories
-      for (File f : files) {
-
-        if(f.isDirectory()) {
-          //Visit the first node to have the DFS algo
-          explore(f, vistor);
-        }
-      }
-    }
     }
   }
 }
