@@ -20,6 +20,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
 
   private int lineNo = 1;
+  private boolean readBackslashR = false;
 
   public FileNumberingFilterWriter(Writer out) {
     super(out);
@@ -37,11 +38,26 @@ public class FileNumberingFilterWriter extends FilterWriter {
       super.write(prefix, 0, prefix.length());
     }
     for (int i = off; i < off+len; i++) {
-      super.write(cbuf[i]);
-      if (cbuf[i] == '\n' || cbuf[i] == '\r' && i<off+len-1 && cbuf[i+1] != '\n') {
+      if(cbuf[i] == '\r') {
+        readBackslashR = true;
+      }
+      else if (cbuf[i] == '\n') {
+        if(readBackslashR)
+          super.write('\r');
+        super.write('\n');
         String prefix = "" + lineNo++ + "\t";
         super.write(prefix, 0, prefix.length());
       }
+      else {
+        if(readBackslashR) {
+          super.write('\r');
+          String prefix = "" + lineNo++ + "\t";
+          super.write(prefix, 0, prefix.length());
+        }
+        super.write(cbuf[i]);
+      }
+      if(cbuf[i] != '\r')
+        readBackslashR = false;
     }
   }
 
