@@ -139,7 +139,7 @@ public class Application implements IApplication {
         File file = new File(path);
         file.mkdirs();
         
-        path += filename;
+        path += filename + ".utf8";
         file = new File(path);
         file.createNewFile();
         
