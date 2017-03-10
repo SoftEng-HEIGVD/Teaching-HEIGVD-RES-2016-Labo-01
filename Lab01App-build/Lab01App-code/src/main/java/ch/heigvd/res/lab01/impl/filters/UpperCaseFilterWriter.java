@@ -7,26 +7,29 @@ import java.io.Writer;
 /**
  *
  * @author Olivier Liechti
+            Modified by Tano Iannetta
  */
 public class UpperCaseFilterWriter extends FilterWriter {
-  
+
   public UpperCaseFilterWriter(Writer wrappedWriter) {
     super(wrappedWriter);
   }
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    super.write(str.toUpperCase(), off, len); // convert input in upper case
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+      String str = new String(cbuf);
+      super.write(str.toUpperCase(), off, len); // convert in upper case
+
   }
 
   @Override
   public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    super.write(Character.toUpperCase(c)); // convert c in upper case
   }
 
 }
