@@ -29,10 +29,14 @@ public class Utils {
             tab[0] += curChar;
 
             if (curChar == '\n') {
-                tab[1] = lines.substring(i + 1);
+                if (i + 1 < lines.length()) {
+                    tab[1] = lines.substring(i + 1);
+                }
                 break;
             } else if (curChar == '\r' && i < lines.length() - 1 && lines.charAt(i + 1) != '\n') {
-                tab[1] = lines.substring(i + 1);
+                if (i + 1 < lines.length()) {
+                    tab[1] = lines.substring(i + 1);
+                }
                 break;
             }
         }
