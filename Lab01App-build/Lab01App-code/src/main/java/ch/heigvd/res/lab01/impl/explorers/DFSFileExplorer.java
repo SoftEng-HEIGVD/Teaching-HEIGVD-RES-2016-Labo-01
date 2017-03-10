@@ -13,7 +13,7 @@ import java.io.File;
  * @author Olivier Liechti
  */
 public class DFSFileExplorer implements IFileExplorer {
-   
+
    /* for each file in the rootDirectory directory, we will:
     *    - If the file is a directory, visit the directory and then call the
     *      explore() function recursively with this directory
@@ -22,14 +22,21 @@ public class DFSFileExplorer implements IFileExplorer {
    @Override
    public void explore(File rootDirectory, IFileVisitor vistor) {
       vistor.visit(rootDirectory);
-      
+
       if (rootDirectory.listFiles() != null) {
-         for (File fileEntry : rootDirectory.listFiles()) {
-            if (fileEntry.isDirectory())
-               explore(fileEntry, vistor);
-            else
-               vistor.visit(fileEntry);
-          
+
+         File[] files = rootDirectory.listFiles();
+
+         for (File f : files) {
+            if (f.isFile()) {
+               vistor.visit(f);
+            }
+         }
+
+         for (File f : files) {
+            if (f.isDirectory()) {
+               explore(f, vistor);
+            }
          }
       }
    }
