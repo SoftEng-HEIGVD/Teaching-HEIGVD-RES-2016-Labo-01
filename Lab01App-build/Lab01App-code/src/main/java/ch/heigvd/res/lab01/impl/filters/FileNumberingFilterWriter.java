@@ -21,7 +21,8 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
   private int nbLine = 0;
-  private boolean firstCHar = true;
+  private boolean isFirstLine = true;
+  char lastChar = '\0';
 
   public FileNumberingFilterWriter(Writer out) {
     super(out);
@@ -29,29 +30,11 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(String str) throws IOException {
-    String strOutput;
-    String out[];
+    final int STR_LENGHT = str.length();
 
-    if (nbLine == 0)
-      strOutput = ++nbLine + "\t";
-    else
-      strOutput = "";
-
-    out = Utils.getNextLine(str);
-
-    while (!out[0].isEmpty()) {
-      if(!out[0].isEmpty()) {
-        strOutput += out[0] + ++nbLine + "\t";
-      } else {
-        strOutput += out[1] + "\n" + ++nbLine + "\t";
-      }
-
-      out = Utils.getNextLine(out[1]);
+    for (int i = 0; i < STR_LENGHT; ++i) {
+      write(str.charAt(i));
     }
-
-    strOutput += out[1];
-
-    super.write(strOutput, 0, strOutput.length());
   }
 
   @Override
@@ -69,11 +52,30 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(int c) throws IOException {
-    if (c != '\r')
-      write(Character.toString((char) c));
-    else
-      super.write(c);
+    char currChar = (char) c;
+    StringBuilder output = new StringBuilder();
 
+    if (isFirstLine) {
+      output.append(++nbLine).append('\t').append(currChar);
+      isFirstLine = false;
+
+    } else if (lastChar == '\r' && currChar == '\n') {
+        output.append(lastChar).append(currChar).append(++nbLine).append('\t');
+
+    } else if (lastChar == '\r' && currChar != '\n') {
+      output.append(lastChar).append(++nbLine).append('\t').append(currChar);
+
+    } else if (currChar == '\n') {
+      output.append(currChar).append(++nbLine).append('\t');
+
+    } else if (currChar != '\r') {
+      output.append(currChar);
+
+    }
+
+    lastChar = currChar;
+
+    super.write(output.toString(), 0, output.length());
   }
 
 }
