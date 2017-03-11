@@ -155,8 +155,9 @@ public class Application implements IApplication {
       explorer.explore(new File(WORKSPACE_DIRECTORY), new IFileVisitor() {
          @Override
          public void visit(File file) {
+            
             try {
-               writer.write(file.getPath() + file.getName());
+               writer.write(file.getPath() + "\n");
             } catch (IOException e) {
 
             }
