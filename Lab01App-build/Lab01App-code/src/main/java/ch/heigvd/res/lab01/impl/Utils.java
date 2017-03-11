@@ -4,7 +4,8 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Abass Mahdavi
+ * @author Olivier Liechti
+ * modified by Abass Mahdavi
  */
 public class Utils {
 
@@ -55,5 +56,11 @@ public class Utils {
       }
       return result;
   }
+
+    public static class java {
+
+        public java() {
+        }
+    }
 
 }
