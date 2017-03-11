@@ -151,17 +151,24 @@ public class Application implements IApplication {
   /**
    * This method uses a IFileExplorer to explore the file system and prints the name of each
    * encountered file and directory.
+   * 
+   * @author Ludovic Delafontaine
+   * @param writer output to write
    */
   void printFileNames(final Writer writer) {
     IFileExplorer explorer = new DFSFileExplorer();
     explorer.explore(new File(WORKSPACE_DIRECTORY), new IFileVisitor() {
       @Override
       public void visit(File file) {
-        /*
-         * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
-         * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
-         * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
-         */
+        
+        try {
+          // Write the complete path to the output
+          writer.write(file.getPath() + '\n');
+        } catch (IOException e) {
+          // In case of exception, print the complete stack trace for debugging
+          e.printStackTrace();
+        }
+        
       }
     });
   }
