@@ -1,10 +1,12 @@
 package ch.heigvd.res.lab01.impl;
 
 import java.util.logging.Logger;
+import java.lang.Math;
 
 /**
  *
  * @author Olivier Liechti
+ * @author Xavier Vaz Afonso
  */
 public class Utils {
 
@@ -20,7 +22,44 @@ public class Utils {
    * contain any line separator, then the first element is an empty string.
    */
   public static String[] getNextLine(String lines) {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
 
+    String[] newLines = new String[2];      //Creation of an array with 2 elements
+    int findPositionFirst = lines.length(); // By default, the first position is the size of the string
+    int adjustment;
+
+    final String  LF = "\n"; //Line Feed
+    final String  CR = "\r"; //Carriage Return
+
+    //Find the firsts 'next new line separators' (indexOf can't have multiple string in parameters)
+     if(lines.contains(LF)) {
+      findPositionFirst = Math.min(findPositionFirst,lines.indexOf(LF));
+    }
+
+     if(lines.contains(CR)) {
+      findPositionFirst = Math.min(findPositionFirst,lines.indexOf(CR));
+    }
+
+    //if there is a \r\n side by side
+    adjustment = (lines.indexOf(LF)-lines.indexOf(CR))==1 ? 2:1;
+
+    //If a character is find
+    if((findPositionFirst)!=lines.length()){
+
+      //first element is the next line
+      newLines[0] = lines.substring(0, findPositionFirst+adjustment);
+
+      //the remaining text
+      newLines[1] = lines.substring(findPositionFirst + adjustment);
+    }
+
+    //If there are no new lines
+    else {
+      //the first element is an empty string
+      newLines[0] = "";
+
+      //The same string
+      newLines[1] = lines;
+    }
+    return newLines;
+  }
 }

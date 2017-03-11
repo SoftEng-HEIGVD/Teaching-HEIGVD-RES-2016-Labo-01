@@ -7,12 +7,8 @@ import ch.heigvd.res.lab01.interfaces.IFileExplorer;
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
 import ch.heigvd.res.lab01.quotes.QuoteClient;
 import ch.heigvd.res.lab01.quotes.Quote;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.StringWriter;
-import java.io.Writer;
+
+import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -20,6 +16,7 @@ import org.apache.commons.io.FileUtils;
 /**
  *
  * @author Olivier Liechti
+ * @author Xavier Vaz Afonso
  */
 public class Application implements IApplication {
 
@@ -30,6 +27,8 @@ public class Application implements IApplication {
   public static String WORKSPACE_DIRECTORY = "./workspace/quotes";
   
   private static final Logger LOG = Logger.getLogger(Application.class.getName());
+
+  private int counter = 0;
   
   public static void main(String[] args) {
     
@@ -85,7 +84,10 @@ public class Application implements IApplication {
     clearOutputDirectory();
     QuoteClient client = new QuoteClient();
     for (int i = 0; i < numberOfQuotes; i++) {
+
       Quote quote = client.fetchQuote();
+      storeQuote(quote,WORKSPACE_DIRECTORY);
+
       /* There is a missing piece here!
        * As you can see, this method handles the first part of the lab. It uses the web service
        * client to fetch quotes. We have removed a single line from this method. It is a call to
@@ -125,7 +127,26 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+
+    //Creation of folders
+    String filePath = filename+"/";
+
+    for (String tag : quote.getTags()) {
+      filePath += tag + "/";
+    }
+
+    new File(filePath).mkdirs();
+
+    //Creation of the utf8 file
+    counter++;
+    filePath +="quote-"+counter+".utf8";
+
+    OutputStream outputStream = new FileOutputStream(filePath);
+    Writer  outputStreamWriter = new OutputStreamWriter(outputStream);
+
+    //Write the joke into the file
+    outputStreamWriter.write(quote.getQuote());
+    outputStreamWriter.close();
   }
   
   /**
@@ -133,28 +154,37 @@ public class Application implements IApplication {
    * encountered file and directory.
    */
   void printFileNames(final Writer writer) {
-    IFileExplorer explorer = new DFSFileExplorer();
+    final IFileExplorer explorer = new DFSFileExplorer();
     explorer.explore(new File(WORKSPACE_DIRECTORY), new IFileVisitor() {
       @Override
       public void visit(File file) {
+
         /*
          * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
          * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
          * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
          */
+
+        try {
+          writer.write(file.getPath()+"\n");
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
       }
     });
   }
   
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+
+    String authorEmail = "xavier.vazafonso@heig-vd.ch";
+    return authorEmail;
   }
 
   @Override
   public void processQuoteFiles() throws IOException {
-    IFileExplorer explorer = new DFSFileExplorer();
-    explorer.explore(new File(WORKSPACE_DIRECTORY), new CompleteFileTransformer());    
-  }
 
+     IFileExplorer explorer = new DFSFileExplorer();
+     explorer.explore(new File(WORKSPACE_DIRECTORY), new CompleteFileTransformer());
+  }
 }
