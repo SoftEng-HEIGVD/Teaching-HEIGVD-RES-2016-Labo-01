@@ -30,7 +30,6 @@ public class UpperCaseFilterWriter extends FilterWriter {
     
     @Override
     public void write(int c) throws IOException {
-        char t = Character.toChars(c)[0];
         super.write(Character.toUpperCase(c));
     }
     
