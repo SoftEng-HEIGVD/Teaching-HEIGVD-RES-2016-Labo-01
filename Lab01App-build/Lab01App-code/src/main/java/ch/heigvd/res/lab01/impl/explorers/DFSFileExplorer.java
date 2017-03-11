@@ -11,12 +11,20 @@ import java.io.File;
  * files in the directory and then moves into the subdirectories.
  * 
  * @author Olivier Liechti
+ * modified by Abass MAHDAVI
  */
 public class DFSFileExplorer implements IFileExplorer {
 
   @Override
-  public void explore(File rootDirectory, IFileVisitor vistor) {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
-
+  public void explore(File rootDirectory, IFileVisitor visitor) {
+    //throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    
+    visitor.visit(rootDirectory);
+    
+    if (rootDirectory.isDirectory()){
+        for(File subDirectory : rootDirectory.listFiles()){
+            explore(subDirectory, visitor);
+        }
+    }    
+  } 
 }
