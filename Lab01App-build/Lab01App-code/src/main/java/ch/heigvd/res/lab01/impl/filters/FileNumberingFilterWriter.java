@@ -14,28 +14,57 @@ import java.util.logging.Logger;
  * Hello\n\World -> 1\Hello\n2\tWorld
  *
  * @author Olivier Liechti
+ * @author Mathias Gilson
  */
 public class FileNumberingFilterWriter extends FilterWriter {
 
-  private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
+    private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
+    private int lineNumber = 0;
+    // indicate that this is the first char
+    private boolean first = true;
+    //carriage return detected
+    private boolean CR = false;
 
-  public FileNumberingFilterWriter(Writer out) {
-    super(out);
-  }
+    public FileNumberingFilterWriter(Writer out) {
+        super(out);
+    }
 
-  @Override
-  public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
+    @Override
+    public void write(String str, int off, int len) throws IOException {
+        // Change the string into a charArray and send to corresponding method
+        write(str.toCharArray(), off, len);
+    }
 
-  @Override
-  public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
+    @Override
+    public void write(char[] cbuf, int off, int len) throws IOException {
+        // call the write(int c) method for each char in the charArray
+        for(int i = off; i < len + off; i++)
+            write(cbuf[i]);
+    }
 
-  @Override
-  public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
+    @Override
+    public void write(int c) throws IOException {
+        char charC = (char)c;
+
+        // add a number if is first line or as a carriage return flag but is not a new line
+        if((first || CR) && charC != '\n'){
+            out.write(++lineNumber + "\t");
+            first = false;
+            CR = false;
+        }
+
+        out.write(charC);
+
+        // Unix and windows new line, carriage return flag
+        // is set to false because it's handled by default
+        if(charC == '\n'){
+            CR = false;
+            out.write(++lineNumber + "\t");
+        }
+        else if(charC == '\r'){
+            CR = true;
+        }
+
+    }
 
 }
