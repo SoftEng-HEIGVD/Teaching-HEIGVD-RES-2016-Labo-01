@@ -94,6 +94,7 @@ public class Application implements IApplication {
        * one method provided by this class, which is responsible for storing the content of the
        * quote in a text file (and for generating the directories based on the tags).
        */
+      // Store the quote with the filname quote-x.utf8 where x is the number of the quote
       storeQuote(quote, "quote-" + i + ".utf8");
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
       for (String tag : quote.getTags()) {
@@ -177,6 +178,7 @@ public class Application implements IApplication {
               */
           try {
               writer.write(file.getPath());
+              LOG.info(file.getPath());
           } catch (IOException ex) {
               Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
           }
