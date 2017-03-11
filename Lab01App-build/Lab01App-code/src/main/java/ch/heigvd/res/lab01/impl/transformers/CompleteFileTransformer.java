@@ -11,7 +11,7 @@ import ch.heigvd.res.lab01.impl.filters.*;
  * beginning of each line.
  * 
  * @author Olivier Liechti
- * @modified by Luana Martelli
+ * @author Luana Martelli
  *
  * This class will decorate a Writer twice
  * once with an Upper case decorator and once with a File numbering filter

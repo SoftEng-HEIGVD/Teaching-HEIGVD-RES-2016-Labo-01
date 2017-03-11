@@ -6,7 +6,7 @@ import java.io.Writer;
 
 /**
  * @author Olivier Liechti
- * @modified by Luana Martelli
+ * @author Luana Martelli
  *
  * In this class, we just put the strings (or char) to upper case and we give the result to the super class
  * for treatment

@@ -14,14 +14,13 @@ import java.util.logging.Logger;
  * Hello\n\World -> 1\Hello\n2\tWorld
  *
  * @author Olivier Liechti
- * @modified by Luana Martelli
+ * @author Luana Martelli
  */
 public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
   private int nbLigne = 0;
   private boolean rSeparator = false;
-  private boolean nSeparator = false;
   private boolean lineStart = true;
 
   public FileNumberingFilterWriter(Writer out) {
@@ -60,23 +59,15 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
     out.write(c);
 
-    /* We check for Linux separator \n
-    * We must make this test after we write the \n, otherwise it will be put on the wrong line
-    * We have to link the two conditions, otherwise they could both be true, since we update n's boolean to true
-    * In this case, we make the test after writing the char because we are focus on the current letter */
+    /* We check for Linux separator \n or Windows \r\n
+    * We must make this test after we write the \n, otherwise it will be put on the wrong line */
     if (c == '\n') {
-      nSeparator = true;
-      out.write(++nbLigne + "\t");
-    }
-    /* We check for Windows separator \r\n
-    * The boolean is usefull to know if the previous char was a \r*/
-     else if (rSeparator && nSeparator) {
       out.write(++nbLigne + "\t");
     }
 
-    /* We update the boolean */
+
+    /* We update the boolean flag */
     rSeparator = (c == '\r');
-    nSeparator = (c == '\n');
 
   }
 
