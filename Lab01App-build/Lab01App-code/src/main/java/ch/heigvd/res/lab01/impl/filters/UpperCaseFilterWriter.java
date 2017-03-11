@@ -9,7 +9,8 @@ import java.io.Writer;
  * A FilterWriter that transforms all incoming characters to uppercase before
  * writing into the decorated writer out.
  *
- * @author Olivier Liechti, Sydney Hauke
+ * @author Olivier Liechti
+ * @author Sydney Hauke
  */
 public class UpperCaseFilterWriter extends FilterWriter {
   

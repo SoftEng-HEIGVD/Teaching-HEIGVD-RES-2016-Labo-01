@@ -33,6 +33,9 @@ public class FileNumberingFilterWriter extends FilterWriter {
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
     for(int i = off; i < off + len; i++) {
+      /* Must be very careful when encountering a carriage return. When encountering '\r' we
+       * must know whether a line feed ('\n') follows it or not.
+       */
       if(cbuf[i] == '\r') {
         if(prevIsCR) {
           writeNewLineNumber();

@@ -15,8 +15,11 @@ import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 
 /**
+ * Application that fetches quotes, stores them into files, organize them with respect to tags,
+ * and process them.
  *
  * @author Olivier Liechti
+ * @author Sydney Hauke
  */
 public class Application implements IApplication {
 
