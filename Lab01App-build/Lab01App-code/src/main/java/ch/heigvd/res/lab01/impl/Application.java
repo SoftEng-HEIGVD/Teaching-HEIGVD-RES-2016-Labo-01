@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -30,6 +31,8 @@ public class Application implements IApplication {
   public static String WORKSPACE_DIRECTORY = "./workspace/quotes";
   
   private static final Logger LOG = Logger.getLogger(Application.class.getName());
+
+  private static int numberOfQuotesCreated = 0;
   
   public static void main(String[] args) {
     
@@ -86,12 +89,14 @@ public class Application implements IApplication {
     QuoteClient client = new QuoteClient();
     for (int i = 0; i < numberOfQuotes; i++) {
       Quote quote = client.fetchQuote();
-      /* There is a missing piece here!
+      /* There is no more missing piece here!
        * As you can see, this method handles the first part of the lab. It uses the web service
        * client to fetch quotes. We have removed a single line from this method. It is a call to
        * one method provided by this class, which is responsible for storing the content of the
        * quote in a text file (and for generating the directories based on the tags).
        */
+      storeQuote(quote, "quote-"+ ++numberOfQuotesCreated + ".utf8" );
+
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
       for (String tag : quote.getTags()) {
         LOG.info("> " + tag);
@@ -125,7 +130,28 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+
+    /* fetching and sorting tags. Sorting prevents from creating A/B/ and B/A/ folders. */
+    List<String> tags = quote.getTags();
+    java.util.Collections.sort(tags);
+
+    /* creating path */
+    String path = WORKSPACE_DIRECTORY + "/";
+    for (String tag: tags) { path += tag + "/"; }
+
+    /* creating directories and file */
+    File file = new File(path + filename );
+    file.getParentFile().mkdirs();
+    if(! file.createNewFile() ) {
+      throw new IOException("file n°" + numberOfQuotesCreated + " couldn't be created");
+    }
+
+    /* writing file */
+    OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(file),"UTF-8");
+    osw.write(quote.getQuote());
+    osw.flush();
+    osw.close();
+
   }
   
   /**
@@ -138,17 +164,27 @@ public class Application implements IApplication {
       @Override
       public void visit(File file) {
         /*
-         * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
-         * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
-         * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
+         * There is no more missing piece here. Notice how we use an anonymous class here. We provide the implementation
+         * of the the IFileVisitor interface inline. You just had to add the body of the visit method, which was
+         * pretty easy (we want to write the filename, including the path, to the writer passed in argument).
          */
+        try {
+          writer.write( file.getPath() + "\n" );
+        }
+        catch (IOException e) {
+          e.printStackTrace();
+        }
+
       }
     });
   }
-  
+
+  /**
+   * This method returns the author's email address
+   */
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    return "max.caduff@heig-vd.ch" ;
   }
 
   @Override
