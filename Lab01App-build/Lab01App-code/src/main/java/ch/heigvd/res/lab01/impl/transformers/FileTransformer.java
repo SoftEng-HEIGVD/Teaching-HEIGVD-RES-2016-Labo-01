@@ -24,6 +24,7 @@ import java.util.logging.Logger;
  * a list of filters and decorates the output writer with them.
  * 
  * @author Olivier Liechti
+ * Modified by Lara Chauffoureaux on 08.03.2017
  */
 public abstract class FileTransformer implements IFileVisitor {
 

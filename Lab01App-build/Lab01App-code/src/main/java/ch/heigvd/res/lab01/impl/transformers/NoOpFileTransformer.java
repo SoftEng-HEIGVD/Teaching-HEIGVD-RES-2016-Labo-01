@@ -8,6 +8,7 @@ import java.io.Writer;
  * the content of the input file into the output file.
  * 
  * @author Olivier Liechti
+ * Modified by Lara Chauffoureaux on 08.03.2017
  */
 public class NoOpFileTransformer extends FileTransformer {
 
