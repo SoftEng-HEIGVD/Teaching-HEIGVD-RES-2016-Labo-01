@@ -16,6 +16,7 @@ import org.apache.commons.io.FileUtils;
 /**
  *
  * @author Olivier Liechti
+ * @author Xavier Vaz Afonso
  */
 public class Application implements IApplication {
 
@@ -27,7 +28,7 @@ public class Application implements IApplication {
   
   private static final Logger LOG = Logger.getLogger(Application.class.getName());
 
-  private int cpt = 0;
+  private int counter = 0;
   
   public static void main(String[] args) {
     
@@ -137,13 +138,13 @@ public class Application implements IApplication {
     new File(filePath).mkdirs();
 
     //Creation of the utf8 file
-    cpt++;
-    filePath +="quote-"+cpt+".utf8";
+    counter++;
+    filePath +="quote-"+counter+".utf8";
 
-    //Write the joke into the file
     OutputStream outputStream = new FileOutputStream(filePath);
     Writer  outputStreamWriter = new OutputStreamWriter(outputStream);
 
+    //Write the joke into the file
     outputStreamWriter.write(quote.getQuote());
     outputStreamWriter.close();
   }
@@ -177,7 +178,6 @@ public class Application implements IApplication {
   public String getAuthorEmail() {
 
     String authorEmail = "xavier.vazafonso@heig-vd.ch";
-
     return authorEmail;
   }
 

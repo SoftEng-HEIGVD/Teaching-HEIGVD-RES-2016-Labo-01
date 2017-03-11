@@ -16,12 +16,13 @@ import java.util.logging.Logger;
  * Hello\n\World -> 1\Hello\n2\tWorld
  *
  * @author Olivier Liechti
+ * @author Xavier Vaz Afonso
  */
 public class FileNumberingFilterWriter extends FilterWriter {
 
   //Declaration of variables
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
-  private  int cpt = 1;
+  private  int counter = 1;
   private  boolean firstLine = true;
   private char previousCharacter = '0';
 
@@ -49,33 +50,35 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
       //The firstTime
       if(firstLine) {
-          out.write(cpt +"\t");
+          out.write(counter +"\t");
           firstLine = false;
       }
 
+      //if the previous character was \r
       if(previousCharacter=='\r') {
 
-          cpt++;
+          counter++;
 
-         if((char)c=='\n')
-         {
-             out.write("\n"+cpt + "\t");
+         //if the current caracter is \n
+         if((char)c=='\n') {
+             out.write("\n"+counter + "\t");
              previousCharacter = '\n';
          }
 
-         else if((char)c!='\n')
-         {
-             out.write(cpt+"\t"+(char)c);
+         //if the current caracter isn't \n
+         else if((char)c!='\n') {
+             out.write(counter+"\t"+(char)c);
              previousCharacter = (char)c;
          }
       }
 
-      else if((char)c=='\n')
-      {
-          cpt++;
-          out.write("\n"+cpt+"\t");
+      //if the previous character wasn't \r and the current is \n
+      else if((char)c=='\n') {
+          counter++;
+          out.write("\n"+counter+"\t");
           previousCharacter = (char)c;
       }
+      //else
       else{
           out.write(c);
           previousCharacter = (char)c;

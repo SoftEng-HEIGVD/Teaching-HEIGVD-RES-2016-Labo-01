@@ -6,6 +6,7 @@ import java.lang.Math;
 /**
  *
  * @author Olivier Liechti
+ * @author Xavier Vaz Afonso
  */
 public class Utils {
 
@@ -24,30 +25,22 @@ public class Utils {
 
     String[] newLines = new String[2];      //Creation of an array with 2 elements
     int findPositionFirst = lines.length(); // By default, the first position is the size of the string
-    int adjustment = 0;
+    int adjustment;
 
     final String  LF = "\n"; //Line Feed
     final String  CR = "\r"; //Carriage Return
-    final String  CRLF = "\r\n"; //CR+LF
 
     //Find the firsts 'next new line separators' (indexOf can't have multiple string in parameters)
-    if(lines.contains(CRLF))
-    {
-      findPositionFirst = Math.min(findPositionFirst,lines.indexOf(CRLF));
-      adjustment = 2;
-    }
-
-    else if(lines.contains(LF))
-    {
+     if(lines.contains(LF)) {
       findPositionFirst = Math.min(findPositionFirst,lines.indexOf(LF));
-      adjustment = 1;
     }
 
-    else if(lines.contains(CR))
-    {
+     if(lines.contains(CR)) {
       findPositionFirst = Math.min(findPositionFirst,lines.indexOf(CR));
-      adjustment = 1;
     }
+
+    //if there is a \r\n side by side
+    adjustment = (lines.indexOf(LF)-lines.indexOf(CR))==1 ? 2:1;
 
     //If a character is find
     if((findPositionFirst)!=lines.length()){
@@ -60,15 +53,13 @@ public class Utils {
     }
 
     //If there are no new lines
-    else
-    {
+    else {
       //the first element is an empty string
       newLines[0] = "";
 
       //The same string
       newLines[1] = lines;
     }
-
     return newLines;
   }
 }
