@@ -24,6 +24,7 @@ import org.apache.commons.io.FileUtils;
 /**
  *
  * @author Olivier Liechti
+ * @author David Truan
  */
 public class Application implements IApplication {
 
@@ -93,6 +94,7 @@ public class Application implements IApplication {
         for (int i = 1; i <= numberOfQuotes; i++) {
             Quote quote = client.fetchQuote();
             
+            // creation of the name of the file
             storeQuote(quote, "quote-" + i + ".utf8");
             LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
             for (String tag : quote.getTags()) {
@@ -143,6 +145,16 @@ public class Application implements IApplication {
         // we make the parent directories if needed and we create the file
         f.getParentFile().mkdirs();
         f.createNewFile();
+        
+        try {
+            FileWriter fstream = new FileWriter(f);
+            BufferedWriter out = new BufferedWriter(fstream);
+            out.write(quote.getQuote());
+            //Close the output stream
+            out.close();
+        }catch (Exception e){//Catch exception if any
+            e.printStackTrace();
+  }
     }
 
     /**

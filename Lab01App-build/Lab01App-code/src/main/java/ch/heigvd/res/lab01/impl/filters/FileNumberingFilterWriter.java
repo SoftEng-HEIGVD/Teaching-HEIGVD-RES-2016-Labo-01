@@ -1,3 +1,4 @@
+
 package ch.heigvd.res.lab01.impl.filters;
 
 import java.io.FilterWriter;
@@ -14,6 +15,7 @@ import java.util.logging.Logger;
  * Hello\n\World -> 1\tHello\n2\tWorld
  *
  * @author Olivier Liechti
+ * @author David Truan
  */
 public class FileNumberingFilterWriter extends FilterWriter {
 
@@ -29,9 +31,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
     @Override
     public void write(String str, int off, int len) throws IOException {
-        for (int i = off; i < off + len; ++i) {
-            write(str.charAt(i));
-        }
+        write(str.toCharArray(),off,len);
     }
 
     @Override
@@ -44,11 +44,17 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
     @Override
     public void write(int c) throws IOException {
+        // check if it is the first char. If so we write the header
         if (isFirstChar) {
             isFirstChar = false;
             super.out.write(++lineCount + "\t");
         }
-
+        
+        // here we check if the char is a '\n', if so we copy it and write the
+        // header
+        // if the previous char was a '\r' (if only '\r' is used as nextline
+        // char) we write the header and then write the char
+        // else we only write the char
         if (c == '\n') {
             out.write(c);
             super.out.write(++lineCount + "\t");

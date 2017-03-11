@@ -4,6 +4,7 @@ import ch.heigvd.res.lab01.interfaces.IFileExplorer;
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -13,6 +14,7 @@ import java.util.List;
  * all files in the directory and then moves into the subdirectories.
  *
  * @author Olivier Liechti
+ * @author David Truan
  */
 public class DFSFileExplorer implements IFileExplorer {
 
@@ -20,24 +22,37 @@ public class DFSFileExplorer implements IFileExplorer {
     public void explore(File rootDirectory, IFileVisitor visitor) {
         visitor.visit(rootDirectory);
 
-        File[] files = rootDirectory.listFiles();
+        // we check if we are in a directory
+        if(rootDirectory.isDirectory()) {
+            
+            List<File> files = new ArrayList<>();
+            List<File> directories = new ArrayList<>();
 
-        List<File> directories = new ArrayList<>();
+            // check if it is not empty
+            if (rootDirectory.listFiles() == null)
+                return;
 
-        if (files == null) {
-            return;
-        }
+            // for each file or directory we put it in the corresponding list
+            for (File f : rootDirectory.listFiles()) {
+                if (f.isDirectory()) {
+                    directories.add(f);
 
-        for (File f : files) {
-            if (f.isDirectory()) {
-                directories.add(f);
-            } else {
+                } else {
+                    files.add(f);
+                }
+            }
+
+            // we sort the two lists to be comptaible with all OS
+            // then we visit the files and explore the directories
+            Collections.sort(files);
+            Collections.sort(directories);
+            
+            for(File f : files) {
                 visitor.visit(f);
             }
-        }
-
-        for (File directory : directories) {
-            explore(directory, visitor);
+            for(File d : directories) {
+                explore(d, visitor);
+            }
         }
     }
 

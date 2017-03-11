@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 /**
  *
  * @author Olivier Liechti
+ * @author David Truan
  */
 public class Utils {
 
@@ -21,12 +22,13 @@ public class Utils {
      * an empty string.
      */
     public static String[] getNextLine(String lines) {
+        // the array containing the nextline characters for different OS
         String[] charNextLine = {"\r\n", "\n", "\r"};
 
         int firstOccurence = lines.length();
 
+        // we search the nearest nextline char
         for (String token : charNextLine) {
-
             if (lines.indexOf(token) != -1 && lines.indexOf(token) < firstOccurence) {
                 firstOccurence = lines.indexOf(token);
                 if (token == "\r\n") {
@@ -35,7 +37,8 @@ public class Utils {
                 }
             }
         }
-
+        // if there was a nextline char in the line we return the substring as 
+        // asked, else we return the ("", lines) array
         if (firstOccurence != lines.length()) {
             return new String[]{lines.substring(0, firstOccurence + 1), lines.substring(firstOccurence + 1)};
         } else {

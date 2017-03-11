@@ -1,4 +1,4 @@
-package ch.heigvd.res.lab01.impl.filters;
+ package ch.heigvd.res.lab01.impl.filters;
 
 import java.io.FilterWriter;
 import java.io.IOException;
@@ -7,6 +7,7 @@ import java.io.Writer;
 /**
  *
  * @author Olivier Liechti
+ * @author David Truan
  */
 public class UpperCaseFilterWriter extends FilterWriter {
   
@@ -16,8 +17,7 @@ public class UpperCaseFilterWriter extends FilterWriter {
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-      for(int i = off; i < off + len; ++i) 
-          write(str.charAt(i));
+      write(str.toCharArray(),off,len);
   }
 
   @Override
