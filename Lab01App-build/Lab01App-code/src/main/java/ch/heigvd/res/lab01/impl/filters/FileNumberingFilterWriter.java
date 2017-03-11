@@ -16,26 +16,56 @@ import java.util.logging.Logger;
  * @author Olivier Liechti
  */
 public class FileNumberingFilterWriter extends FilterWriter {
-
-  private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
-
-  public FileNumberingFilterWriter(Writer out) {
-    super(out);
-  }
-
-  @Override
-  public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
-
-  @Override
-  public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
-
-  @Override
-  public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
-
+    
+    private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
+    private int noLine;
+    private boolean returnLine;
+    
+    public FileNumberingFilterWriter(Writer out) {
+        super(out);
+        this.noLine = 1;
+        this.returnLine = false;
+        try{
+            super.write(noLine + "\t");
+        }catch(IOException e){
+            System.err.println(e);
+        }
+    }
+    
+    @Override
+    public void write(String str, int off, int len) throws IOException {
+        for(int i = off; i < off + len; i++){
+            this.write(str.charAt(i));
+        }
+    }
+    
+    @Override
+    public void write(char[] cbuf, int off, int len) throws IOException {
+        this.write(new String(cbuf), off, len);
+    }
+    
+    @Override
+    public void write(int c) throws IOException {
+        char charactere = (char)c;
+        
+        if(returnLine && charactere != '\n'){
+            out.write(++noLine + "\t");
+        }
+        
+        out.write(charactere);
+        
+        switch(charactere){
+            case '\n':
+                out.write(++noLine + "\t");
+                returnLine = false;
+                break;
+            case '\r':
+                returnLine = true;
+                break;
+            default:
+                returnLine = false;
+        }
+        
+    }
+    
 }
