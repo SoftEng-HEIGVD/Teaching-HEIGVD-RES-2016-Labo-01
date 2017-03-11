@@ -118,14 +118,14 @@ public class Application implements IApplication {
         StringBuilder path = new StringBuilder(WORKSPACE_DIRECTORY);
         for (String tag : tags) {
             // Each time appending a tag.
-            path.append("/").append(tag);
+            path.append(File.separator).append(tag);
         }
         // Create the folders in the path only if they don't exist.
         File folder = new File(path.toString());
         folder.mkdirs();
 
         // Construct final path to the utf8 file.
-        path.append("/").append(filename);
+        path.append(File.separator).append(filename);
         // Construct a writer to write into the file.
         FileOutputStream fos = new FileOutputStream(path.toString());
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos, "UTF-8"));
