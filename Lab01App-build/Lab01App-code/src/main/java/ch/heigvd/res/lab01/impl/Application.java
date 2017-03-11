@@ -139,7 +139,7 @@ public class Application implements IApplication {
     File file = new File(path);
     file.getParentFile().mkdirs();
     
-   Writer writer = new OutputStreamWriter(new FileOutputStream(path), "UTF-8");
+    Writer writer = new OutputStreamWriter(new FileOutputStream(path), "UTF-8");
     writer.write(quote.getQuote());
     writer.close();
     
