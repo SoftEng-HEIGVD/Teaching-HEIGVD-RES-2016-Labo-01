@@ -21,7 +21,7 @@ public class DFSFileExplorer implements IFileExplorer {
 
         vistor.visit(rootDirectory);
         
-        // 
+        // If directory, we need to further explore
         if (rootDirectory.isDirectory()){
             File[] filesAndDirectories = rootDirectory.listFiles();
             // Sort needed because tests spawn random directories and files
