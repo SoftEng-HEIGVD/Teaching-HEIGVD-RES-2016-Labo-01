@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 /**
  *
  * @author Olivier Liechti
+ * @author Aurelie Levy
  */
 public class Utils {
 
@@ -21,20 +22,47 @@ public class Utils {
      * an empty string.
      */
     public static String[] getNextLine(String lines) {
-        String[] tabChar = {"", lines};
-        int i = 0;
-        for (; i < lines.length(); i++) {
-            if (lines.charAt(i) == '\r' || lines.charAt(i) == '\n') {
-                if ((i + 1) < lines.length() && lines.charAt(i + 1) == '\n' && lines.charAt(i) == '\r') {
-                    i++;
-                }
-                tabChar[0] = lines.substring(0, i + 1);
-                tabChar[1] = lines.substring(i + 1, lines.length());
+        String[] arrayString = {"", ""};
+        boolean quit = false;
+        int j = 0;// not to change index of loop. Offset to know where to substring lines
+        for (int i = 0; i < lines.length(); i++) {
+            j = i + 1;
+
+            switch (lines.charAt(i)) {
+                case '\r'://Windows or MacOs
+                    if ((i + 1) < lines.length() && lines.charAt(i + 1) == '\n') {//windows
+                        j += 1;
+                    }
+                    getNextLinesFillArrayString(j, lines, arrayString);
+                    quit = true;
+                    break;
+                case '\n'://Unix
+                    getNextLinesFillArrayString(j, lines, arrayString);
+                    quit = true;
+                    break;
+                default://no separator
+                    arrayString[0] = "";
+                    arrayString[1] = lines;
+                    break;
+            }
+            
+            if (quit) {//arrayString is ok => stop the loop
                 break;
             }
         }
-        return tabChar;
+        return arrayString;
         //throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    }
+
+    /**
+     * to fill the arrayString in the getNextLine method (factorization)
+     * @param j index
+     * @param lines String to use to fill the array
+     * @param arrayString array to fill
+     */
+    private static void getNextLinesFillArrayString(int j, String lines, String[] arrayString) {
+        arrayString[0] = lines.substring(0, j);
+        arrayString[1] = lines.substring(j, lines.length());
     }
 
 }

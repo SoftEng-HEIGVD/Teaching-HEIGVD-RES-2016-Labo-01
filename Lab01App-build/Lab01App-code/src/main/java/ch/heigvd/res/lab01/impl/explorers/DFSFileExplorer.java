@@ -13,38 +13,44 @@ import java.util.Arrays;
  * all files in the directory and then moves into the subdirectories.
  *
  * @author Olivier Liechti
+ * @author Aurelie Levy
  */
 public class DFSFileExplorer implements IFileExplorer {
 
     @Override
     public void explore(File rootDirectory, IFileVisitor vistor) {
-        
+
+        //check if rootDirectory is ok to explore/visit
         if (rootDirectory == null) {
-            throw new UnsupportedOperationException("rootDirectory not existing");
-
+            throw new UnsupportedOperationException("rootDirectory not find");
         }
-        vistor.visit(rootDirectory);
-        if (rootDirectory.isDirectory()) {
-            ArrayList<File> arrayDirectories = new ArrayList<>();
-            File[] filesAndDirectories = rootDirectory.listFiles();
-            Arrays.sort(filesAndDirectories);
-            
-            if (filesAndDirectories != null) {
+        
+        ArrayList<File> arrayDirectories = new ArrayList<>();//to store subdirectories
+        
+        //all the content of rootDirectory (files AND subdirectories)
+        File[] filesAndDirectories = rootDirectory.listFiles();
 
-                for (File f : filesAndDirectories) {//subdirectories
-                    //vistor.visit(f);
-                    if (f.isDirectory()) {
-                        arrayDirectories.add(f);
-                        //explore(f, vistor);
+        vistor.visit(rootDirectory);
+
+        //if rootDirectory is a directory, we have to find its files/subdirectories
+        if (rootDirectory.isDirectory()) {
+
+            //we sort the content of rootDirectory to explore/visit in the right order
+            Arrays.sort(filesAndDirectories);
+
+            if (filesAndDirectories != null) {//if there is smth in rootDirectory, we have to explore/visit
+
+                for (File contentOfRoot : filesAndDirectories) {
+                    if (contentOfRoot.isDirectory()) {//for the subdirectories
+                        arrayDirectories.add(contentOfRoot);//we keep them because we have to do the files first
                     } else {
-                        explore(f, vistor);
+                        explore(contentOfRoot, vistor); //explore the files first (by recursion)
                     }
                 }
-                for (File af : arrayDirectories) {
-                    explore(af, vistor);
+                for (File subDirectories : arrayDirectories) {//explore the subdirectories then (by recursion)
+                    explore(subDirectories, vistor);
                 }
             }
-
         }   //throw new UnsupportedOperationException("The student has not implemented this method yet.");
     }
 

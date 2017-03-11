@@ -9,7 +9,6 @@ import ch.heigvd.res.lab01.quotes.QuoteClient;
 import ch.heigvd.res.lab01.quotes.Quote;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
@@ -22,6 +21,7 @@ import org.apache.commons.io.FileUtils;
 /**
  *
  * @author Olivier Liechti
+ * @author Aurelie Levy
  */
 public class Application implements IApplication {
 
@@ -93,7 +93,9 @@ public class Application implements IApplication {
        * one method provided by this class, which is responsible for storing the content of the
        * quote in a text file (and for generating the directories based on the tags).
              */
-            storeQuote(quote, "quote-" + quote.getValue().getId() + ".utf8");
+
+            storeQuote(quote, "quote-" + quote.getValue().getId() + ".utf8");//store the content of the quote in parameter
+
             LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
             for (String tag : quote.getTags()) {
                 LOG.info("> " + tag);
@@ -130,6 +132,7 @@ public class Application implements IApplication {
      */
     void storeQuote(Quote quote, String filename) throws IOException {
         //throw new UnsupportedOperationException("The student has not implemented this method yet.");
+
         List<String> tags = quote.getTags();//list of tags
         String path = WORKSPACE_DIRECTORY + "\\";
 
@@ -138,11 +141,11 @@ public class Application implements IApplication {
         }
 
         File f = new File(path);
-        f.mkdirs(); //creation of new directories and file
-        //f.createNewFile();
+        f.mkdirs(); //creation of new directories and files
+        //Creates an OutputStreamWriter that uses the named of the file created with FileOutputStream (file output stream to write to the file with the specified name)
         Writer fw = new OutputStreamWriter(new FileOutputStream(path + filename), "UTF-8");
-        fw.write(quote.getQuote());
-        fw.close();
+        fw.write(quote.getQuote()); //write the quote
+        fw.close();//closing the writer
     }
 
     /**
@@ -158,18 +161,21 @@ public class Application implements IApplication {
          * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
          * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
          * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
-*/
-try {
-   writer.write(file.getPath() + "\n");
-} catch (IOException e) {
-   //e.printStackTrace();
-}
-}
+                 */
+                try {
+                    writer.write(file.getPath() + "\n"); ///write filename + path to the writer
+                } catch (IOException e) {//throw exception if not ok
+                    e.printStackTrace();
+                }
+            }
         });
     }
 
     @Override
 
+    /**
+     * Return author's email
+     */
     public String getAuthorEmail() {
         return "aurelie.levy@heig-vd.ch";
         //throw new UnsupportedOperationException("The student has not implemented this method yet.");
