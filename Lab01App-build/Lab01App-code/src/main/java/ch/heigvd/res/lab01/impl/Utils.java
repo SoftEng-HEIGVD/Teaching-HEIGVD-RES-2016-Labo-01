@@ -2,9 +2,12 @@ package ch.heigvd.res.lab01.impl;
 
 import java.util.logging.Logger;
 
+
 /**
  *
  * @author Olivier Liechti
+ * 
+ *  Modified by Nathalie Mégevand
  */
 public class Utils {
 
@@ -20,7 +23,28 @@ public class Utils {
    * contain any line separator, then the first element is an empty string.
    */
   public static String[] getNextLine(String lines) {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+      
+    String[] firstLineAndRest = {"", ""};
+    int indexOfSeparator;
+    int indexNextLine = 1;
+     
+    indexNextLine = (lines.contains("\r\n")) ? 2 : 1;
+    
+    // Taking advantage of Java lazyness by-passing the or operator.
+    // Even if there is a complete "\r\n", only the index of the "\r" is needed.
+    if ( ((indexOfSeparator = lines.indexOf("\r")) > -1 ) || 
+         ((indexOfSeparator = lines.indexOf("\n")) > -1 ) ) {
+      
+        //
+        firstLineAndRest[0] = lines.substring(0, indexOfSeparator + indexNextLine);
+        firstLineAndRest[1] = lines.substring(indexOfSeparator + indexNextLine);
+        
+    }
+    else {
+        firstLineAndRest[1] = lines;       
+    }
+ 
+    return firstLineAndRest;
   }
 
 }
