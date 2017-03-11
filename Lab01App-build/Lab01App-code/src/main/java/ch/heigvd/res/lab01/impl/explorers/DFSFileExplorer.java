@@ -33,23 +33,20 @@ public class DFSFileExplorer implements IFileExplorer {
                 }
             }
 
-            files.sort(new Comparator<File>() {
+            Comparator fileComparator = new Comparator<File>() {
                 @Override
                 public int compare(File o1, File o2) {
                     return o1.getName().compareTo(o2.getName());
                 }
-            });
+            };
+
+            files.sort(fileComparator);
 
             for (File f : files) {
                 vistor.visit(f);
             }
 
-            directories.sort(new Comparator<File>() {
-                @Override
-                public int compare(File o1, File o2) {
-                    return o1.getName().compareTo(o2.getName());
-                }
-            });
+            directories.sort(fileComparator);
 
             for (File d : directories) {
                 explore(d, vistor);
