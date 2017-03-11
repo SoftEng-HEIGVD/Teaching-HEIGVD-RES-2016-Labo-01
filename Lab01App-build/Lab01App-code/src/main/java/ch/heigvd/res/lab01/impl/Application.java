@@ -14,6 +14,18 @@ import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 
 /**
+ * This application performs the following tasks :
+ *
+ *  - The user invokes the application on the command line and provides a numeric argument (n).
+ *  - The application uses a Web Service client to fetch n quotes from the Internet Chuck Norris Database
+ *    online service.
+ *  - The application stores the content of each quote in a text file (utf-8), on the local filesystem.
+ *    It uses the tags associated to each quote to create a hierarchical structure of directories.
+ *  - The application then traverses the local file system (depth-first) and applies a processing to each visited
+ *    quote file.
+ *  - The processing consists of 1) converting all characters to their uppercase value and 2) adding a line number
+ *    (followed by a tab character) at the beginning of each line. This is achieved by combining sub-classes of
+ *    the FilterWriter class.
  *
  * @author Olivier Liechti
  */
@@ -82,14 +94,9 @@ public class Application implements IApplication {
     QuoteClient client = new QuoteClient();
     for (int i = 0; i < numberOfQuotes; i++) {
       Quote quote = client.fetchQuote();
-      /* There is a missing piece here!
-       * As you can see, this method handles the first part of the lab. It uses the web service
-       * client to fetch quotes. We have removed a single line from this method. It is a call to
-       * one method provided by this class, which is responsible for storing the content of the
-       * quote in a text file (and for generating the directories based on the tags).
-       */
 
-      storeQuote(quote, "quote-" + i + ".utf8");
+      /* Store the quote in a file named "quote-n.utf8" */
+      storeQuote(quote, "quote-" + (i + 1) + ".utf8");
 
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
       for (String tag : quote.getTags()) {
@@ -124,21 +131,24 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    File file;
+
+    String path = WORKSPACE_DIRECTORY + File.separator; // Path where we create files and directories
+
     FileOutputStream fileOut;
     OutputStreamWriter fileOutStream;
-    String path = WORKSPACE_DIRECTORY + File.separator;
 
+    /* Generate path with tag quotes */
     for (String tag : quote.getTags()) {
       path += tag  + File.separator;
     }
 
+    /* Create all directories according to the path */
     new File(path).mkdirs();
 
-    file = new File(path + filename);
+    /* With this object we can inform in a OutputStreamWriter the charset used in the file */
+    fileOut = new FileOutputStream(new File(path + filename));
 
-    fileOut = new FileOutputStream(file);
-
+    /* Create a stream using the charset UTF-8 */
     fileOutStream = new OutputStreamWriter(fileOut, "UTF-8");
 
     fileOutStream.write(quote.getQuote());

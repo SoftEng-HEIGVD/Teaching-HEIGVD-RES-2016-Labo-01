@@ -3,8 +3,10 @@ package ch.heigvd.res.lab01.impl;
 import java.util.logging.Logger;
 
 /**
+ * This class provides different utils.
  *
  * @author Olivier Liechti
+ * @author Luca Sivillica
  */
 public class Utils {
 
@@ -25,20 +27,27 @@ public class Utils {
     int indexEndLine = -1;
 
     /* look for of a character of end line */
-    for (int i = 0; indexEndLine == -1 && i < END_LINES_CHAR.length; i++)
+    for (int i = 0; indexEndLine == -1 && i < END_LINES_CHAR.length; i++) {
       indexEndLine = lines.indexOf(END_LINES_CHAR[i]);
+    }
 
     /* if a character of end line is found */
     if (indexEndLine != -1) {
+
       /* if this character is not the last character */
       if (indexEndLine + 1 < lines.length()) {
 
-        /* if there is two characters of end line (\r\n) */
+
+        /* if there is two characters of end line (\r\n),
+           then we take this line with these two characters */
         if (lines.charAt(indexEndLine + 1) == '\n') {
           output[0] = lines.substring(0, indexEndLine + 2);
           output[1] = lines.substring(indexEndLine + 2);
 
-        } else { // if there is just one character of end line
+
+          /* if there is just one character of end line,
+             then we take this line with this character */
+        } else {
           output[0] = lines.substring(0, indexEndLine + 1);
           output[1] = lines.substring(indexEndLine + 1);
         }
@@ -47,7 +56,7 @@ public class Utils {
         output[0] = lines;
       }
 
-    } else { // if there is no character of end line
+    } else { // if there is no character of end line, then the input string isn't a line
       output[1] = lines;
     }
 
