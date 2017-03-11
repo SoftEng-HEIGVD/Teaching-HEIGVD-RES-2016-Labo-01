@@ -5,8 +5,14 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
+ * This class transforms the streams of character sent to the decorated writer.
+ * When filter all encounters characters, they send it to the decorated writer.
+ * They then send the upper case character.
+ *
+ * Hello World -> HELLO WORLD
  *
  * @author Olivier Liechti
+ * @author Luca Sivillica
  */
 public class UpperCaseFilterWriter extends FilterWriter {
   
@@ -16,17 +22,38 @@ public class UpperCaseFilterWriter extends FilterWriter {
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+
+    String strUpCase = str.substring(off, off + len).toUpperCase();
+
+    super.write(strUpCase, 0, strUpCase.length());
+  }
+
+  @Override
+  public void write(String str) throws IOException {
+
+    write(str, 0, str.length());
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+
+    for (int i = off; i < off + len; i++) {
+      write(cbuf[i]);
+    }
+  }
+
+  @Override
+  public void write(char[] cbuf) throws IOException {
+
+    for (int i = 0; i < cbuf.length; i++) {
+      write(cbuf[i]);
+    }
   }
 
   @Override
   public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+
+    super.write(Character.toUpperCase(c));
   }
 
 }
