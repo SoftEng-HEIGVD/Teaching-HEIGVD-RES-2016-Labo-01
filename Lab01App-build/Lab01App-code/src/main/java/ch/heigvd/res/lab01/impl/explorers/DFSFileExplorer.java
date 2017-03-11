@@ -3,6 +3,8 @@ package ch.heigvd.res.lab01.impl.explorers;
 import ch.heigvd.res.lab01.interfaces.IFileExplorer;
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  * This implementation of the IFileExplorer interface performs a depth-first
@@ -17,14 +19,40 @@ public class DFSFileExplorer implements IFileExplorer {
     @Override
     public void explore(File rootDirectory, IFileVisitor vistor) {
 
-        File[] listOfFiles = rootDirectory.listFiles();
+        vistor.visit(rootDirectory);
+        if (rootDirectory.isDirectory()) {
+            File[] dirContent = rootDirectory.listFiles();
+            ArrayList<File> files = new ArrayList<>();
+            ArrayList<File> directories = new ArrayList<>();
 
-        for (int i = 0; i < listOfFiles.length; i++) {
-            if (listOfFiles[i].isFile()) {
-                System.out.println("File " + listOfFiles[i].getName());
-            } else if (listOfFiles[i].isDirectory()) {
-                System.out.println("Directory " + listOfFiles[i].getName());
+            for (int i = 0; i < dirContent.length; i++) {
+                if (dirContent[i].isFile()) {
+                    files.add(dirContent[i]);
+                } else if (dirContent[i].isDirectory()) {
+                    directories.add(dirContent[i]);
+                }
+            }
 
+            files.sort(new Comparator<File>() {
+                @Override
+                public int compare(File o1, File o2) {
+                    return o1.getName().compareTo(o2.getName());
+                }
+            });
+
+            for (File f : files) {
+                vistor.visit(f);
+            }
+
+            directories.sort(new Comparator<File>() {
+                @Override
+                public int compare(File o1, File o2) {
+                    return o1.getName().compareTo(o2.getName());
+                }
+            });
+
+            for (File d : directories) {
+                explore(d, vistor);
             }
         }
     }
