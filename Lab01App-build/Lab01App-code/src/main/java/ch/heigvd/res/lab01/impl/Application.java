@@ -134,10 +134,10 @@ public class Application implements IApplication {
         //throw new UnsupportedOperationException("The student has not implemented this method yet.");
 
         List<String> tags = quote.getTags();//list of tags
-        String path = WORKSPACE_DIRECTORY + "\\";
+        String path = WORKSPACE_DIRECTORY + File.separator;
 
         for (String t : tags) {
-            path += t + "\\"; //add tags in path
+            path += t + File.separator; //add tags in path
         }
 
         File f = new File(path);
