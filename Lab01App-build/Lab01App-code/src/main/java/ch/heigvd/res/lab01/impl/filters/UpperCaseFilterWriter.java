@@ -8,7 +8,8 @@ import java.io.Writer;
  * Note : my intention is to only use the "basic" write(int) method below for the actual conversion and writing,
  * having the code written only once and calling this method in the other write()
  *
- * @author Olivier Liechti, Camilo Pineda Serna
+ * @author Olivier Liechti
+ * @author Camilo Pineda Serna
  */
 public class UpperCaseFilterWriter extends FilterWriter
 {
@@ -28,7 +29,7 @@ public class UpperCaseFilterWriter extends FilterWriter
     @Override
     public void write(int c) throws IOException
     {
-        // This FilterWrite's decorator(?) is only responsible for "upper casing" the char.
+        // This FilterWrite's decorator is only responsible for "upper casing" the char.
         // The writing part is done by the super-class.
         super.write(Character.toUpperCase(c));
     }

@@ -13,12 +13,17 @@ import java.util.logging.Logger;
  * <p>
  * Hello\n\World -> 1\Hello\n2\tWorld
  *
+ * Note : my intention is to only use the "basic" write(int) method below for the actual conversion and writing,
+ * having the code written only once and calling this method in the other write()
+ *
  * @author Olivier Liechti
+ * @author Camilo Pineda Serna
  */
 public class FileNumberingFilterWriter extends FilterWriter
 {
 
     private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
+
     private int currentLineNumber = 0;
     private boolean precedentIsCarriageReturn = false;
     private boolean isFirstLine = true;
@@ -55,7 +60,6 @@ public class FileNumberingFilterWriter extends FilterWriter
         if (c == '\r')
         {
             precedentIsCarriageReturn = true;
-            return;
         }
         else if (c == '\n')
         {
@@ -70,7 +74,6 @@ public class FileNumberingFilterWriter extends FilterWriter
             out.write(c);
             out.write(Integer.toString(++currentLineNumber));
             out.write('\t');
-            return;
         }
         else // not \n, not \r, so not \r\n
         {
@@ -84,9 +87,7 @@ public class FileNumberingFilterWriter extends FilterWriter
             }
 
             out.write(c);
-
         }
-
     }
 
     /**
@@ -122,7 +123,6 @@ public class FileNumberingFilterWriter extends FilterWriter
     {
         for (int currentCharPos = off; currentCharPos < off + len; ++currentCharPos)
         {
-            //
             this.write(str.codePointAt(currentCharPos));
         }
     }

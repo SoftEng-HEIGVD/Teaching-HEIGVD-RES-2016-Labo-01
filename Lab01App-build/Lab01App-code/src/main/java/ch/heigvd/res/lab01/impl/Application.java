@@ -15,15 +15,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * @author Olivier Liechti, Camilo Pineda Serna
+ * @author Olivier Liechti
+ * @author Camilo Pineda Serna
  */
 public class Application implements IApplication
 {
 
     private static final Logger LOG = Logger.getLogger(Application.class.getName());
+
     private static final String authorEmail = "camilo.pinedaserna@heig-vd.ch";
     private static final String beforeFilename = "quote-";
     private static final String afterFilename = ".utf8";
+
     /**
      * This constant defines where the quotes will be stored. The path is relative
      * to where the Java application is invoked.
@@ -144,7 +147,7 @@ public class Application implements IApplication
         String pathOfQuote = WORKSPACE_DIRECTORY + "/"; // path of the destination and appended /
         for (String currentTag : tagsOfQuote)
         {
-            pathOfQuote += currentTag + "/"; // they all need the / because we are going to make directories
+            pathOfQuote += currentTag + "/"; // they all need the '/' because we are going to make directories
         }
 
         // we prepare the file for the quote
@@ -152,7 +155,7 @@ public class Application implements IApplication
 
         boolean dirsCreated = fileForQuote.mkdirs();
         // beware : false if part of the path already exists, so we also need to check if the file doesn't exist.
-        if (!dirsCreated && !fileForQuote.exists()) // test if something really wrong happened
+        if (!dirsCreated && !fileForQuote.exists()) // test if something really wrong happened during creation of directories
         {
             throw new IOException();
         }
@@ -161,8 +164,6 @@ public class Application implements IApplication
         BufferedOutputStream streamForWriting = new BufferedOutputStream(new FileOutputStream(pathOfQuote + filename));
         streamForWriting.write(quote.getQuote().getBytes("UTF-8")); // writing here
         streamForWriting.close();
-
-
     }
 
     /**
