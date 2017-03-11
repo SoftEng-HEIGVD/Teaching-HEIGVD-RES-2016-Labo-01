@@ -19,6 +19,8 @@ import java.util.logging.Logger;
 public class FileNumberingFilterWriter extends FilterWriter {
 
     private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
+    private int currentLine = 1;
+    private boolean isInLine = false;
 
     public FileNumberingFilterWriter(Writer out) {
         super(out);
@@ -26,21 +28,8 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
     @Override
     public void write(String str, int off, int len) throws IOException {
-        int currentLine = 1;
-        
-        String strOut = "b";
-        
-        String[] tabStr = Utils.getNextLine(str);
-        
-        /*
-        //Per line
-        for (String[] tab = Utils.getNextLine(str);; tab = Utils.getNextLine(tab[1])) {
-            strOut += currentLine + "\t";
-            strOut += tab[0];
-            
-            currentLine++;
-            System.out.println(currentLine);
-        }*/
+        if(!isInLine)
+            super.write("\n");
         
         super.write(str, off, len);
     }
