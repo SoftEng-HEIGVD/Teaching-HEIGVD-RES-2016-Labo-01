@@ -127,11 +127,11 @@ public class Application implements IApplication {
   void storeQuote(Quote quote, String filename) throws IOException {
       
       // Get the base directory
-      String path = WORKSPACE_DIRECTORY + "/"; 
+      String path = WORKSPACE_DIRECTORY + '/'; 
       
       // Construct all the path for the file
       for (String tag : quote.getTags()) {
-          path += tag + "/";
+          path += tag + '/';
       }
       
       // Make the path directories (don't store the result to save memory)
