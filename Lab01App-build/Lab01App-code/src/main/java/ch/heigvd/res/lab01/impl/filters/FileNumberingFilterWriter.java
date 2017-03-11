@@ -22,8 +22,13 @@ public class FileNumberingFilterWriter extends FilterWriter {
   private boolean isCarriageReturn;
   private int lineNumber;
 
+   /**
+   * Write line number and a tabulation in the writer.
+   *
+   * @throws   IOException
+   */
   private void lineNumbering() throws IOException {
-        out.write(String.valueOf(++lineNumber) + '\t');
+    out.write(String.valueOf(++lineNumber) + '\t');
   }
 
   public FileNumberingFilterWriter(Writer out) {
@@ -47,6 +52,9 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(int c) throws IOException {
+    // A line number should be write in the writer before the character c
+    // if it's first line or if the last character was '\r' and the current
+    // character c is not '\n'
     if(lineNumber == 0 || isCarriageReturn && c != '\n')
     {
         lineNumbering();
@@ -55,6 +63,8 @@ public class FileNumberingFilterWriter extends FilterWriter {
     out.write(c);
     isCarriageReturn = c == '\r';
     
+    // A line number should be writer after the character c
+    // if this character was '\n'
     if(c == '\n')
     {
         lineNumbering();
