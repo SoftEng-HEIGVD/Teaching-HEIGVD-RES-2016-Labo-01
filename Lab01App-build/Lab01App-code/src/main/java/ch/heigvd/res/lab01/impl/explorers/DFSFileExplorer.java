@@ -21,13 +21,17 @@ public class DFSFileExplorer implements IFileExplorer {
 
         vistor.visit(rootDirectory);
         
+        // 
         if (rootDirectory.isDirectory()){
             File[] filesAndDirectories = rootDirectory.listFiles();
+            // Sort needed because tests spawn random directories and files
             Arrays.sort(filesAndDirectories);
             
             if (filesAndDirectories != null){
                 LinkedList<File> directories = new LinkedList<>();
                 
+                // We first explore all the file from the directory, then all 
+                // the subdirectories
                 for (File f : filesAndDirectories){
                     if (f.isFile()){
                         explore(f, vistor);
