@@ -21,31 +21,35 @@ public class Utils {
      * an empty string.
      */
     public static String[] getNextLine(String lines) {
-        String[] tab = {"", ""};
+
+        int nextLinePos = 0;
 
         //Explore all of the char
         for (int i = 0; i < lines.length(); i++) {
             char curChar = lines.charAt(i);
-            tab[0] += curChar;
-
-            if (curChar == '\n') {
-                if (i + 1 < lines.length()) {
-                    tab[1] = lines.substring(i + 1);
-                }
+            
+            //Finding the next line--
+            //Windows
+            if(i + 1 < lines.length() && curChar == '\r' && lines.charAt(i + 1) == '\n'){
+                nextLinePos = i + 1;
                 break;
-            } else if (curChar == '\r' && i < lines.length() - 1 && lines.charAt(i + 1) != '\n') {
-                if (i + 1 < lines.length()) {
-                    tab[1] = lines.substring(i + 1);
-                }
+            }
+            //Other OS
+            if (curChar == '\n' || curChar == '\r') {
+                nextLinePos = i;
                 break;
             }
         }
 
-        //It Should Return A Line Only If There Is A New Line Character At The End
-        if (tab[0].charAt(tab[0].length() - 1) != '\n'
-                && tab[0].charAt(tab[0].length() - 1) != '\r') {
-            tab[1] = tab[0];
+        //Result tab
+        String[] tab = new String[2];
+
+        if (nextLinePos == 0) { //No new line
             tab[0] = "";
+            tab[1] = lines;
+        } else { //With new line
+            tab[0] = lines.substring(0, nextLinePos + 1);
+            tab[1] = lines.substring(nextLinePos + 1);
         }
 
         return tab;
