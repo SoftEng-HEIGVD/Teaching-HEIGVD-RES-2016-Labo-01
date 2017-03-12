@@ -19,8 +19,37 @@ public class Utils {
    * the line separator, the second element is the remaining text. If the argument does not
    * contain any line separator, then the first element is an empty string.
    */
-  public static String[] getNextLine(String lines) {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+  public static String[] getNextLine(String lines)
+  {
+    //throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    int idxNextNewLine = lines.indexOf("\n");
+    int idxNextCarr  = lines.indexOf("\r");
+
+    int idxNextLine = 0;
+
+    if (idxNextCarr != -1 && idxNextNewLine != -1)
+    {
+
+      if (idxNextNewLine < idxNextCarr || idxNextNewLine == (idxNextCarr + 1)) // for windows and Linux
+      {
+        idxNextLine = idxNextNewLine + 1;
+      }
+      else // For MacOs
+      {
+        idxNextLine = idxNextCarr + 1;
+      }
+    }
+    else if (idxNextNewLine != -1)
+    {
+      idxNextLine = idxNextNewLine + 1;
+    }
+    else if (idxNextCarr != -1)
+    {
+      idxNextLine = idxNextCarr + 1;
+    }
+    String firstElem = lines.substring(0, idxNextLine);
+    String secondElem = lines.substring(idxNextLine, lines.length());
+    return new String[] { firstElem, secondElem };
   }
 
 }
