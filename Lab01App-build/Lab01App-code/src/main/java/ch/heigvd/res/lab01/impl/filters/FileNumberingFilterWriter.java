@@ -18,6 +18,8 @@ import java.util.logging.Logger;
 public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
+  private int nbLine = 0;
+  private int previousC = 0;
 
   public FileNumberingFilterWriter(Writer out) {
     super(out);
@@ -39,7 +41,21 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(int c) throws IOException {
-    super.write(c);
+    // we have to number every time the first line of a string.
+    // then if we find a new line 
+    if(nbLine == 0 || (previousC == '\r' && c != '\n')){
+      nbLine++;
+      out.write(nbLine + "\t");
+    }
+    
+    // then we write the caracter
+    out.write(c);
+    
+    if(c == '\n'){
+      nbLine++;
+      out.write(nbLine + "\t");  
+    }
+    previousC = c;    
   }
 
 }
