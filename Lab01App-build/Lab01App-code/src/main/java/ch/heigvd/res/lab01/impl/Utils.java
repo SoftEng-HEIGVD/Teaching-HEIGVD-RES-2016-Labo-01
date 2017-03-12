@@ -20,7 +20,23 @@ public class Utils {
    * contain any line separator, then the first element is an empty string.
    */
   public static String[] getNextLine(String lines) {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+      //si la ligne ne contient aucun caractère de retour de ligne on retourne une igne vide
+     if(!lines.contains("\r") && !lines.contains("\n"))
+     {
+        String[] array = {"", lines};
+        return array;
+     }
+     String[] array = lines.split("\r\n|\r|\n", 2);
+     //split supprime le caractère de fin de ligne on rajoute donc le caractère suivant la ligne
+     array[0] += lines.charAt(array[0].length());
+     
+     
+     //on rajoute aussi le deuxième si le caractère de fin de ligne est '\r' + '\n'
+     if(array[0].length() < lines.length() && lines.charAt(array[0].length() - 1) == '\r' && lines.charAt(array[0].length()) == '\n')
+     {
+         array[0] += lines.charAt(array[0].length());
+     }
+     return array;
   }
 
 }

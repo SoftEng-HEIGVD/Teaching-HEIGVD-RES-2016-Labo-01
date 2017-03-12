@@ -18,24 +18,59 @@ import java.util.logging.Logger;
 public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
-
+  private int nbLine = 1;
+  private boolean newLine = true;
+  private int lastChar = 0;
   public FileNumberingFilterWriter(Writer out) {
     super(out);
   }
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+     for(int i = off; i < off + len; i++)
+     {
+        this.write(str.charAt(i));
+     }
+     //System.out.println(formattedString);
+    
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    for(int i = off; i < off + len; i++)
+     {
+        this.write(cbuf[i]);
+     }
   }
 
   @Override
   public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+      //if it's the first time we call this method we write a new line
+     if(newLine)
+     {
+        out.write(nbLine + "\t");
+        nbLine++;
+        newLine = false;
+     }
+     
+     //if the caractere of endline is '\r' we wait next call to see if there is a '\n' to write befor nextLine
+     if(lastChar == '\r' && c != '\n')
+     {
+        out.write(nbLine + "\t");
+        nbLine++;
+     }
+     
+     out.write(c);
+     
+     //if it's a '\n' we are sure that it's a new line
+     if(c == '\n')
+     {
+        out.write(nbLine + "\t");
+        nbLine++;
+     }
+     //keep in memory the last caractere for next calls of the method
+     lastChar = c;
+     
   }
 
 }
