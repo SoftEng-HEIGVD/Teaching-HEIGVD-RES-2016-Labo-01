@@ -20,12 +20,12 @@ public class FileNumberingFilterWriter extends FilterWriter {
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
 
   private int nbLine;
-  private boolean newLine;
+  private char char_memory;
 
   public FileNumberingFilterWriter(Writer out) {
     super(out);
     nbLine = 0;
-    newLine = false;
+    char_memory = '\0';
   }
 
   @Override
@@ -45,23 +45,17 @@ public class FileNumberingFilterWriter extends FilterWriter {
     if(nbLine == 0){ //beginning of the file
       out.write(++nbLine+"\t");
     }
-    super.write(c);
-    if (c == (int) '\n' || c == (int) '\r'){
-      if(!char_memory.equals('\r')){//on traite le cas \r\n
-        super.write((char) ++nbLine);
-        super.write('\t');
+      //if last char was a \r but not a windows new line
+      if(char_memory == '\r' && (char)c != '\n') {
+        out.write(++nbLine + "\t");
+      }
+      out.write(c);
+
+      //new line for linux and also for windows
+      if((char)c=='\n' ) { //Windows and linux
+        out.write( ++nbLine+"\t");
 
       }
-    }
-//    if(char_memory.equals('\r')){
-//      is_char_memory_back_r = true;
-//    }
-//    super.write(c);
-//    if (c == (int) '\n' && is_char_memory_back_r) {
-//      super.write((char) ++nbLine);
-//      super.write('\t');
-//      is_char_memory_back_r = false;
-//    }
 
     char_memory = (char)c;
   }
