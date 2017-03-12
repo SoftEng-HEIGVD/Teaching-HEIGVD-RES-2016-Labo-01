@@ -16,26 +16,53 @@ import java.util.logging.Logger;
  * @author Olivier Liechti
  */
 public class FileNumberingFilterWriter extends FilterWriter {
+  private int nbLines = 1;
+  private int charac;
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
-
+  
   public FileNumberingFilterWriter(Writer out) {
     super(out);
   }
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    //throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    write(str.toCharArray(), off, len);
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    //throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    int i = off;
+    while(i < off + len){
+        write(cbuf[i]);
+        i++;
+    }
   }
-
+  
   @Override
   public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+      if (nbLines ==1){
+      writeHeaderLine();
   }
-
+      
+  if ((this.charac == '\r' && c != '\n')) {
+      writeHeaderLine();
+     }
+  
+     out.write(c);
+     
+     if (c == '\n') {
+        writeHeaderLine();
+     }
+     
+     this.charac = c;
+  }
+  
+    private void writeHeaderLine() throws IOException {
+        out.write(nbLines + "\t");
+        nbLines++;
+    }
 }
+

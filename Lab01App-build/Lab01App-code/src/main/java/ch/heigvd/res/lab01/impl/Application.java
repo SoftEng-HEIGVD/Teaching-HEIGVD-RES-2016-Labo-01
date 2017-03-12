@@ -7,6 +7,7 @@ import ch.heigvd.res.lab01.interfaces.IFileExplorer;
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
 import ch.heigvd.res.lab01.quotes.QuoteClient;
 import ch.heigvd.res.lab01.quotes.Quote;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -92,7 +93,9 @@ public class Application implements IApplication {
        * one method provided by this class, which is responsible for storing the content of the
        * quote in a text file (and for generating the directories based on the tags).
        */
+      
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
+      storeQuote(quote, "quote-" + i + ".utf8");
       for (String tag : quote.getTags()) {
         LOG.info("> " + tag);
       }
@@ -125,7 +128,20 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    //throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    String path = WORKSPACE_DIRECTORY + File.separator;
+     // recover a tag
+     for (String tag : quote.getTags()){
+         path = path + tag + File.separator;
+     }
+    
+     path = path + "/" + filename; // add filename
+     File files = new File(path); // we create file
+     files.getParentFile().mkdirs(); //we create parent repertory
+     BufferedWriter BufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path), "UTF-8"));
+     BufferedWriter.write(quote.getQuote());
+     BufferedWriter.close();
+     
   }
   
   /**
@@ -142,13 +158,20 @@ public class Application implements IApplication {
          * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
          * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
          */
+         try{
+          writer.write(file.getPath() + "\n");
+        }
+        catch(IOException ex) {
+            LOG.log(Level.SEVERE, "Could not write quotes.", ex.getMessage());
+             ex.printStackTrace();
+        }
       }
     });
   }
   
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    return "zacharie.nguefack@heig-vd.ch";
   }
 
   @Override
