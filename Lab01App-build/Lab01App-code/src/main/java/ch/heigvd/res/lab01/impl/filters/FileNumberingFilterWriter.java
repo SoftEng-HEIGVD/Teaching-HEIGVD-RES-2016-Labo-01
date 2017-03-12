@@ -19,8 +19,8 @@ import ch.heigvd.res.lab01.impl.Utils;
 public class FileNumberingFilterWriter extends FilterWriter {
 
     private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
-    long num_de_ligne = 1;
-    char char_precedent;
+    long line_number = 1;
+    char previous_char;
 
     public FileNumberingFilterWriter(Writer out) {
         super(out);
@@ -30,24 +30,24 @@ public class FileNumberingFilterWriter extends FilterWriter {
     public void write(String str, int off, int len) throws IOException {
         //throw new UnsupportedOperationException("The student has not implemented this method yet.");
 
-        String ligne_qui_suit[] = Utils.getNextLine(str.substring(off, off + len));
+        String line_coming_next[] = Utils.getNextLine(str.substring(off, off + len));
         String string = "";
 
-        if (num_de_ligne == 1) {
-            string = (num_de_ligne++) + "\t";
+        if (line_number == 1) {
+            string = (line_number++) + "\t";
         }
 
-        while (!ligne_qui_suit[0].isEmpty()) {
-            string += ligne_qui_suit[0] + (num_de_ligne++) + "\t";
-            ligne_qui_suit = Utils.getNextLine(ligne_qui_suit[1]);
+        while (!line_coming_next[0].isEmpty()) {
+            string += line_coming_next[0] + (line_number++) + "\t";
+            line_coming_next = Utils.getNextLine(line_coming_next[1]);
         }
 
-        string += ligne_qui_suit[1];
+        string += line_coming_next[1];
         out.write(string);
     }
 
     @Override
-    public void write(char[] cbuf, int off, int len) throws IOException {
+    public void write(char[] cbuf, int off, int len) throws IOException { //writing into the char buff
         //throw new UnsupportedOperationException("The student has not implemented this method yet.");
         write(new String(cbuf).substring(off, off + len));
     }
@@ -55,18 +55,18 @@ public class FileNumberingFilterWriter extends FilterWriter {
     @Override
     public void write(int c) throws IOException {
         //throw new UnsupportedOperationException("The student has not implemented this method yet.");
-        char charactere = Character.toChars(c)[0];
+        char my_char = Character.toChars(c)[0];
 
         String string = "";
 
-        if (num_de_ligne == 1
-                || char_precedent == '\n'
-                || (char_precedent == '\r' && charactere != '\n')) {
-            string += (num_de_ligne++) + "\t";
+        if (line_number == 1
+                || previous_char == '\r' // '\r' and '\n' are our line separators
+                || (previous_char == '\n' && my_char != '\n')) {
+            string += (line_number++) + "\t";
         }
 
-        out.write(string + charactere);
-        char_precedent = charactere;
+        out.write(string + my_char);
+        previous_char = my_char;
     }
 }
 
