@@ -19,23 +19,54 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
 
+  private int nbLine;
+  private boolean newLine;
+
   public FileNumberingFilterWriter(Writer out) {
     super(out);
+    nbLine = 0;
+    newLine = false;
   }
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    write(str.toCharArray(),off,len);
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    for(int i = 0; i< len;++i){
+      write((int)cbuf[off+i]);
+    }
   }
 
   @Override
   public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    if(nbLine == 0){ //beginning of the file
+      out.write(++nbLine+"\t");
+    }
+    super.write(c);
+    if (c == (int) '\n' || c == (int) '\r'){
+      if(!char_memory.equals('\r')){//on traite le cas \r\n
+        super.write((char) ++nbLine);
+        super.write('\t');
+
+      }
+    }
+//    if(char_memory.equals('\r')){
+//      is_char_memory_back_r = true;
+//    }
+//    super.write(c);
+//    if (c == (int) '\n' && is_char_memory_back_r) {
+//      super.write((char) ++nbLine);
+//      super.write('\t');
+//      is_char_memory_back_r = false;
+//    }
+
+    char_memory = (char)c;
   }
+
+
+
 
 }
