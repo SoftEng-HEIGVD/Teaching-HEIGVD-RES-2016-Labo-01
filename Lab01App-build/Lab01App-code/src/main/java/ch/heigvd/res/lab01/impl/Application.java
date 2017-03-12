@@ -157,8 +157,14 @@ public class Application implements IApplication {
       cwd.createNewFile();
   
       // Writing the content of the quote into the new file
-      OutputStreamWriter writer = new OutputStreamWriter( new FileOutputStream(cwd.getPath()), "UTF-8" );
-      writer.write(quote.getQuote());
+      try {
+        OutputStreamWriter writer = new OutputStreamWriter( new FileOutputStream(cwd.getPath()), "UTF-8" );
+        writer.write(quote.getQuote());
+        writer.flush();
+        writer.close();
+      } catch(IOException ex) {
+        LOG.log(Level.SEVERE, null, ex);
+    }
   }
   
   /**
@@ -178,7 +184,6 @@ public class Application implements IApplication {
               */
           try {
               writer.write(file.getPath() + "\n");
-              LOG.info(file.getPath());
           } catch (IOException ex) {
               Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
           }
