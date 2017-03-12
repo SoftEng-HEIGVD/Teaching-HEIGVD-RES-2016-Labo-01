@@ -18,6 +18,9 @@ import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 
 /**
+ * CLASS: Get randomly quotes and save them on disk with numbers and tags as identifiers.
+ * Then all these quotes are processed to uppercase and line numbered form.
+ * Each result is save in '.out' file, according to original quote.
  *
  * @author Olivier Liechti
  * @author Baeriswyl Julien (julien.baeriswyl@heig-vd.ch) [MODIFIED BY, on 2017-03-12]
