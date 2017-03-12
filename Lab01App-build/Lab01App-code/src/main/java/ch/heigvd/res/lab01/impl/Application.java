@@ -13,13 +13,17 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 
 /**
  *
- * @author Olivier Liechti
+ * @author Olivier Liechti, Basile Châtillon
  */
 public class Application implements IApplication {
 
@@ -30,6 +34,8 @@ public class Application implements IApplication {
   public static String WORKSPACE_DIRECTORY = "./workspace/quotes";
   
   private static final Logger LOG = Logger.getLogger(Application.class.getName());
+  
+  private final String authorEmail = "basile.chatillon@heig-vd.ch";
   
   public static void main(String[] args) {
     
@@ -92,6 +98,8 @@ public class Application implements IApplication {
        * one method provided by this class, which is responsible for storing the content of the
        * quote in a text file (and for generating the directories based on the tags).
        */
+      storeQuote(quote, "quote-" + i +".utf8");
+      
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
       for (String tag : quote.getTags()) {
         LOG.info("> " + tag);
@@ -125,7 +133,33 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    String textPath = WORKSPACE_DIRECTORY;
+    
+    // construction of the path
+    for(String s : quote.getTags()){
+        textPath += File.separator + s; 
+    }
+    
+    // create the directory
+    new File(textPath).mkdirs();
+    
+    // add the name of the file
+    textPath += File.separator + filename;
+    
+    //create the file
+    File f = new File(textPath);
+    f.createNewFile();
+
+    try {
+      // using the exemple of the cours
+      OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(f), "UTF-8");
+      writer.write(quote.getQuote());
+      writer.flush();
+      writer.close();
+    }
+    catch (IOException e){
+      System.out.println("Exception ");
+    }
   }
   
   /**
@@ -142,13 +176,23 @@ public class Application implements IApplication {
          * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
          * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
          */
+        /* Write the file's path in the writer */
+
+        try {
+           // we must had the newLine so the tests work
+           writer.write(file.getPath() + '\n');
+        }
+        catch (IOException e) {
+          System.out.println(e.getMessage());
+        }
+
       }
     });
   }
   
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    return authorEmail;
   }
 
   @Override
