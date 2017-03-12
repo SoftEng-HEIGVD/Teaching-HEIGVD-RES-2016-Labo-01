@@ -35,6 +35,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
         
         String[] lines = Utils.getNextLine(str);
         
+        //if it's the first time we write, we must provide the first line number
         if (linesWritten == 0)
         {
             String temp = ++linesWritten + TAB;
@@ -42,15 +43,17 @@ public class FileNumberingFilterWriter extends FilterWriter {
         }
         
         //We consume the string until we reach the end of it
+        //We write new lines until we don't find any separators anymore
         while (!lines[0].isEmpty())
         {
             String line = lines[0] + (++linesWritten) + TAB;
-            System.out.print(line);
             super.write(line.toCharArray(), 0, line.length());
             lines = Utils.getNextLine(lines[1]);
         }
         
-        super.write(lines[1].toCharArray(), 0, lines[1].length());
+        //We write the rest of the string wich can be separatorless
+        if(!lines[1].isEmpty())
+            super.write(lines[1].toCharArray(), 0, lines[1].length());
     }
 
     @Override
