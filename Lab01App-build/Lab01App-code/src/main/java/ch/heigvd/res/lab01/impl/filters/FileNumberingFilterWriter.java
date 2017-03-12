@@ -1,5 +1,6 @@
 package ch.heigvd.res.lab01.impl.filters;
 
+import ch.heigvd.res.lab01.impl.Utils;
 import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -14,28 +15,48 @@ import java.util.logging.Logger;
  * Hello\n\World -> 1\Hello\n2\tWorld
  *
  * @author Olivier Liechti
+ * @author Yosra Harbaoui
  */
 public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
+  private int lineNumber = 1;
+  private boolean isR = false;
+  
 
   public FileNumberingFilterWriter(Writer out) {
-    super(out);
+    super(out);  
   }
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+      this.write(str.toCharArray(), off, len);
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    for (int ic = off; ic < off + len; ic++) {
+        this.write((int)cbuf[ic]);
+    }
   }
-
+  
   @Override
   public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
-
+      
+      if(lineNumber == 1)
+          out.write(lineNumber++ + "\t");
+      
+       if (!(c == '\n') && isR) {
+           out.write(lineNumber++ + "\t");
+            isR = false;
+         }
+         out.write((char) c);
+         if (c == '\n') {
+             out.write(lineNumber++ + "\t");
+             isR = false;
+         } else if (c == '\r') {
+             isR = true;
+         }
+      
+    }
 }
