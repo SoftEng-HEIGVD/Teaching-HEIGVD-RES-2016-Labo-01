@@ -59,13 +59,13 @@ public abstract class FileTransformer implements IFileVisitor {
        * characters and write them to the writer.
        */
 
-      //write to the file until there is nothing left
-      char[] buff = new char[10];
-      while(reader.read(buff)!=-1)
-        writer.write(buff);
+      //write to the file until there is nothing left (char by char. With a buffer it could be possible too)
+      int i = 0;
+      while((i=reader.read())>-1)
+        writer.write(i);
 
       reader.close();
-      writer.flush();
+      writer.flush();// be sure it's written
       writer.close();
     } catch (IOException ex) {
       LOG.log(Level.SEVERE, null, ex);
