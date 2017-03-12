@@ -20,9 +20,11 @@ public class DFSFileExplorer implements IFileExplorer {
   public void explore(File rootDirectory, IFileVisitor vistor) {
      
      /**
-      * visit then explore the node even if its node is a directory
+      * visit then explore the node even if this node is a directory
       */ 
      vistor.visit(rootDirectory);
+     
+     
      
      if(rootDirectory.isDirectory()){
          //Listing of all nodes in the current directory
@@ -34,12 +36,14 @@ public class DFSFileExplorer implements IFileExplorer {
           Arrays.sort(listNodes);
           for(File node : listNodes) {
               /**
-               * for each directory encountered, explore it
+               * visit the node then explore it
                */
+            if(node.isFile()){
+                vistor.visit(node);
+            }
+            
             if (node.isDirectory()) {
               explore(node, vistor);
-            } else {
-              vistor.visit(node);
             }
           }
         }

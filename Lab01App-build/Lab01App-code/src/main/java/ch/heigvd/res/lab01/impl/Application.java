@@ -132,7 +132,7 @@ public class Application implements IApplication {
    */
   void storeQuote(Quote quote, String filename) throws IOException {
     //throw new UnsupportedOperationException("The student has not implemented this method yet.");
-    String path = WORKSPACE_DIRECTORY + "/";
+    String path = WORKSPACE_DIRECTORY;
      
     /**
      * create the path base on the workspace directory 
@@ -156,7 +156,8 @@ public class Application implements IApplication {
       */
      
      BufferedWriter writer = new BufferedWriter(new OutputStreamWriter (new FileOutputStream(path),"utf8"));
-     writer.write(quote.getQuote(), 0, quote.getQuote().length());
+     
+     writer.write(quote.getQuote());
      writer.close();
   }
   
@@ -188,7 +189,6 @@ public class Application implements IApplication {
   
   @Override
   public String getAuthorEmail() {
-    //throw new UnsupportedOperationException("The student has not implemented this method yet.");
     return authorMail;
   }
 
