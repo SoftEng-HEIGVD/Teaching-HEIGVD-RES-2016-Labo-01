@@ -38,14 +38,22 @@ public class FileNumberingFilterWriter extends FilterWriter {
       }
   }
 
+  /**
+   * We have to be careful to distinguish \r from \r\n line seperators.
+   * To do this, a \r will always be considered a newline, but will set a 
+   * flag to true so that, if a \n is detected as the next char, it will 
+   * be written without treating it as a second new line.
+   * 
+   * 
+   */
   @Override
   public void write(int c) throws IOException {
       if(line == 1){
           out.write(line + "\t");
           line++;
       }
-      if(windowsNewlineTest){
-          if (c != '\n'){
+      if(windowsNewlineTest){  //the last char seen was a \r
+          if (c != '\n'){  
             out.write(line + "\t");
             line++;
             windowsNewlineTest = false;

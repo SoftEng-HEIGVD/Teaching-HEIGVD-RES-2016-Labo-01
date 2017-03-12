@@ -23,6 +23,8 @@ public class DFSFileExplorer implements IFileExplorer {
       }
       ArrayList<File> directories = new ArrayList<>();
       
+      //for every file in the root directory, visit it if it's a file,
+      //otherwise add it to a list of directories
       for(File f : rootDirectory.listFiles()){
           if(f.isFile()){
               vistor.visit(f);
@@ -30,6 +32,7 @@ public class DFSFileExplorer implements IFileExplorer {
               directories.add(f);
           }
       }
+      //explore all directories recursively
       for (File directory : directories) {
           explore(directory, vistor);
       }

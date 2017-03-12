@@ -61,7 +61,7 @@ public abstract class FileTransformer implements IFileVisitor {
       int temp;
       while(true){
           temp = reader.read();
-          if(temp == -1){
+          if(temp == -1){  //end of file
               break;
           }else{
               writer.write(temp);

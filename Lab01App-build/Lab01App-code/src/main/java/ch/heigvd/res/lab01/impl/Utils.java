@@ -20,6 +20,8 @@ public class Utils {
    * contain any line separator, then the first element is an empty string.
    */
   public static String[] getNextLine(String lines) {
+      //We assume here that one system will not mix-and-match line seperators,
+      //ie. will not use \r and later \n or \r\n.
       String[] result = new String[2];
       int index = lines.indexOf("\r\n");
       if(index != -1){
@@ -31,7 +33,7 @@ public class Utils {
       }else if((index = lines.indexOf('\n')) != -1){
           result[0] = lines.substring(0, index + 1);
           result[1] = lines.substring(index + 1);   
-      }else{
+      }else{   //no line seperators found
           result[0] = "";
           result[1] = lines;
       }

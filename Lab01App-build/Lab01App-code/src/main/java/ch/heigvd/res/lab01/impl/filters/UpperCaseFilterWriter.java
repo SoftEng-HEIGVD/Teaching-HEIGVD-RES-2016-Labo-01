@@ -26,7 +26,8 @@ public class UpperCaseFilterWriter extends FilterWriter {
       }
       
   }
-
+  
+  //Simply convert chars to uppercase individually
   @Override
   public void write(int c) throws IOException {
       super.write(Character.toUpperCase(c));
