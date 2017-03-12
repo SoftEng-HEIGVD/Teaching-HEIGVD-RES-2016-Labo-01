@@ -46,8 +46,8 @@ public class FileNumberingFilterWriter extends FilterWriter {
    @Override
    public void write(int c) throws IOException {
       
-      char ch = (char) c;
-      String s = "";
+      char character = (char) c;
+      String output = "";
       
       // first character, we add the first line marker
       if(isFirst){
@@ -60,22 +60,22 @@ public class FileNumberingFilterWriter extends FilterWriter {
       // if we find \r, we put \r and wait for the next character to know what to do
       // if it's anything else, we put the character, with the rest of the line if
       // \r was the previous character
-      if(ch == '\n'){
-         s += "\n" + line++ + "\t";
+      if(character == '\n'){
+         output += "\n" + line++ + "\t";
          wasReturn = false;
-      } else if(ch == '\r'){
+      } else if(character == '\r'){
          wasReturn = true;
-         s += "\r";
+         output += "\r";
       } else{
          if(wasReturn){
             wasReturn = false;
-            s+= line++ + "\t";
+            output+= line++ + "\t";
          }
-         s += "" + ch;
+         output += "" + character;
       }
       
       // we write all the characters
-      for (char cha : s.toCharArray()) {
+      for (char cha : output.toCharArray()) {
          super.write((int)cha);
       }
    }
@@ -100,11 +100,11 @@ public class FileNumberingFilterWriter extends FilterWriter {
       
       // we filter only the part to filter
       for (int j = off; j < off + len;j++) {
-         char c = cbuf[j];
+         char character = cbuf[j];
          // if we find a \r, we check if the next is a \n and act accordingly
          // by incrementing j again to skip the second character
          // else we write the number of the line for each line
-         if(c == '\r'){
+         if(character == '\r'){
             strReturn += "\r";
             System.out.print("\\r");
             if(cbuf[j + 1] == '\n'){
@@ -113,13 +113,13 @@ public class FileNumberingFilterWriter extends FilterWriter {
                j++;
             }
             strReturn += line++ + "\t";
-         }else if(c == '\n'){
+         }else if(character == '\n'){
             strReturn += "\n" + line++ + "\t";
             System.out.print("\\n");
          }
          else{
-            System.out.print(c);
-            strReturn += c;
+            System.out.print(character);
+            strReturn += character;
          }
       }
       

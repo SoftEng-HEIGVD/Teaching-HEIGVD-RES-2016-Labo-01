@@ -139,7 +139,7 @@ public class Application implements IApplication {
       path = path.concat(File.separator + filename);
       
       File file = new File(path);
-      file.getParentFile().mkdirs();
+      file.getParentFile().mkdirs(); // make the directories if missing
 
       OutputStreamWriter osw = new OutputStreamWriter(
               new FileOutputStream(file),
