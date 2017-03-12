@@ -15,15 +15,14 @@ import java.util.logging.Logger;
  * Hello\n\World -> 1\Hello\n2\tWorld
  *
  * @author Olivier Liechti
+ * @author Iando Rafidimalala
  */
 public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
+  
   private Boolean isPreviousMacEOL = false;
-  private Boolean isPartialLineLog = false;
-  private Boolean isNewLineLog = false;
   private int noLine = 1;
-  private final String TABULATION = Character.toString('\t');
   
   
   public FileNumberingFilterWriter(Writer out) {
@@ -33,108 +32,43 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-     String tmp = str.substring(off, off + len);
-     String strWellFormed = "";
-     
-     /***
-      * Reinitialize isPartialLineLog in the beginning of the process
-      * 
-      */     
-     if(out.toString().isEmpty()){
-         isPartialLineLog = false;
-         isNewLineLog = false;
-         noLine = 1;
-     }
-     
-     if(containEOF(tmp)){
-        String[] strLines = Utils.getNextLine(tmp);
-        while(!strLines[0].isEmpty()){
-            /**
-             * Check if process log if this method was evoked before with partial line
-             */           
-              if(isPartialLineLog){
-                  strWellFormed += strLines[0];
-                  isPartialLineLog = false;
-                  
-              }else if(isNewLineLog){
-                  strWellFormed += strLines[0];
-                  isNewLineLog = false;
-              }else{
-                  strWellFormed += addNumberOnTopString(strLines[0]);
-              }
-            strLines = Utils.getNextLine(strLines[1]);
-        }    
-        
-        /**
-         * handle the end of strWellFormed
-         */
-          strWellFormed += addNumberOnTopString(strLines[1]);          
-          
-          super.write(strWellFormed, 0, strWellFormed.length());
-          
-         /**
-          * Memorize the last process state if the string argument is a line with separator('\n', '\r', '\r\n')
-          */          
-          isNewLineLog = true;
-          isPartialLineLog = false;
-          
-     }else{
-     
-
-         if(isPartialLineLog || isNewLineLog){
-             strWellFormed += tmp;
-         }else
-            strWellFormed = addNumberOnTopString(tmp);
-         
-         super.write(strWellFormed, 0, strWellFormed.length());
-         
-         /**
-          * Memorize the last process state if the string argument is a partial line without separator('\n', '\r', '\r\n')
-          */         
-         isPartialLineLog = !isPartialLineLog;
-     }
-     
-    //throw new UnsupportedOperationException("The student has not implemented this method yet.");
+      this.write(str.toCharArray(), off, len);
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-      this.write(new String(cbuf), off, len);
-    //throw new UnsupportedOperationException("The student has not implemented this method yet.");
+      for(int i = off ; i < off + len ; i++)
+          this.write(cbuf[i]);
   }
-
+  
+  
   @Override
   public void write(int c) throws IOException {
-    String tmp = Character.toString((char) c);
+/**
+ * Be ware to write the header when the process encounter the carriage return or the first char
+ */      
+    if (noLine == 1 || (isPreviousMacEOL && c != '\n')){
+      out.write(stringHeader());
+     }
     
-     /***
-      * Reinitialize isPartialLineLog in the beginning of the process
-      * 
-      */     
-     if(out.toString().isEmpty()){
-         isPartialLineLog = false;
-         isNewLineLog = false;
-         noLine = 1;
-        tmp = addNumberOnTopString(tmp);
-        super.write(tmp, 0, tmp.length());
-     }else if((char) c == '\n'){
-        tmp += addNumberOnTopString("");
-        super.write(tmp, 0, tmp.length());
-    }else   
-        super.write(c);
+   out.write(c);
 
-    
-        
-    //throw new UnsupportedOperationException("The student has not implemented this method yet.");
+   if (c == '\n') {
+      out.write(stringHeader());
+   }
+
+   isPreviousMacEOL =  c == '\r';
   }
   
-  private Boolean containEOF(String str){
-      return (str.indexOf('\r') != -1) || (str.indexOf('\n') != -1);
-  }
-  
-  private String addNumberOnTopString(String str){
-      String tmp = Integer.toString(noLine) + TABULATION + str;
+  /**
+   * 
+   * Design the header with the number of line
+   */
+  private String stringHeader(){
+      String tmp = noLine + "\t";
+      
       noLine++;
+      
       return tmp;
   }
 }

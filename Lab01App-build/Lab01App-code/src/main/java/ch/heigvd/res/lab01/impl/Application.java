@@ -21,6 +21,7 @@ import org.apache.commons.io.FileUtils;
 /**
  *
  * @author Olivier Liechti
+ * @author Iando Rafidimalala
  */
 public class Application implements IApplication {
 
@@ -95,7 +96,7 @@ public class Application implements IApplication {
        * quote in a text file (and for generating the directories based on the tags).
        */
       
-      storeQuote(quote, "quote-" + quote.getValue().getId() + ".utf8");
+      storeQuote(quote, "quote-" + i + ".utf8");
       
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
       for (String tag : quote.getTags()) {
@@ -131,7 +132,7 @@ public class Application implements IApplication {
    */
   void storeQuote(Quote quote, String filename) throws IOException {
     //throw new UnsupportedOperationException("The student has not implemented this method yet.");
-    String path = WORKSPACE_DIRECTORY;
+    String path = WORKSPACE_DIRECTORY + "/";
      
     /**
      * create the path base on the workspace directory 
@@ -144,6 +145,7 @@ public class Application implements IApplication {
 
      path = path + "/" + filename; 
      File files = new File(path);
+     
      /**
       * create parent hierarchy
       */

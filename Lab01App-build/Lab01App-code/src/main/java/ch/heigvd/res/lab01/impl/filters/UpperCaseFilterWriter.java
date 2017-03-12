@@ -8,6 +8,7 @@ import java.util.Arrays;
 /**
  *
  * @author Olivier Liechti
+ * @author Iando Rafidimalala
  */
 public class UpperCaseFilterWriter extends FilterWriter {
   
@@ -15,13 +16,6 @@ public class UpperCaseFilterWriter extends FilterWriter {
     super(wrappedWriter);
   }
 
-  /**
-   * Call the writer providing by FilterWriter
-   * @param str
-   * @param off
-   * @param len
-   * @throws IOException 
-   */
   @Override
   public void write(String str, int off, int len) throws IOException {
 
