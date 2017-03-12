@@ -1,5 +1,7 @@
 package ch.heigvd.res.lab01.impl.filters;
 
+import ch.heigvd.res.lab01.impl.Utils;
+
 import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -14,28 +16,70 @@ import java.util.logging.Logger;
  * Hello\n\World -> 1\Hello\n2\tWorld
  *
  * @author Olivier Liechti
+ * @author Baeriswyl Julien (julien.baeriswyl@heig-vd.ch) [MODIFIED BY, on 2017-03-12]
  */
-public class FileNumberingFilterWriter extends FilterWriter {
+public class FileNumberingFilterWriter extends FilterWriter
+{
+    private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
+    
+    private int lineCounter;
+    private boolean newline = true;
+    
+    public FileNumberingFilterWriter (Writer out)
+    {
+        super(out);
+    }
 
-  private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
+    @Override
+    public void write (String str, int off, int len) throws IOException
+    {
 
-  public FileNumberingFilterWriter(Writer out) {
-    super(out);
-  }
+        String[] lines = Utils.getNextLine(str.substring(off, off + len));
+        String countStr;
 
-  @Override
-  public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
+        while (true)
+        {
+            if (newline)
+            {
+                countStr = String.format("%d\t", ++lineCounter);
+                super.write(countStr, 0, countStr.length());
+                newline = false;
+            }
 
-  @Override
-  public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
+            if (lines[0].isEmpty())
+            {
+                super.write(lines[1], 0, lines[1].length());
+                return;
+            }
 
-  @Override
-  public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
+            super.write(lines[0], 0, lines[0].length());
+            lines  = Utils.getNextLine(lines[1]);
+            newline = true;
+        }
+    }
 
+    @Override
+    public void write (char[] cbuf, int off, int len) throws IOException
+    {
+        /* DONE */
+        write(String.copyValueOf(cbuf, off, len), 0, len);
+    }
+
+    @Override
+    public void write (int c) throws IOException
+    {
+        /* DONE */
+        if ((c == '\n' | c == '\r'))
+        {
+            newline = true;
+        }
+        else if (newline)
+        {
+            String countStr = String.format("%d\t", ++lineCounter);
+            super.write(countStr, 0, countStr.length());
+            newline = false;
+        }
+
+        super.write(c);
+    }
 }
