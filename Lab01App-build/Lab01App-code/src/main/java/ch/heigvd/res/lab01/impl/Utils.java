@@ -40,7 +40,7 @@ public class Utils {
       }
       //we found '\n'
       else if(c == '\n'){
-          delimFound = true;
+        delimFound = true;
         break;
       }  
     }

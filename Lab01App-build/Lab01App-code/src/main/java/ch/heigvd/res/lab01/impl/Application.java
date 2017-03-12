@@ -179,8 +179,10 @@ public class Application implements IApplication {
         /* Write the file's path in the writer */
 
         try {
+           // we must had the newLine so the tests work
            writer.write(file.getPath() + '\n');
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
           System.out.println(e.getMessage());
         }
 

@@ -28,7 +28,7 @@ public class DFSFileExplorer implements IFileExplorer {
     
     //cas if the rootDirectory is not a Directory or is empty
     if (rootDirectory.isDirectory() && rootDirectory.listFiles() != null){
-      //we get all the files and sub-directories
+      // we get all the files and sub-directories
       File[] files = rootDirectory.listFiles();
       Arrays.sort(files);
       
@@ -36,7 +36,7 @@ public class DFSFileExplorer implements IFileExplorer {
       for(File f : files){
         if(f.isFile()){
           explore(f, vistor);
-          }
+        }
       }
         
       // then all the directories
