@@ -30,6 +30,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
     @Override
     public void write(String str, int off, int len) throws IOException {
+        
         char[] chars = str.toCharArray();//transform str in array
         this.write(chars, off, len);
 
@@ -48,7 +49,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
     @Override
     public void write(int c) throws IOException {
 
-        if (isFirstChar) {//if it's the first char, we have to number
+        if (isFirstChar) {//if it's the first char, we have to number too
             outWrite();
             isFirstChar = false;
         }

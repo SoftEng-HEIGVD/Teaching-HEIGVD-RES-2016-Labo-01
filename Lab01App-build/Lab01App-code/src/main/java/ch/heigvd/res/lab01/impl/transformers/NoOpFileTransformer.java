@@ -21,6 +21,7 @@ public class NoOpFileTransformer extends FileTransformer {
      * the output file at all. Just uncomment the following line and get rid of the UnsupportedOperationException and
      * you will be all set.
      */
+    
     return writer;
   }
 

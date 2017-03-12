@@ -134,7 +134,7 @@ public class Application implements IApplication {
         //throw new UnsupportedOperationException("The student has not implemented this method yet.");
 
         List<String> tags = quote.getTags();//list of tags
-        String path = WORKSPACE_DIRECTORY + File.separator;
+        String path = WORKSPACE_DIRECTORY + File.separator;//File.separator allow to have the right separator for the OS used
 
         for (String t : tags) {
             path += t + File.separator; //add tags in path

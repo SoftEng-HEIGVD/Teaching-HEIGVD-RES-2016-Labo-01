@@ -25,6 +25,7 @@ public class Utils {
         String[] arrayString = {"", ""};
         boolean quit = false;
         int j = 0;// not to change index of loop. Offset to know where to substring lines
+        
         for (int i = 0; i < lines.length(); i++) {
             j = i + 1;
 

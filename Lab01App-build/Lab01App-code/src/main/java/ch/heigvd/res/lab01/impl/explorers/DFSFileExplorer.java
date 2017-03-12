@@ -47,8 +47,8 @@ public class DFSFileExplorer implements IFileExplorer {
                         explore(contentOfRoot, vistor); //explore the files first (by recursion)
                     }
                 }
-                for (File subDirectories : arrayDirectories) {//explore the subdirectories then (by recursion)
-                    explore(subDirectories, vistor);
+                for (File subDirectories : arrayDirectories) {
+                    explore(subDirectories, vistor);//explore the subdirectories then (by recursion too)
                 }
             }
         }   //throw new UnsupportedOperationException("The student has not implemented this method yet.");
