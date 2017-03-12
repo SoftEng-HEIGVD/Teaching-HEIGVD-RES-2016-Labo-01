@@ -22,11 +22,13 @@ public class FileNumberingFilterWriter extends FilterWriter {
   
   private int number;
   private boolean firstCall;
+  private int lastPrintedChar;
 
   public FileNumberingFilterWriter(Writer out) {
     super(out);
     number = 1; // Remembering the line number
     firstCall = true; // Used for the call with the int c
+    lastPrintedChar = 'a'; // Can be anything but \n or \r
   }
 
   @Override
@@ -69,44 +71,21 @@ public class FileNumberingFilterWriter extends FilterWriter {
       {
           toWrite = toWrite.substring(off, off + len);
       }
-      String[] partsOfStr = {"", ""};
- 
-      // Getting the next line
-      partsOfStr = Utils.getNextLine(toWrite);
-      
-      // Adding the first line number
-      if(firstCall) {
-          firstCall = false;
-          out.write(number + "\t");
-          number++;
-      }
-      
-      while( ! partsOfStr[0].isEmpty()) {
-          out.write(partsOfStr[0] + number + "\t");
-          number++;
-          partsOfStr = Utils.getNextLine(partsOfStr[1]);
-      }
-      
-      if ( !partsOfStr[1].isEmpty()) {
-          out.write(partsOfStr[1] /*+ number + "\t"*/);
-          number++;
-      }
+      write(toWrite);
   }
 
   @Override
   public void write(int c) throws IOException {
     
-    if (firstCall) {
+    if (firstCall || lastPrintedChar == '\n' ||
+          (lastPrintedChar == '\r' && c != '\n')  ) {
         firstCall = false;
         out.write( number + "\t");
         number++;
     }
-    
-    if (c == '\n') {
-        out.write( "\n" + number + "\t");
-        number++;
-    } else {
-        out.write(c);
-    }  
+   
+    out.write(c);
+    lastPrintedChar = c;
+     
   }
 }
