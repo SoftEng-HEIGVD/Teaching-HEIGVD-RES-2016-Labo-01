@@ -7,13 +7,8 @@ import ch.heigvd.res.lab01.interfaces.IFileExplorer;
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
 import ch.heigvd.res.lab01.quotes.QuoteClient;
 import ch.heigvd.res.lab01.quotes.Quote;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.StringWriter;
-import java.io.Writer;
+
+import java.io.*;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,18 +17,20 @@ import org.apache.commons.io.FileUtils;
 /**
  *
  * @author Olivier Liechti
+ * 
+ * EDIT by : Nourazar Antoine
  */
 public class Application implements IApplication {
 
    /**
-    * This constant defines where the quotes will be stored. The path is relative to
-    * where the Java application is invoked.
+    * This constant defines where the quotes will be stored. The path is
+    * relative to where the Java application is invoked.
     */
    public static String WORKSPACE_DIRECTORY = "." + File.separator + "workspace"
            + File.separator + "quotes";
-
+   
    private static final Logger LOG = Logger.getLogger(Application.class.getName());
-
+   
    public static void main(String[] args) {
 
       /*
@@ -42,7 +39,7 @@ public class Application implements IApplication {
        * better to use a Logger rather than using System.out.println
        */
       System.setProperty("java.util.logging.SimpleFormatter.format", "%4$s: %5$s%6$s%n");
-
+      
       int numberOfQuotes = 0;
       try {
          numberOfQuotes = Integer.parseInt(args[0]);
@@ -50,7 +47,7 @@ public class Application implements IApplication {
          System.err.println("The command accepts a single numeric argument (number of quotes to fetch)");
          System.exit(-1);
       }
-
+      
       Application app = new Application();
       try {
          /*
@@ -75,29 +72,30 @@ public class Application implements IApplication {
        *          (convert to uppercase and add line numbers)
           */
          app.processQuoteFiles();
-
+         
       } catch (IOException ex) {
          LOG.log(Level.SEVERE, "Could not fetch quotes. {0}", ex.getMessage());
          ex.printStackTrace();
       }
    }
-
+   
    @Override
    public void fetchAndStoreQuotes(int numberOfQuotes) throws IOException {
-
+      
       clearOutputDirectory();
       QuoteClient client = new QuoteClient();
-
+      
       for (int i = 0; i < numberOfQuotes; i++) {
-
+         
          Quote quote = client.fetchQuote();
          /* There is a missing piece here!
-       * As you can see, this method handles the first part of the lab. It uses the web service
-       * client to fetch quotes. We have removed a single line from this method. It is a call to
-       * one method provided by this class, which is responsible for storing the content of the
-       * quote in a text file (and for generating the directories based on the tags).
+          * As you can see, this method handles the first part of the lab. It uses the web service
+          * client to fetch quotes. We have removed a single line from this method. It is a call to
+          * one method provided by this class, which is responsible for storing the content of the
+          * quote in a text file (and for generating the directories based on the tags).
           */
-         storeQuote(quote, "monFichierdeQuote.out");
+         storeQuote(quote, "quote-" + Integer.toString(i+1) + ".utf8");
+         
          LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
          for (String tag : quote.getTags()) {
             LOG.info("> " + tag);
@@ -106,8 +104,8 @@ public class Application implements IApplication {
    }
 
    /**
-    * This method deletes the WORKSPACE_DIRECTORY and its content. It uses the apache
-    * commons-io library. You should call this method in the main method.
+    * This method deletes the WORKSPACE_DIRECTORY and its content. It uses the
+    * apache commons-io library. You should call this method in the main method.
     *
     * @throws IOException
     */
@@ -116,51 +114,49 @@ public class Application implements IApplication {
    }
 
    /**
-    * This method stores the content of a quote in the local file system. It has 2
-    * responsibilities:
+    * This method stores the content of a quote in the local file system. It has
+    * 2 responsibilities:
     *
     * - with quote.getTags(), it gets a list of tags and uses it to create
-    * sub-folders (for instance, if a quote has three tags "A", "B" and "C", it will
-    * be stored in /quotes/A/B/C/quotes-n.utf8.
+    * sub-folders (for instance, if a quote has three tags "A", "B" and "C", it
+    * will be stored in /quotes/A/B/C/quotes-n.utf8.
     *
-    * - with quote.getQuote(), it has access to the text of the quote. It stores this
-    * text in UTF-8 file.
+    * - with quote.getQuote(), it has access to the text of the quote. It stores
+    * this text in UTF-8 file.
     *
     * @param quote the quote object, with tags and text
-    * @param filename the name of the file to create and where to store the quote
-    * text
+    * @param filename the name of the file to create and where to store the
+    * quote text
     * @throws IOException
     */
    void storeQuote(Quote quote, String filename) throws IOException {
-      
+
       //Get the tags
       List<String> tagsList = quote.getTags();
+
+      /* Create the directory */
+      String directory = WORKSPACE_DIRECTORY;
       
-      //Get the quote's text
-      String text = quote.getQuote();
-      
-      //Manage the extension
-      if(!filename.contains(".utf8")) {
-         filename = filename.concat(".utf8");
+      for (String tag : tagsList) {
+         directory += File.separator + tag;
       }
-      //Create the file in utf-8
-      File fileToCreate = new File(filename);
       
-      // if we succeed to create file, we write into it
-      if (fileToCreate.exists()) {
-         
-         FileWriter writer = new FileWriter(fileToCreate);
-         writer.write(text);
-         
-         
-         //Don't forget to close the writer after using it
-         writer.close();
-      }
+      filename = directory + File.separator + filename;
+      
+      File file = new File(directory);
+      file.mkdirs();
+      
+      File namedFile = new File(filename);
+      
+      BufferedOutputStream writer = new BufferedOutputStream(new FileOutputStream(namedFile));
+      writer.write(quote.getQuote().getBytes("UTF-8"));
+      writer.close();
+      
    }
 
    /**
-    * This method uses a IFileExplorer to explore the file system and prints the name
-    * of each encountered file and directory.
+    * This method uses a IFileExplorer to explore the file system and prints the
+    * name of each encountered file and directory.
     */
    void printFileNames(final Writer writer) {
       
@@ -173,28 +169,29 @@ public class Application implements IApplication {
              * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
              * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
              * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
+             *
+             *  FIXED ! 
              */
             
-            
             try {
-               writer.write(file.toString());
+               writer.write(file.getPath()+ '\n');
             } catch (IOException e) {
                e.printStackTrace();
             }
          }
       });
    }
-
+   
    @Override
    public String getAuthorEmail() {
       //return my email as it was indicate in IApplication interface
       return "antoine.nourazar@heig-vd.ch";
    }
-
+   
    @Override
    public void processQuoteFiles() throws IOException {
       IFileExplorer explorer = new DFSFileExplorer();
       explorer.explore(new File(WORKSPACE_DIRECTORY), new CompleteFileTransformer());
    }
-
+   
 }

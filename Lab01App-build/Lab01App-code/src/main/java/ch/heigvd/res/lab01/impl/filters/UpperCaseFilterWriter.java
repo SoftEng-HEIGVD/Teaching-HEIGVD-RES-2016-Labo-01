@@ -7,6 +7,8 @@ import java.io.Writer;
 /**
  *
  * @author Olivier Liechti
+ * 
+ * EDIT by Nourazar Antoine
  */
 public class UpperCaseFilterWriter extends FilterWriter {
 
@@ -28,10 +30,9 @@ public class UpperCaseFilterWriter extends FilterWriter {
    public void write(char[] cbuf, int off, int len) throws IOException {
       
       /* Convert to uppercase */
-      for (int i = 0; i < cbuf.length; i++) {
-         
+      for (int i = 0; i < cbuf.length; i++)
          cbuf[i] = Character.toUpperCase(cbuf[i]);
-      }
+      
       
       //Use the mother's method
       super.write(cbuf, off, len);

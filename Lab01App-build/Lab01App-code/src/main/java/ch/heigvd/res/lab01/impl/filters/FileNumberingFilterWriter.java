@@ -33,19 +33,15 @@ public class FileNumberingFilterWriter extends FilterWriter {
    @Override
    public void write(String str, int off, int len) throws IOException {
 
-      for (int i = off; i < (off + len); i++) {
-
-         this.write(str.charAt(i));
-      }
-
+      for (int i = off; i < (off + len); i++)
+         write(str.charAt(i));
    }
 
    @Override
    public void write(char[] cbuf, int off, int len) throws IOException {
 
-      for (int i = off; i < off + len; i++) {
-         this.write(cbuf[i]);
-      }
+      for (int i = off; i < off + len; i++)
+         write(cbuf[i]);
    }
    
    
@@ -74,7 +70,6 @@ public class FileNumberingFilterWriter extends FilterWriter {
          // char. So we store with a boolean the fact we met a '\r'...
          if (c == '\r')
             lseparator = true;
-         
          
          else {
             
