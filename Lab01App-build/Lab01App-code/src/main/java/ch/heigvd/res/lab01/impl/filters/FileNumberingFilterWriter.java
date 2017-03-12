@@ -18,24 +18,57 @@ import java.util.logging.Logger;
 public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
-
+  private int lineNumber =0;
+  private char previousCharacter ='\0';
   public FileNumberingFilterWriter(Writer out) {
     super(out);
   }
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    for(int i=off; i < off+len;++i){
+       this.write(str.charAt(i));
+    }
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    this.write(new String(cbuf),off,len);
   }
 
   @Override
   public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    /*if it is the first line we write the number*/
+     if(lineNumber==0){
+        writeLineNumber();
+     }
+     /*if is the end of line*/
+     if(c == '\n'){
+        super.write('\n');
+        /*if the character was not \r\n(end of line)*/
+        if(previousCharacter != '\r'){
+           writeLineNumber();  
+        }
+        /*if its \r\n */
+        else{ 
+           writeLineNumber();
+        }
+     }
+     else {
+        if(previousCharacter == '\r')
+           writeLineNumber();
+        super.write(c);
+     }
+     
+     previousCharacter = (char) c;
+  }
+   /*this method convert the line number into string and write the it with the '\t'*/
+  private void writeLineNumber() throws IOException{
+     
+      String lineNumberStr = Integer.toString(++lineNumber);
+           for(int i =0; i< lineNumberStr.length();++i)
+              super.write(lineNumberStr.charAt(i));
+           super.write('\t');
   }
 
 }
