@@ -32,7 +32,6 @@ public class Utils {
 	  }
 	  if(pos != Integer.MAX_VALUE)
 	  {
-		  System.out.println("pos = " + pos);
 		  lignes[0] = lines.substring(0,pos);
 		  lignes[1] = lines.substring(pos);
 	  }
@@ -41,9 +40,7 @@ public class Utils {
 		  lignes[0] = "";
 		  lignes[1] = lines;
 	  }
-	  System.out.println(lines + " separated in ");
-	  System.out.println(lignes[0]);
-	  System.out.println(lignes[1]);
+	 // System.out.println(lines + " separated in '" + lignes[0] + "' and '" + lignes[1] + "'");
 	  
 	  return lignes;
   }
