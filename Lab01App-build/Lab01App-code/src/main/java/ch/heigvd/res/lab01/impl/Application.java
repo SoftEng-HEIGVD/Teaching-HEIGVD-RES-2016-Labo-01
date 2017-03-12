@@ -20,6 +20,8 @@ import org.apache.commons.io.FileUtils;
 /**
  *
  * @author Olivier Liechti
+ * 
+ *  Modified by Nathalie Mégevand
  */
 public class Application implements IApplication {
 
@@ -92,6 +94,8 @@ public class Application implements IApplication {
        * one method provided by this class, which is responsible for storing the content of the
        * quote in a text file (and for generating the directories based on the tags).
        */
+      // Store the quote with the filname quote-x.utf8 where x is the number of the quote
+      storeQuote(quote, "quote-" + i + ".utf8");
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
       for (String tag : quote.getTags()) {
         LOG.info("> " + tag);
@@ -125,7 +129,42 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+      File cwd = new File(WORKSPACE_DIRECTORY);
+      File[] subFiles = null;
+      boolean dirExists = false;
+      
+      // Extracting the tags of the quote
+      for (String tag : quote.getTags()) {
+          dirExists = false;
+          // Checking if a sudirectory already exists
+          subFiles = cwd.listFiles();
+          if (subFiles != null) {
+            for (File child : cwd.listFiles() ) {
+                if (child.getName().equals(tag)) {
+                     dirExists = true;
+                }
+            }
+          }
+          cwd = new File(cwd.getPath() + File.separator + tag);
+
+          // If not create it !
+          if(!dirExists) {            
+              cwd.mkdirs();
+          }
+      }
+      // Once all the directories have been created, it is the file turn.
+      cwd = new File(cwd.getPath() + File.separator + filename);
+      cwd.createNewFile();
+  
+      // Writing the content of the quote into the new file
+      try {
+        OutputStreamWriter writer = new OutputStreamWriter( new FileOutputStream(cwd.getPath()), "UTF-8" );
+        writer.write(quote.getQuote());
+        writer.flush();
+        writer.close();
+      } catch(IOException ex) {
+        LOG.log(Level.SEVERE, null, ex);
+    }
   }
   
   /**
@@ -137,18 +176,24 @@ public class Application implements IApplication {
     explorer.explore(new File(WORKSPACE_DIRECTORY), new IFileVisitor() {
       @Override
       public void visit(File file) {
-        /*
-         * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
-         * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
-         * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
-         */
+          
+              /*
+              * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
+              * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
+              * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
+              */
+          try {
+              writer.write(file.getPath() + "\n");
+          } catch (IOException ex) {
+              Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
+          }
       }
     });
   }
   
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    return "nathalie.megevand@heig-vd.ch";
   }
 
   @Override
