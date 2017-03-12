@@ -134,7 +134,7 @@ public class Application implements IApplication {
 		path += tag + "/";
 	}
     path += filename + ".utf8";
-    System.out.println("Store quote with path : " + path);
+  //  System.out.println("Store quote with path : " + path);
     File file = new File(path);
     file.getParentFile().mkdirs();
     FileWriter writer = new FileWriter(file);
@@ -163,7 +163,7 @@ public class Application implements IApplication {
   
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    return "tony.clavien@heig-vd.ch";
   }
 
   @Override
