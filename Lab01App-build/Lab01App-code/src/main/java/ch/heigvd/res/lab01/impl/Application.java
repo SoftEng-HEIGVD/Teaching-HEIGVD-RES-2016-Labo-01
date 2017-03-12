@@ -11,8 +11,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -20,6 +22,7 @@ import org.apache.commons.io.FileUtils;
 /**
  *
  * @author Olivier Liechti
+ * @author Nathan Gonzalez Montes
  */
 public class Application implements IApplication {
 
@@ -66,7 +69,7 @@ public class Application implements IApplication {
        */
       Writer writer = new StringWriter(); // we create a special writer that will send characters into a string (memory)
       app.printFileNames(writer);         // we hand over this writer to the printFileNames method
-      LOG.info(writer.toString());       // we dump the whole result on the console
+      LOG.info(writer.toString());        // we dump the whole result on the console
       
       /*
        * Step 4 : process the quote files, by applying 2 transformations to their content
@@ -92,6 +95,7 @@ public class Application implements IApplication {
        * one method provided by this class, which is responsible for storing the content of the
        * quote in a text file (and for generating the directories based on the tags).
        */
+        storeQuote(quote, "quote-" + i + ".utf8");
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
       for (String tag : quote.getTags()) {
         LOG.info("> " + tag);
@@ -125,7 +129,20 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+      String pathFiles = WORKSPACE_DIRECTORY + "/quotes/";
+      for(String s : quote.getTags()){
+          pathFiles += s + File.separator; //Creation oh the path for files
+      }
+      
+      File fileDirCreate = new File(pathFiles);
+      fileDirCreate.mkdirs(); // We create the directories
+      fileDirCreate = new File(pathFiles + filename);
+      fileDirCreate.createNewFile();
+      
+      OutputStreamWriter writerOut = new OutputStreamWriter(new FileOutputStream(fileDirCreate),
+                                                      Charset.forName("UTF-8"));
+      writerOut.write(quote.getQuote());
+      writerOut.close();
   }
   
   /**
@@ -135,20 +152,28 @@ public class Application implements IApplication {
   void printFileNames(final Writer writer) {
     IFileExplorer explorer = new DFSFileExplorer();
     explorer.explore(new File(WORKSPACE_DIRECTORY), new IFileVisitor() {
-      @Override
-      public void visit(File file) {
-        /*
-         * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
-         * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
-         * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
-         */
-      }
+        @Override
+        public void visit(File file) {
+            try {
+                /*
+                * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
+                * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
+                * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
+                */
+                writer.write(file.getPath() + '\n');
+            } catch (IOException ex) {
+                Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     });
   }
-  
+  /**
+   * Method returning the author of the application
+   * @return the mail of the author
+   */
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+      return "nathan.gonzalezmontes@heig-vd.ch";
   }
 
   @Override
