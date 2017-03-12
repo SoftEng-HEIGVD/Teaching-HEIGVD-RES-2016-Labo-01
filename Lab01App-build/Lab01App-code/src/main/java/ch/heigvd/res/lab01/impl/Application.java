@@ -7,12 +7,11 @@ import ch.heigvd.res.lab01.interfaces.IFileExplorer;
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
 import ch.heigvd.res.lab01.quotes.QuoteClient;
 import ch.heigvd.res.lab01.quotes.Quote;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.StringWriter;
-import java.io.Writer;
+
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -28,7 +27,7 @@ public class Application implements IApplication {
    * to where the Java application is invoked.
    */
   public static String WORKSPACE_DIRECTORY = "./workspace/quotes";
-  
+
   private static final Logger LOG = Logger.getLogger(Application.class.getName());
   
   public static void main(String[] args) {
@@ -96,6 +95,8 @@ public class Application implements IApplication {
       for (String tag : quote.getTags()) {
         LOG.info("> " + tag);
       }
+
+      storeQuote(quote, "quote-" + (i + 1) + ".utf8");
     }
   }
   
@@ -125,7 +126,17 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    String directoryPath = new String(WORKSPACE_DIRECTORY);
+
+    // First we create the directory where the quote file will be stored using the quote's tags
+    for (String tag : quote.getTags())
+      directoryPath += File.separator + tag;
+
+    Files.createDirectories(Paths.get(directoryPath));
+
+    // Then we create the file and write the quote inside it
+    BufferedWriter output = new BufferedWriter(new FileWriter(directoryPath + File.separatorChar + filename));
+    output.write(quote.getQuote());
   }
   
   /**
@@ -137,18 +148,18 @@ public class Application implements IApplication {
     explorer.explore(new File(WORKSPACE_DIRECTORY), new IFileVisitor() {
       @Override
       public void visit(File file) {
-        /*
-         * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
-         * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
-         * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
-         */
+        try {
+          writer.write(file.getPath() + System.lineSeparator());
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
       }
     });
   }
   
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    return "benoit.gianinetti@heig-vd.ch";
   }
 
   @Override
