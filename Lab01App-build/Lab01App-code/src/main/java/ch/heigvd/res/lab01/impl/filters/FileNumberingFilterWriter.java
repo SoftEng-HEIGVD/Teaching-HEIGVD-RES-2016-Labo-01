@@ -24,6 +24,23 @@ public class FileNumberingFilterWriter extends FilterWriter
     
     private int lineCounter;
     private boolean newline = true;
+    private int lastChar = -1;
+
+    /**
+     * Write line number and update flags.
+     *
+     * @throws IOException if write operations fail
+     */
+    private void writeLineNumber () throws IOException
+    {
+        // JBL: write formatted line number
+        String countStr = String.format("%d\t", ++lineCounter);
+        super.write(countStr, 0, countStr.length());
+
+        // JBL: update flags
+        lastChar = -1;
+        newline  = false;
+    }
     
     public FileNumberingFilterWriter (Writer out)
     {
@@ -33,51 +50,53 @@ public class FileNumberingFilterWriter extends FilterWriter
     @Override
     public void write (String str, int off, int len) throws IOException
     {
+        // JBL: ensure no reading outside array range
+        len = Math.min(len, str.length() - off);
 
-        String[] lines = Utils.getNextLine(str.substring(off, off + len));
-        String countStr;
-
-        while (true)
+        // JBL: iterate char by char, with call to overloaded/overridden 'write (int c)'
+        for (int i = 0; i < len; ++i)
         {
-            if (newline)
-            {
-                countStr = String.format("%d\t", ++lineCounter);
-                super.write(countStr, 0, countStr.length());
-                newline = false;
-            }
+            write(str.charAt(off + i));
+        }
 
-            if (lines[0].isEmpty())
-            {
-                super.write(lines[1], 0, lines[1].length());
-                return;
-            }
-
-            super.write(lines[0], 0, lines[0].length());
-            lines  = Utils.getNextLine(lines[1]);
-            newline = true;
+        // JBL: even if last new line is empty, we number it
+        if (newline)
+        {
+            writeLineNumber();
         }
     }
 
     @Override
     public void write (char[] cbuf, int off, int len) throws IOException
     {
-        /* DONE */
-        write(String.copyValueOf(cbuf, off, len), 0, len);
+        // JBL: ensure no reading outside array range
+        len = Math.min(len, cbuf.length - off);
+
+        // JBL: iterate char by char, with call to overloaded/overridden 'write (int c)'
+        for (int i = 0; i < len; ++i)
+        {
+            write(cbuf[off + i]);
+        }
+
+        // JBL: even if last new line is empty, we number it
+        if (newline)
+        {
+            writeLineNumber();
+        }
     }
 
     @Override
     public void write (int c) throws IOException
     {
-        /* DONE */
-        if ((c == '\n' | c == '\r'))
+        // JBL: write new line if we are not in the middle of combinations "\r\n" or "\n\r"
+        if (newline && !(c != lastChar && (c == '\n' | c == '\r')))
         {
-            newline = true;
+            writeLineNumber();
         }
-        else if (newline)
+        else if (c == '\n' | c == '\r') // JBL: update flags if new line char encountered
         {
-            String countStr = String.format("%d\t", ++lineCounter);
-            super.write(countStr, 0, countStr.length());
-            newline = false;
+            lastChar = c;
+            newline  = true;
         }
 
         super.write(c);
