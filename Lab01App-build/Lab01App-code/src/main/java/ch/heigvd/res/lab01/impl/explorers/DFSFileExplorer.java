@@ -21,33 +21,34 @@ public class DFSFileExplorer implements IFileExplorer {
      
      /**
       * visit then explore the node even if this node is a directory
-      */ 
-     vistor.visit(rootDirectory);
+      */
      
-     
-     
-     if(rootDirectory.isDirectory()){
-         //Listing of all nodes in the current directory
-        File[] listNodes = rootDirectory.listFiles();
-        if(listNodes != null) {
-            /**
-             * order the nodes according to the expected output
-             */
-          Arrays.sort(listNodes);
-          for(File node : listNodes) {
-              /**
-               * visit the node then explore it
-               */
-            if(node.isFile()){
-                vistor.visit(node);
-            }
-            
-            if (node.isDirectory()) {
-              explore(node, vistor);
-            }
+      vistor.visit(rootDirectory);
+
+      //Listing of all nodes in the current directory
+      File[] listNodes = rootDirectory.listFiles();
+      if (listNodes != null) {
+        /**
+         * order the nodes according to the expected output
+         */
+        Arrays.sort(listNodes);
+
+        /**
+         * visit the node then explore it 
+         */          
+          for (File node : listNodes) {
+
+              if (node.isFile()) {
+                  vistor.visit(node);
+              }
           }
-        }
-     }
+
+          for (File node : listNodes) {
+              if (node.isDirectory()) {
+                  explore(node, vistor);
+              }
+          }
+      }
   }
 
 }
