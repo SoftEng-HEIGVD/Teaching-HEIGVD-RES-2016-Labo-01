@@ -7,12 +7,9 @@ import ch.heigvd.res.lab01.interfaces.IFileExplorer;
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
 import ch.heigvd.res.lab01.quotes.QuoteClient;
 import ch.heigvd.res.lab01.quotes.Quote;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.StringWriter;
-import java.io.Writer;
+
+import java.io.*;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -96,6 +93,8 @@ public class Application implements IApplication {
       for (String tag : quote.getTags()) {
         LOG.info("> " + tag);
       }
+
+      storeQuote(quote,"quote-" + i+1 + ".utf8" );
     }
   }
   
@@ -125,7 +124,28 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    //store the temporary workspace
+    String currentWorkspace = WORKSPACE_DIRECTORY;
+
+    //get the list of folder name
+    List<String> tags = quote.getTags();
+
+    //Be sure folder exists
+    for(String f : tags)
+      currentWorkspace += File.separator + f;
+
+    new File(currentWorkspace).mkdirs();
+
+    //create the file
+    File fileQuote = new File(currentWorkspace + File.separator + filename);
+    fileQuote.createNewFile();
+
+    //write the quote in it. And be sure the correct encoding is used
+    Writer w = new OutputStreamWriter(new FileOutputStream(fileQuote),"UTF-8");
+    w.write(quote.getQuote());
+    w.flush();
+    w.close();
+
   }
   
   /**
@@ -142,13 +162,20 @@ public class Application implements IApplication {
          * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
          * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
          */
+
+        try {
+          //print the paths and do not forget the carriage return
+          writer.write(file.getPath()+"\n");
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
       }
     });
   }
   
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    return "quentin.zeller@heig-vd.ch";
   }
 
   @Override
