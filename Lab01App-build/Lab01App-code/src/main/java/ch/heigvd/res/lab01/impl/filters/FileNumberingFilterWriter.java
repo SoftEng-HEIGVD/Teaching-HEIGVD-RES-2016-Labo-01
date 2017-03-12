@@ -18,24 +18,54 @@ import java.util.logging.Logger;
 public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
-
-  public FileNumberingFilterWriter(Writer out) {
+  private boolean alreadyCalled = false;
+  private int nbrLines = 0;
+  private int lastC = 0;
+  public FileNumberingFilterWriter(Writer out)
+  {
     super(out);
   }
 
   @Override
-  public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+  public void write(String str, int off, int len) throws IOException
+  {
+     for(int i = 0; i < len; i++)
+     {
+        write(str.charAt(off + i));
+     }
   }
 
   @Override
-  public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+  public void write(char[] cbuf, int off, int len) throws IOException
+  {
+    for (int i = 0; i < len; i++)
+    {
+       write(cbuf[off + i]);
+    }
   }
 
   @Override
-  public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+  public void write(int c) throws IOException
+  {
+      if(!alreadyCalled) // call this just the first time
+      {
+          nbrLines++;
+          out.write(nbrLines + "\t");
+          alreadyCalled = true;
+      }
+      if(c != '\n' && lastC == '\r')
+      {
+          nbrLines++;
+          out.write(nbrLines + "\t");
+
+      }
+      out.write(c);
+      if(c == '\n')
+      {
+          nbrLines++;
+          out.write(nbrLines + "\t");
+      }
+      lastC = c;
   }
 
 }

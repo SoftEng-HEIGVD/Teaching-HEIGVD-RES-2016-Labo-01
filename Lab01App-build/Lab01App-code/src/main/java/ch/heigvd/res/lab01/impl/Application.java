@@ -7,12 +7,10 @@ import ch.heigvd.res.lab01.interfaces.IFileExplorer;
 import ch.heigvd.res.lab01.interfaces.IFileVisitor;
 import ch.heigvd.res.lab01.quotes.QuoteClient;
 import ch.heigvd.res.lab01.quotes.Quote;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.StringWriter;
-import java.io.Writer;
+
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -28,9 +26,8 @@ public class Application implements IApplication {
    * to where the Java application is invoked.
    */
   public static String WORKSPACE_DIRECTORY = "./workspace/quotes";
-  
   private static final Logger LOG = Logger.getLogger(Application.class.getName());
-  
+  private static int counter = 0;
   public static void main(String[] args) {
     
     /*
@@ -84,18 +81,15 @@ public class Application implements IApplication {
   public void fetchAndStoreQuotes(int numberOfQuotes) throws IOException {
     clearOutputDirectory();
     QuoteClient client = new QuoteClient();
-    for (int i = 0; i < numberOfQuotes; i++) {
+    for (int i = 0; i < numberOfQuotes; i++)
+    {
       Quote quote = client.fetchQuote();
-      /* There is a missing piece here!
-       * As you can see, this method handles the first part of the lab. It uses the web service
-       * client to fetch quotes. We have removed a single line from this method. It is a call to
-       * one method provided by this class, which is responsible for storing the content of the
-       * quote in a text file (and for generating the directories based on the tags).
-       */
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
-      for (String tag : quote.getTags()) {
+      for (String tag : quote.getTags())
+      {
         LOG.info("> " + tag);
       }
+      storeQuote(quote, "quote-" + (i + 1) + ".utf8");
     }
   }
   
@@ -124,8 +118,23 @@ public class Application implements IApplication {
    * @param filename the name of the file to create and where to store the quote text
    * @throws IOException 
    */
-  void storeQuote(Quote quote, String filename) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+  void storeQuote(Quote quote, String filename) throws IOException
+  {
+    String pathDirectory = WORKSPACE_DIRECTORY;
+      for(String tag : quote.getTags())
+      {
+        pathDirectory += File.separator + tag;
+      }
+
+      // create the folders needed to store our utf8 files
+     Files.createDirectories(Paths.get(pathDirectory));
+
+      // create name of file .uft8 to create
+
+      pathDirectory += File.separatorChar + filename;
+      // create the utf8 file as outputstream and use outputstreamwriter to write data into file
+    BufferedWriter writer = new BufferedWriter(new FileWriter(pathDirectory));
+      writer.write(quote.getQuote());
   }
   
   /**
@@ -142,13 +151,21 @@ public class Application implements IApplication {
          * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
          * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
          */
+        try
+        {
+          writer.write(file.getPath()+"\n");
+        }
+        catch (IOException e)
+        {
+          e.printStackTrace();
+        }
       }
     });
   }
   
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    return "kevin.moreiradacosta@heig-vd.ch";
   }
 
   @Override
