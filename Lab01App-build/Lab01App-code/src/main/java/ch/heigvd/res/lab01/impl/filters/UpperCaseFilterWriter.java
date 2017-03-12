@@ -10,23 +10,32 @@ import java.io.Writer;
  */
 public class UpperCaseFilterWriter extends FilterWriter {
   
-  public UpperCaseFilterWriter(Writer wrappedWriter) {
-    super(wrappedWriter);
-  }
+    public UpperCaseFilterWriter(Writer wrappedWriter)
+    {
+        super(wrappedWriter);
+    }
 
-  @Override
-  public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
+    @Override
+    public void write(String str, int off, int len) throws IOException
+    {
+        //Using the write method of the UpperCaseFilterWriter class
+        write(str.toCharArray(), off, len);
+    }
 
-  @Override
-  public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
+    @Override
+    public void write(char[] cbuf, int off, int len) throws IOException
+    {
+        for (int i = off; i < len + off; i++)
+        {
+            //Using the write method of the UpperCaseFilterWriter class
+            write(cbuf[i]);
+        }
+    }
 
-  @Override
-  public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
-
+    @Override
+    public void write(int c) throws IOException
+    {
+        //Writing in the out attribute of the extended class.
+        super.write(Character.toUpperCase(c));
+    }
 }
