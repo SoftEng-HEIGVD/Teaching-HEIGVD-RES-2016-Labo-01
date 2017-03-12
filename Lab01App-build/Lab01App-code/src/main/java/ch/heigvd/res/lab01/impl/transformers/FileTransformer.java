@@ -24,10 +24,12 @@ import java.util.logging.Logger;
  * a list of filters and decorates the output writer with them.
  * 
  * @author Olivier Liechti
+ * @author Aurelie Levy
  */
 public abstract class FileTransformer implements IFileVisitor {
 
   private static final Logger LOG = Logger.getLogger(FileTransformer.class.getName());
+  
   private final List<FilterWriter> filters = new ArrayList<>();
   
   /**
@@ -59,10 +61,18 @@ public abstract class FileTransformer implements IFileVisitor {
        * characters and write them to the writer.
        */
       
+      int readerStream = reader.read();
+      //read character by character and write it in the writer
+      while(readerStream != -1){
+          writer.write(readerStream);
+          readerStream = reader.read();
+      }
+      
       reader.close();
       writer.flush();
       writer.close();
-    } catch (IOException ex) {
+    } 
+    catch (IOException ex) {
       LOG.log(Level.SEVERE, null, ex);
     }
   }
