@@ -4,8 +4,6 @@ import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * This class transforms the streams of character sent to the decorated writer. When
@@ -20,10 +18,10 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
    private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
    
-   private int line = 2;
-   private boolean isFirst = true;
+   private int line = 2; // static number of lines (the first is staticly put)
+   private boolean isFirst = true;  // to know when to put the first line
 
-   private boolean wasReturn = false;
+   private boolean wasReturn = false; // check if previous char was a \r
    
    public FileNumberingFilterWriter(Writer out) {
       super(out);
@@ -51,12 +49,17 @@ public class FileNumberingFilterWriter extends FilterWriter {
       char ch = (char) c;
       String s = "";
       
+      // first character, we add the first line marker
       if(isFirst){
          super.write('1');
          super.write('\t');
          isFirst = false;
       }
       
+      // if we find \n, we put the line in all cases
+      // if we find \r, we put \r and wait for the next character to know what to do
+      // if it's anything else, we put the character, with the rest of the line if
+      // \r was the previous character
       if(ch == '\n'){
          s += "\n" + line++ + "\t";
          wasReturn = false;
@@ -71,22 +74,36 @@ public class FileNumberingFilterWriter extends FilterWriter {
          s += "" + ch;
       }
       
+      // we write all the characters
       for (char cha : s.toCharArray()) {
          super.write((int)cha);
       }
    }
    
+   /**
+    * Write the buffer array delimited with the offset and length
+    * and return a string with the line number before each line
+    * @param cbuf an array of chars to write (can be a string converted)
+    * @param off the starting character
+    * @param len the lenght of the part to filter
+    * @return the string filtered (can be converted to a charArray)
+    */
    private String lineWrite (char[] cbuf, int off, int len){
-      System.out.println("## START ##");
       
       String strReturn = "";
+      
+      // first line to write
       if(isFirst){
          isFirst = false;
          strReturn = "1\t";
       }
       
+      // we filter only the part to filter
       for (int j = off; j < off + len;j++) {
          char c = cbuf[j];
+         // if we find a \r, we check if the next is a \n and act accordingly
+         // by incrementing j again to skip the second character
+         // else we write the number of the line for each line
          if(c == '\r'){
             strReturn += "\r";
             System.out.print("\\r");
@@ -106,7 +123,6 @@ public class FileNumberingFilterWriter extends FilterWriter {
          }
       }
       
-      System.out.println("\n## AFTER  ##");
       return strReturn;
    }
 }

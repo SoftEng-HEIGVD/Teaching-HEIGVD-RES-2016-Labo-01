@@ -14,23 +14,21 @@ import java.util.Arrays;
  * @author Olivier Liechti
  */
 public class DFSFileExplorer implements IFileExplorer {
-
-   private boolean isRoot = true;
    
    @Override
    public void explore(File rootDirectory, IFileVisitor vistor) {
       File[] files = rootDirectory.listFiles();
 
-      if(isRoot){
-         vistor.visit(rootDirectory);
-         isRoot = false;
-      }
+      // visit directory just before it's content
+      vistor.visit(rootDirectory);
       
       if (files != null) {
          Arrays.sort(files);
          // first visit files
          for (File file : files) {
-            vistor.visit(file);
+            if(file.isFile()){
+               vistor.visit(file);
+            }
          }
          // then visit directories
          for (File file : files) {
