@@ -129,22 +129,19 @@ public class Application implements IApplication {
    */
   void storeQuote(Quote quote, String filename) throws IOException {
 
-    String path =  WORKSPACE_DIRECTORY; // Initilize withe the workspace_direcoty
+    String path =  WORKSPACE_DIRECTORY; // Initilize with the workspace_direcoty
 
     /* Concatenate tag to creat the correct path */
     for(String tag : quote.getTags()){
       path += File.separator + tag ; //File.separator could change using differents OS
     }
-    File dir = new File(path);
-    dir.mkdirs(); //Creat directorîes from path
 
-    BufferedWriter fileWrite = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path + File.separator +filename), "UTF-8"));
+    File dirs = new File(path);
+    dirs.mkdirs(); //Creat directorîes from path
 
-    try {
-      fileWrite.write(quote.getQuote());
-    } finally {
-      fileWrite.close();
-    }
+    Writer fileWrite = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path + File.separator + filename), "UTF-8"));
+    fileWrite.write(quote.getQuote());
+    fileWrite.close();
 
   }
   

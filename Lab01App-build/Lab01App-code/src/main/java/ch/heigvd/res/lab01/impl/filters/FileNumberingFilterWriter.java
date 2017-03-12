@@ -53,18 +53,17 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
         }
 
-        rDelim = false; //Current char isn't \r anymore
+        rDelim = false; //Reset flag \r
 
-        /* Case of current char is \r */
+        out.write(c);
+
+        /* Case of current char value : \r */
         if (c == '\r') {
             rDelim = true; //Use boolean to remember
-            out.write(c);
-        } else {
-            out.write(c);
-            if (c == '\n') { // Case current char is \n
+
+        } else if (c == '\n') { // Case current char value : \n
                 compteurLigne++;
                 out.write(compteurLigne + "\t");
-            }
         }
     }
 }
