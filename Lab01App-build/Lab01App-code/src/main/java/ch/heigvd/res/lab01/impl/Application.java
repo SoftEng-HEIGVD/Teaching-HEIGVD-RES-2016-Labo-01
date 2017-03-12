@@ -98,7 +98,7 @@ public class Application implements IApplication {
        * one method provided by this class, which is responsible for storing the content of the
        * quote in a text file (and for generating the directories based on the tags).
        */
-      storeQuote(quote, "quotes-" + i +".utf8");
+      storeQuote(quote, "quote-" + i +".utf8");
       
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
       for (String tag : quote.getTags()) {
@@ -137,18 +137,28 @@ public class Application implements IApplication {
     
     // construction of the path
     for(String s : quote.getTags()){
-        textPath += "/" + s; 
+        textPath += File.separator + s; 
     }
+    
+    // create the directory
+    new File(textPath).mkdirs();
+    
     // add the name of the file
-    textPath += "/" + filename;
-    Path path = Paths.get(textPath);
-
-    Files.createDirectories(path.getParent());
+    textPath += File.separator + filename;
+    
+    //create the file
+    File f = new File(textPath);
+    f.createNewFile();
 
     try {
-      Files.createFile(path);
-    } catch (FileAlreadyExistsException e) {
-      System.err.println("already exists: " + e.getMessage());
+      // using the exemple of the cours
+      OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(f), "UTF-8");
+      writer.write(quote.getQuote());
+      writer.flush();
+      writer.close();
+    }
+    catch (IOException e){
+      System.out.println("Exception ");
     }
   }
   
@@ -166,6 +176,14 @@ public class Application implements IApplication {
          * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
          * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
          */
+        /* Write the file's path in the writer */
+
+        try {
+           writer.write(file.getPath() + '\n');
+        } catch (IOException e) {
+          System.out.println(e.getMessage());
+        }
+
       }
     });
   }
