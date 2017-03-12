@@ -23,6 +23,7 @@ import org.junit.BeforeClass;
  * then you will introduce a change of specification!!!
  *
  * @author Olivier Liechti
+ * @author Ludovic Richard
  */
 public class ApplicationTest {
 
