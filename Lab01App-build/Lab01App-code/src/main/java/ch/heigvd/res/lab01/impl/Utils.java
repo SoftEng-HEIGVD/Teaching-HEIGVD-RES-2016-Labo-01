@@ -20,17 +20,16 @@ public class Utils {
    * contain any line separator, then the first element is an empty string.
    */
   public static String[] getNextLine(String lines) {
-    int i = 0;
+    int i = 0; // the index
     String[] s = new String[2];//the string to return
 
     if ((i = lines.indexOf('\n')) > -1) {//fin the line separator
       s = returnStrings(i, lines);
     }
-    else if ((i = lines.indexOf('\r')) > -1) {
+    else if ((i = lines.indexOf('\r')) > -1) {//for machintosh
       s = returnStrings(i, lines);
-    } else {
-      s[0] = "";
-      s[1] = lines;
+    } else {// if there is no new line
+      s[0] = ""; s[1] = lines;
     }
     return s;
   }
@@ -39,6 +38,7 @@ public class Utils {
   private static String[] returnStrings(int i, String lines) {
     String[] s = new String[2];
     i++;
+    //return the next line and remaining test according to definition
     s[0]=lines.substring(0,i); s[1] = lines.substring(i); //i+1 because "the ending index is exclusive"
     return s;
   }
