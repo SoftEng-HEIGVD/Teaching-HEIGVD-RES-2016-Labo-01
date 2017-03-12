@@ -10,32 +10,60 @@ import java.util.logging.Logger;
  * When filter encounters a line separator, it sends it to the decorated writer.
  * It then sends the line number and a tab character, before resuming the write
  * process.
- *
- * Hello\n\World -> 1\Hello\n2\tWorld
+ * <p>
+ * Hello\n\World -> 1\tHello\n2\tWorld
  *
  * @author Olivier Liechti
  */
 public class FileNumberingFilterWriter extends FilterWriter {
 
-  private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
+    private int compteurLigne = 0;
+    private boolean rDelim = false;
 
-  public FileNumberingFilterWriter(Writer out) {
-    super(out);
-  }
+    private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
 
-  @Override
-  public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
+    public FileNumberingFilterWriter(Writer out) {
+        super(out);
+    }
 
-  @Override
-  public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
+    @Override
+    public void write(String str, int off, int len) throws IOException {
+        write(str.toCharArray(), off, len); // Transform String into Array of char
+    }
 
-  @Override
-  public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
+    @Override
+    public void write(char[] cbuf, int off, int len) throws IOException {
+       /* Write char by char using write(int c) methode */
+        for (int i = 0; i < len; i++) {
+            write(cbuf[off + i]);
+        }
+    }
 
+    @Override
+    public void write(int c) throws IOException {
+        /* Case of 1st line */
+        if (compteurLigne == 0) {
+            compteurLigne++;
+            out.write(compteurLigne + "\t");
+        }
+        /* Case of last char was \r (bool) and current chat is \n */
+        if (rDelim && c != '\n') {
+            compteurLigne++;
+            out.write(compteurLigne + "\t");
+
+        }
+
+        rDelim = false; //Reset flag \r
+
+        out.write(c);
+
+        /* Case of current char value : \r */
+        if (c == '\r') {
+            rDelim = true; //Use boolean to remember
+
+        } else if (c == '\n') { // Case current char value : \n
+                compteurLigne++;
+                out.write(compteurLigne + "\t");
+        }
+    }
 }
