@@ -22,18 +22,29 @@ public class DFSFileExplorer implements IFileExplorer {
       vistor.visit(rootDirectory);
       
       File[] subFiles = rootDirectory.listFiles();
+      // ArrayList<File> listOfFiles = new ArrayList<File>();
+      ArrayList<File> listOfDirectories = new ArrayList<File>();
       
+      vistor.visit(rootDirectory);
+   
       // The files are visited and the derectories explored
       if (subFiles != null) {
           // Alphabetical order is used
           Arrays.sort(subFiles);
           for(File current : subFiles) {
               if (!current.isFile()) {
-                  // listOfDirectories.add(current);
-                  explore(current, vistor);
+                  listOfDirectories.add(current);
+                  // explore(current, vistor);
               } else {
                   vistor.visit(current);
               }
+          }
+      }
+      
+      // Then it moves onto the sub-directories
+     if (!listOfDirectories.isEmpty()) {
+          for(File currentDir : listOfDirectories) {
+              explore(currentDir, vistor);
           }
       }
   }
