@@ -103,8 +103,8 @@ public class Application implements IApplication
        * one method provided by this class, which is responsible for storing the content of the
        * quote in a text file (and for generating the directories based on the tags).
        */
-      // JBL: call storeQuote method
-      this.storeQuote(quote, String.format("quote-%d.utf8", numberOfQuotes));
+      // JBL: call storeQuote method with current quote numbering (starting from 1)
+      this.storeQuote(quote, String.format("quote-%d.utf8", i + 1));
 
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
       for (String tag : quote.getTags())
@@ -142,14 +142,21 @@ public class Application implements IApplication
    */
   void storeQuote (Quote quote, String filename) throws IOException
   {
+    // JBL: new file from computed path
     File fileQuote = new File(String.join("/", WORKSPACE_DIRECTORY, String.join("/", quote.getTags()), filename));
 
+    // JBL: create directories and empty text file (if not already exist)
     fileQuote.getParentFile().mkdirs();
     fileQuote.createNewFile();
 
+    // JBL: create writer (with specified encoding)
     OutputStreamWriter writerQuote = new OutputStreamWriter(new FileOutputStream(fileQuote), "UTF-8");
+
+    // JBL: get and write quote text
     String quoteText = quote.getQuote();
     writerQuote.write(quoteText,0, quoteText.length());
+
+    // JBL: close writer and file
     writerQuote.close();
   }
   
@@ -170,14 +177,15 @@ public class Application implements IApplication
            * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
            * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
            */
-          // JBL: print filename on standard output;
-          try
+          try // JBL: try{...}catch{...} because of IOException
           {
+            // JBL: print filename in writer
             writer.write(file.getPath());
             writer.write(String.format("%n"));
           }
           catch (IOException e)
           {
+            //JBL: notifying problem, but no treatment done
             LOG.info("printFileNames: failed to write file name - '" + file.getPath() + "'");
           }
         }
@@ -188,6 +196,7 @@ public class Application implements IApplication
   @Override
   public String getAuthorEmail()
   {
+    // JBL: return my HEIG email
     return "julien.baeriswyl@heig-vd.ch";
   }
 
