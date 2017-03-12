@@ -18,6 +18,8 @@ import java.util.logging.Logger;
 public class FileNumberingFilterWriter extends FilterWriter {
 
   private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
+  private int compteur = 0;
+  private boolean isMac = false;
 
   public FileNumberingFilterWriter(Writer out) {
     super(out);
@@ -25,17 +27,36 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    write(str.toCharArray(), off, len);
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    for (int i = off; i < off + len; i++) {
+      write(cbuf[i]);
+    }
   }
 
   @Override
   public void write(int c) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
+    // first char
+    if (compteur == 0) {
+      out.write(++compteur + "\t");
+    }
 
+    // Check for mac
+    if (c != '\n') {
+      if (isMac) {
+        out.write(++compteur + "\t");
+      }
+    }
+    isMac = (c == '\r');
+
+    out.write(c);
+
+    if (c == '\n') {
+      out.write(++compteur + "\t");
+    }
+
+  }
 }
