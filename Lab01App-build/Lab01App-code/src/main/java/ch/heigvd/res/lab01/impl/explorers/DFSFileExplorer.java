@@ -24,8 +24,6 @@ public class DFSFileExplorer implements IFileExplorer {
       File[] subFiles = rootDirectory.listFiles();
       // ArrayList<File> listOfFiles = new ArrayList<File>();
       ArrayList<File> listOfDirectories = new ArrayList<File>();
-      
-      vistor.visit(rootDirectory);
    
       // The files are visited and the derectories explored
       if (subFiles != null) {
