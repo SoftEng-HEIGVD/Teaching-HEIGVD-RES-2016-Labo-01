@@ -37,15 +37,17 @@ public class DFSFileExplorer implements IFileExplorer {
     if (files != null) {
       Arrays.sort(files);
 
-      for (File f : files)
-            visitor.visit(f);
+      for (File f : files) {
+        visitor.visit(f);
+      }
     }
 
     if (directory != null) {
       Arrays.sort(directory);
 
-      for (File f : directory)
+      for (File f : directory) {
         explore(f, visitor);
+      }
     }
   }
 }

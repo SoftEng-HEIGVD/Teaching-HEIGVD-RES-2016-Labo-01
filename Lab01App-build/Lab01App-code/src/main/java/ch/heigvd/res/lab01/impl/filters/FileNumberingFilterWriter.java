@@ -32,14 +32,16 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
   @Override
   public void write(String str, int off, int len) throws IOException {
-    for (int i = 0; i < len; i++)
+    for (int i = 0; i < len; i++) {
       write(str.charAt(off + i));
+    }
   }
 
   @Override
   public void write(char[] cbuf, int off, int len) throws IOException {
-    for (int i = 0; i < len; i++)
+    for (int i = 0; i < len; i++) {
       write(cbuf[off + i]);
+    }
   }
 
   @Override
@@ -59,14 +61,16 @@ public class FileNumberingFilterWriter extends FilterWriter {
 
     } else {
       // For the first line of the file
-      if (lineCounter == 0)
+      if (lineCounter == 0) {
         out.write(getNextNumbering());
+      }
 
       out.write(c);
 
       // Linux EOL
-      if ((char) c == '\n')
+      if ((char) c == '\n') {
         out.write(getNextNumbering());
+      }
     }
 
     readCarriageReturn = (char) c == '\r';
