@@ -8,19 +8,25 @@ import java.util.logging.Logger;
  */
 public class Utils {
 
-  private static final Logger LOG = Logger.getLogger(Utils.class.getName());
+    private static final Logger LOG = Logger.getLogger(Utils.class.getName());
 
-  /**
-   * This method looks for the next new line separators (\r, \n, \r\n) to extract
-   * the next line in the string passed in arguments. 
-   * 
-   * @param lines a string that may contain 0, 1 or more lines
-   * @return an array with 2 elements; the first element is the next line with
-   * the line separator, the second element is the remaining text. If the argument does not
-   * contain any line separator, then the first element is an empty string.
-   */
-  public static String[] getNextLine(String lines) {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
-  }
+    public static String[] getNextLine(String lines) {
+        String[] line_separators = {"\n", "\r", "\r\n"}; //array of separators
+        String[] result = new String[2];                 //array of return result
+        int size = line_separators.length;
+        for (int i = 0; i < size; ++i) {
+            String separator = line_separators[i];
+            int j = lines.indexOf(separator);  // search index of separator in  lines
+            if (j != -1) {
+                result[0] = lines.substring(0, j + separator.length()); // because separator don't have the same lenght
+                result[1] = lines.substring(j + separator.length());
+                return result;
 
+            }
+        }
+        // we have not found no separator
+        result[0] = "";
+        result[1] = lines;
+        return result;
+    }
 }
