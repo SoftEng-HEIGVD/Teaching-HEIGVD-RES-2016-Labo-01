@@ -24,18 +24,18 @@ public class Utils {
         //throw new UnsupportedOperationException("The student has not implemented this method yet.");
 
         String[] tab = new String[]{"\n", "\r"};
-        int position;
+        int index_searched;
 
         for (String string : tab) {
-            if ((position = lines.indexOf(string)) != -1) {
-                return new String[]{
-                    lines.substring(0, position + string.length()),
-                    lines.substring(position + string.length(), lines.length())
+            if ((index_searched = lines.indexOf(string)) != -1) { // did we reach the end yet?
+                return new String[]{  //parsing to keep the part we want, which is the remaining text
+                    lines.substring(0, index_searched + string.length()),
+                    lines.substring(index_searched + string.length(), lines.length())
                 };
             }
         }
 
-        return new String[]{"", lines};
+        return new String[]{"", lines}; // in case of no line separator, using the empty string 
     }
 
 }
