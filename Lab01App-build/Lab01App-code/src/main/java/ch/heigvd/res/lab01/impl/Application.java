@@ -23,7 +23,7 @@ import org.apache.commons.io.FileUtils;
 
 /**
  *
- * @author Olivier Liechti
+ * @author Olivier Liechti, Basile Châtillon
  */
 public class Application implements IApplication {
 

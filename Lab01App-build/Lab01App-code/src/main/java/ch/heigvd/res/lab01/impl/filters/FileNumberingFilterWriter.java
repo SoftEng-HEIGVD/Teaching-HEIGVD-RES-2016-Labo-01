@@ -11,9 +11,9 @@ import java.util.logging.Logger;
  * It then sends the line number and a tab character, before resuming the write
  * process.
  *
- * Hello\n\World -> 1\Hello\n2\tWorld
+ * Hello\n\World -> 1\tHello\n2\tWorld
  *
- * @author Olivier Liechti
+ * @author Olivier Liechti, Basile Châtillon
  */
 public class FileNumberingFilterWriter extends FilterWriter {
 
@@ -42,7 +42,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
   @Override
   public void write(int c) throws IOException {
     // we have to number every time the first line of a string.
-    // then if we find a new line 
+    // then if we find if we had a \r and we did not had a new line.
     if(nbLine == 0 || (previousC == '\r' && c != '\n')){
       nbLine++;
       out.write(nbLine + "\t");
@@ -51,10 +51,13 @@ public class FileNumberingFilterWriter extends FilterWriter {
     // then we write the caracter
     out.write(c);
     
+    // whenever we have a '\n' we add anumber and the tab
     if(c == '\n'){
       nbLine++;
       out.write(nbLine + "\t");  
     }
+    
+    // we stock the new value of previousC
     previousC = c;    
   }
 

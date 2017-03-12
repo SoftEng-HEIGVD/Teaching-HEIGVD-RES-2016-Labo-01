@@ -6,7 +6,7 @@ import java.io.Writer;
 
 /**
  *
- * @author Olivier Liechti
+ * @author Olivier Liechti, Basile Châtillon
  */
 public class UpperCaseFilterWriter extends FilterWriter {
   
@@ -30,6 +30,7 @@ public class UpperCaseFilterWriter extends FilterWriter {
 
   @Override
   public void write(int c) throws IOException {
+    // we just transform the char to his uppercase and write it
     out.write(Character.toUpperCase(c));
   }
 
