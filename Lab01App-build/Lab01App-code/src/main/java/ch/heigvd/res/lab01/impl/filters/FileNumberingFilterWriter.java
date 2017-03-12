@@ -19,7 +19,7 @@ import ch.heigvd.res.lab01.impl.Utils;
 public class FileNumberingFilterWriter extends FilterWriter {
 
     private static final Logger LOG = Logger.getLogger(FileNumberingFilterWriter.class.getName());
-    long line_number = 1;
+  int line_number = 1;
     char previous_char;
 
     public FileNumberingFilterWriter(Writer out) {
@@ -30,6 +30,7 @@ public class FileNumberingFilterWriter extends FilterWriter {
     public void write(String str, int off, int len) throws IOException {
         //throw new UnsupportedOperationException("The student has not implemented this method yet.");
 
+        
         String line_coming_next[] = Utils.getNextLine(str.substring(off, off + len));
         String string = "";
 
@@ -55,13 +56,13 @@ public class FileNumberingFilterWriter extends FilterWriter {
     @Override
     public void write(int c) throws IOException {
         //throw new UnsupportedOperationException("The student has not implemented this method yet.");
-        char my_char = Character.toChars(c)[0];
+char my_char = Character.toChars(c)[0];
 
         String string = "";
 
         if (line_number == 1
-                || previous_char == '\r' // '\r' and '\n' are our line separators
-                || (previous_char == '\n' && my_char != '\n')) {
+                || previous_char == '\n'
+                || (previous_char == '\r' && my_char != '\n')) {
             string += (line_number++) + "\t";
         }
 
