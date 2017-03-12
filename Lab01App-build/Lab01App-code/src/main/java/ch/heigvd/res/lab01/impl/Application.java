@@ -17,8 +17,8 @@ import org.apache.commons.io.FileUtils;
 /**
  *
  * @author Olivier Liechti
- * 
- * EDIT by : Nourazar Antoine
+ * EDITED BY 
+ * @author Antoine Nourazar
  */
 public class Application implements IApplication {
 
@@ -93,6 +93,8 @@ public class Application implements IApplication {
           * client to fetch quotes. We have removed a single line from this method. It is a call to
           * one method provided by this class, which is responsible for storing the content of the
           * quote in a text file (and for generating the directories based on the tags).
+          *
+          * FIXED
           */
          storeQuote(quote, "quote-" + Integer.toString(i+1) + ".utf8");
          
@@ -137,6 +139,7 @@ public class Application implements IApplication {
       /* Create the directory */
       String directory = WORKSPACE_DIRECTORY;
       
+      //Create the pathname
       for (String tag : tagsList) {
          directory += File.separator + tag;
       }
@@ -144,14 +147,16 @@ public class Application implements IApplication {
       filename = directory + File.separator + filename;
       
       File file = new File(directory);
+      
+      //Create every necessary directories
       file.mkdirs();
       
       File namedFile = new File(filename);
       
+      //Writing in the file...
       BufferedOutputStream writer = new BufferedOutputStream(new FileOutputStream(namedFile));
       writer.write(quote.getQuote().getBytes("UTF-8"));
       writer.close();
-      
    }
 
    /**
@@ -172,7 +177,6 @@ public class Application implements IApplication {
              *
              *  FIXED ! 
              */
-            
             try {
                writer.write(file.getPath()+ '\n');
             } catch (IOException e) {
@@ -193,5 +197,5 @@ public class Application implements IApplication {
       IFileExplorer explorer = new DFSFileExplorer();
       explorer.explore(new File(WORKSPACE_DIRECTORY), new CompleteFileTransformer());
    }
-   
+
 }

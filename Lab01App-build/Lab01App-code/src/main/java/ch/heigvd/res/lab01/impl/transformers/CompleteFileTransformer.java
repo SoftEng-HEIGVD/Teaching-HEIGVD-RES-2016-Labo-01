@@ -11,6 +11,8 @@ import ch.heigvd.res.lab01.impl.filters.*;
  * beginning of each line.
  * 
  * @author Olivier Liechti
+ * EDITED BY 
+ * @author Antoine Nourazar
  */
 public class CompleteFileTransformer extends FileTransformer {
 

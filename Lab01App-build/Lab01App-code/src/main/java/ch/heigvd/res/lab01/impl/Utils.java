@@ -5,6 +5,8 @@ import java.util.logging.Logger;
 /**
  *
  * @author Olivier Liechti
+ * EDITED BY 
+ * @author Antoine Nourazar
  */
 public class Utils {
 
@@ -46,5 +48,4 @@ public class Utils {
       
       return lineTab;
    }
-
 }

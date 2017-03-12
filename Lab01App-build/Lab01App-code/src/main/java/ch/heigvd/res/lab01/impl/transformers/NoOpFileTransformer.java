@@ -8,7 +8,8 @@ import java.io.Writer;
  * the content of the input file into the output file.
  * 
  * @author Olivier Liechti
- * EDIT By Nourazar Antoine
+ * EDITED BY 
+ * @author Antoine Nourazar
  */
 public class NoOpFileTransformer extends FileTransformer {
 
@@ -19,6 +20,7 @@ public class NoOpFileTransformer extends FileTransformer {
      * (no uppercase, no line number, etc.). So, we don't need to decorate the writer connected to
      * the output file at all. Just uncomment the following line and get rid of the UnsupportedOperationException and
      * you will be all set.
+     * FIXED !
      */
     return writer;
   }
