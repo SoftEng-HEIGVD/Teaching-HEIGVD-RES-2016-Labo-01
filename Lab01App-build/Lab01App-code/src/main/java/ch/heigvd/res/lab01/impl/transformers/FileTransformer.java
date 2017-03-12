@@ -29,6 +29,7 @@ import java.util.logging.Logger;
 public abstract class FileTransformer implements IFileVisitor {
 
   private static final Logger LOG = Logger.getLogger(FileTransformer.class.getName());
+  
   private final List<FilterWriter> filters = new ArrayList<>();
   
   /**

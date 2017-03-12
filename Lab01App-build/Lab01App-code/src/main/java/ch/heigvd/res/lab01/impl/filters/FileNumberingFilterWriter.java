@@ -28,6 +28,13 @@ public class FileNumberingFilterWriter extends FilterWriter {
         super(out);
     }
 
+    /**
+     * Allow to write a string with a filter (call write(char[], int off, int len)
+     * @param str string to use
+     * @param off offset
+     * @param len length from the offset to use (for the string str)
+     * @throws IOException 
+     */
     @Override
     public void write(String str, int off, int len) throws IOException {
         
@@ -37,6 +44,13 @@ public class FileNumberingFilterWriter extends FilterWriter {
         //throw new UnsupportedOperationException("The student has not implemented this method yet.");
     }
 
+    /**
+     * Allow to write an array of char with a filter (call write(int c))
+     * @param cbuf array of char
+     * @param off offset 
+     * @param len length from the offset to use (for the string str)
+     * @throws IOException 
+     */
     @Override
     public void write(char[] cbuf, int off, int len) throws IOException {
 
@@ -46,6 +60,11 @@ public class FileNumberingFilterWriter extends FilterWriter {
         //throw new UnsupportedOperationException("The student has not implemented this method yet.");
     }
 
+    /**
+     * Method used by the other write. Apply the filter (here: numbering the lines)
+     * @param c character 
+     * @throws IOException 
+     */
     @Override
     public void write(int c) throws IOException {
 

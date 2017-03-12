@@ -12,6 +12,11 @@ import java.io.Writer;
  */
 public class NoOpFileTransformer extends FileTransformer {
 
+    /**
+     * Used if we don't need to decorate the writer connected to the output file at all
+     * @param writer where we write character stream 
+     * @return writer
+     */
   @Override
   public Writer decorateWithFilters(Writer writer) {
     //throw new UnsupportedOperationException("The student has not implemented this method yet.");

@@ -17,6 +17,11 @@ import java.util.Arrays;
  */
 public class DFSFileExplorer implements IFileExplorer {
 
+    /**
+     * This method allow to explore and visit every directories (subdirectories) and files we encounter
+     * @param rootDirectory first directory encounter
+     * @param vistor allow to visit the directory
+     */
     @Override
     public void explore(File rootDirectory, IFileVisitor vistor) {
 

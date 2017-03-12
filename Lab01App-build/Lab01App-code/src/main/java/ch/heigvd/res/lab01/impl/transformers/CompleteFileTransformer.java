@@ -16,6 +16,11 @@ import java.io.Writer;
  */
 public class CompleteFileTransformer extends FileTransformer {
 
+    /**
+     * Allow to use a decorator for a writer
+     * @param writer where we write character stream 
+     * @return writer
+     */
     @Override
     public Writer decorateWithFilters(Writer writer) {
         /*if (true) {

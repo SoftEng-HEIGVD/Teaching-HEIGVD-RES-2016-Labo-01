@@ -15,6 +15,13 @@ public class UpperCaseFilterWriter extends FilterWriter {
         super(wrappedWriter);
     }
     
+    /**
+     * call write(char[] cbuf, int off, int len). Allow to write an array of char with a filter
+     * @param str string to use
+     * @param off offset
+     * @param len length from the offset to use (for the string str)
+     * @throws IOException 
+     */
     @Override
     public void write(String str, int off, int len) throws IOException {
         
@@ -25,6 +32,13 @@ public class UpperCaseFilterWriter extends FilterWriter {
         //throw new UnsupportedOperationException("The student has not implemented this method yet.");
     }
     
+    /**
+     * Allow to write an array of char with a filter. Call write(int c)
+     * @param cbuf array of character
+     * @param off offset
+     * @param len length from the offset to use (for the string str)
+     * @throws IOException 
+     */
     @Override
     public void write(char[] cbuf, int off, int len) throws IOException {
         
@@ -36,6 +50,11 @@ public class UpperCaseFilterWriter extends FilterWriter {
         //throw new UnsupportedOperationException("The student has not implemented this method yet.");
     }
     
+    /**
+     * Method used by the other write. Apply the filter (here: use uppercase for each character)
+     * @param c character
+     * @throws IOException 
+     */
     @Override
     public void write(int c) throws IOException {
         

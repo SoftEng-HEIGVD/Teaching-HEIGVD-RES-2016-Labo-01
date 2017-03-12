@@ -81,6 +81,11 @@ public class Application implements IApplication {
         }
     }
 
+    /**
+     * Use the web service client to fetch quotes and store the content of the quote in a text file
+     * @param numberOfQuotes number of quote we want to use
+     * @throws IOException 
+     */
     @Override
     public void fetchAndStoreQuotes(int numberOfQuotes) throws IOException {
         clearOutputDirectory();

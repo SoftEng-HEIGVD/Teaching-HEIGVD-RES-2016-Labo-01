@@ -14,6 +14,7 @@ public class Utils {
     /**
      * This method looks for the next new line separators (\r, \n, \r\n) to
      * extract the next line in the string passed in arguments.
+     * Those separators are for Windows, Unix or MacOs
      *
      * @param lines a string that may contain 0, 1 or more lines
      * @return an array with 2 elements; the first element is the next line with
