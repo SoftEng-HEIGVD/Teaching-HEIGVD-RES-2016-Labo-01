@@ -19,10 +19,18 @@ public class DFSFileExplorer implements IFileExplorer {
         vistor.visit(rootDirectory);
         
         if (rootDirectory.isDirectory()) {
-            File[] children = rootDirectory.listFiles();
+            File[] elems = rootDirectory.listFiles();
             
-            for (File child : children) {
-                explore(child, vistor);
+            for (File elem : elems) {
+                if (elem.isFile()) {
+                    vistor.visit(elem);
+                }
+            }
+            
+            for (File elem : elems) {
+                if (elem.isDirectory()) {
+                    explore(elem, vistor);
+                }
             }
         }
     }
