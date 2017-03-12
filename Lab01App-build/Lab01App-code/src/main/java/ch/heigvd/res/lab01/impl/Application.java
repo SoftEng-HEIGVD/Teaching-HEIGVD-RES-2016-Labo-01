@@ -93,7 +93,10 @@ public class Application implements IApplication {
        * quote in a text file (and for generating the directories based on the tags).
        */
       
-      storeQuote(quote, "quote-" + i + ".utf8");
+      storeQuote(quote, "quote-" + i + ".utf8"); 
+ /* the missing line that calls the method storeQuote which is responsible for 
+      storing our quote in the text file */
+      
       
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
       for (String tag : quote.getTags()) {
@@ -130,17 +133,17 @@ public class Application implements IApplication {
   void storeQuote(Quote quote, String filename) throws IOException {
     //throw new UnsupportedOperationException("The student has not implemented this method yet.");
     
-    /* On génère le directory tout en fonction des tags du quote */
+    /* based on the tags, we get to generate the directory */
      String directory = WORKSPACE_DIRECTORY;      
      for(String tag : quote.getTags())
         directory += "/" + tag;
      directory += "/";
      
-     // Creation du directory par le systeme 
-     File file = new File(directory);
-     file.mkdirs();
+      
+     File file = new File(directory); // creating the new file 
+     file.mkdirs();// creating the directory with its abstract pathname built earlier 
      
-     // Ecriture du quote dans le fichier
+     // writing the quote content into the file
      FileOutputStream file_o_stream = null;
      
      try {
@@ -168,7 +171,8 @@ public class Application implements IApplication {
          */
         
         try {
-            writer.write(file.getPath().replace('\\', '/') + "\n");
+            writer.write(file.getPath().replace('\\', '/') + "\n"); 
+            //to our writer we write the filename and its path 
          }
          catch(IOException e) {
             Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, e);
