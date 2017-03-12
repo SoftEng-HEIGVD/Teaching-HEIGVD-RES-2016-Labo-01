@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -79,7 +80,7 @@ public class Application implements IApplication {
       ex.printStackTrace();
     }
   }
-
+  
   @Override
   public void fetchAndStoreQuotes(int numberOfQuotes) throws IOException {
     clearOutputDirectory();
@@ -92,6 +93,7 @@ public class Application implements IApplication {
        * one method provided by this class, which is responsible for storing the content of the
        * quote in a text file (and for generating the directories based on the tags).
        */
+      storeQuote(quote, "quote-" + i + ".utf8");
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
       for (String tag : quote.getTags()) {
         LOG.info("> " + tag);
@@ -106,7 +108,7 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void clearOutputDirectory() throws IOException {
-    FileUtils.deleteDirectory(new File(WORKSPACE_DIRECTORY));    
+     FileUtils.deleteDirectory(new File(WORKSPACE_DIRECTORY));    
   }
 
   /**
@@ -125,7 +127,19 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+      List<String> listTag = quote.getTags();
+      String path = WORKSPACE_DIRECTORY + File.separator;
+      
+      for(String tag : listTag)
+      {
+         path +=tag + File.separator;
+         new File(path).mkdirs(); //build directory
+      }
+      path += filename;
+      new File(path).createNewFile(); //build file
+      Writer writer = new OutputStreamWriter(new FileOutputStream(path), "UTF-8");
+      writer.write(quote.getQuote());
+      writer.close();
   }
   
   /**
@@ -137,18 +151,25 @@ public class Application implements IApplication {
     explorer.explore(new File(WORKSPACE_DIRECTORY), new IFileVisitor() {
       @Override
       public void visit(File file) {
-        /*
-         * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
-         * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
-         * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
-         */
+          try {
+              /*
+              * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
+              * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
+              * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
+              */
+              
+              writer.write(file.getPath() + "\n");
+          } catch (IOException ex) {
+              Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
+          }
       }
     });
   }
   
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+     String email = "jimmy.verdasca@heig-vd.ch";
+     return email;
   }
 
   @Override
