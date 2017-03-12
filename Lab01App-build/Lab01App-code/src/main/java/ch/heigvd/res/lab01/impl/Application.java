@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.io.BufferedWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -92,6 +93,8 @@ public class Application implements IApplication {
        * one method provided by this class, which is responsible for storing the content of the
        * quote in a text file (and for generating the directories based on the tags).
        */
+      storeQuote(quote, "quote-" + (i+1) + ".utf8");
+
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
       for (String tag : quote.getTags()) {
         LOG.info("> " + tag);
@@ -122,10 +125,27 @@ public class Application implements IApplication {
    * 
    * @param quote the quote object, with tags and text
    * @param filename the name of the file to create and where to store the quote text
-   * @throws IOException 
+   * @throws IOException
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+
+    String path =  WORKSPACE_DIRECTORY; // Initilize withe the workspace_direcoty
+
+    /* Concatenate tag to creat the correct path */
+    for(String tag : quote.getTags()){
+      path += File.separator + tag ; //File.separator could change using differents OS
+    }
+    File dir = new File(path);
+    dir.mkdirs(); //Creat directorîes from path
+
+    BufferedWriter fileWrite = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path + File.separator +filename), "UTF-8"));
+
+    try {
+      fileWrite.write(quote.getQuote());
+    } finally {
+      fileWrite.close();
+    }
+
   }
   
   /**
@@ -142,13 +162,20 @@ public class Application implements IApplication {
          * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
          * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
          */
+        try {
+          writer.write(file.getPath() + '\n');
+        }
+        catch (IOException e) {
+          LOG.log(Level.SEVERE, "Error printing File name ! ",e);
+          e.printStackTrace();
+          }
       }
     });
   }
   
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    return "emmanuel.schmid@heig-vd.ch";
   }
 
   @Override
