@@ -11,6 +11,7 @@ import java.io.File;
  * all files in the directory and then moves into the subdirectories.
  *
  * @author Olivier Liechti
+ * @author Maxime Guillod
  */
 public class DFSFileExplorer implements IFileExplorer {
 
