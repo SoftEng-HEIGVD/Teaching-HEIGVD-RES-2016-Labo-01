@@ -10,9 +10,14 @@ import ch.heigvd.res.lab01.quotes.Quote;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -82,6 +87,8 @@ public class Application implements IApplication {
 
   @Override
   public void fetchAndStoreQuotes(int numberOfQuotes) throws IOException {
+    final String DEFAULT_FILENAME = "quote-",
+                 EXTENSION = ".utf8";
     clearOutputDirectory();
     QuoteClient client = new QuoteClient();
     for (int i = 0; i < numberOfQuotes; i++) {
@@ -92,6 +99,8 @@ public class Application implements IApplication {
        * one method provided by this class, which is responsible for storing the content of the
        * quote in a text file (and for generating the directories based on the tags).
        */
+      storeQuote(quote, DEFAULT_FILENAME + i + EXTENSION);
+      
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
       for (String tag : quote.getTags()) {
         LOG.info("> " + tag);
@@ -125,30 +134,54 @@ public class Application implements IApplication {
    * @throws IOException 
    */
   void storeQuote(Quote quote, String filename) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    final String ENCODING = "UTF-8";
+    List<String> tags = quote.getTags();
+    String path = WORKSPACE_DIRECTORY;
+    
+    //Creating the path for the direcotries that are necessary to store the quote file
+    for (String directory : tags)
+    {
+        path += File.separator + directory;
+    }
+    
+    //Creating the direcotries that are necessary to store the quote file
+    Files.createDirectories(Paths.get(path));
+    
+    //Preparing the file to create
+    path += File.separator + filename;
+    
+    //Writing the quote in the file -> filename, with encoding -> ENCODING
+    Writer writer = new OutputStreamWriter(new FileOutputStream(path), ENCODING);
+    writer.write(quote.getQuote());
+    writer.flush();
+    writer.close();
   }
   
-  /**
-   * This method uses a IFileExplorer to explore the file system and prints the name of each
-   * encountered file and directory.
-   */
-  void printFileNames(final Writer writer) {
-    IFileExplorer explorer = new DFSFileExplorer();
-    explorer.explore(new File(WORKSPACE_DIRECTORY), new IFileVisitor() {
-      @Override
-      public void visit(File file) {
-        /*
-         * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
-         * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
-         * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
-         */
-      }
-    });
-  }
+    /**
+     * This method uses a IFileExplorer to explore the file system and prints
+     * the name of each encountered file and directory.
+     */
+    void printFileNames(final Writer writer)
+    {
+        IFileExplorer explorer = new DFSFileExplorer();
+        explorer.explore(new File(WORKSPACE_DIRECTORY), new IFileVisitor() {
+            @Override
+            public void visit(File file)
+            {
+                try
+                {
+                    writer.write(file.getAbsolutePath());
+                } catch (IOException e)
+                {
+                    System.out.println(e.getMessage());
+                }
+            }
+        });
+    }
   
   @Override
   public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+    return "nadir.benallal@heig-vd.ch";
   }
 
   @Override
