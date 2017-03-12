@@ -20,7 +20,24 @@ public class Utils {
    * contain any line separator, then the first element is an empty string.
    */
   public static String[] getNextLine(String lines) {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+      //We assume here that one system will not mix-and-match line seperators,
+      //ie. will not use \r and later \n or \r\n.
+      String[] result = new String[2];
+      int index = lines.indexOf("\r\n");
+      if(index != -1){
+          result[0] = lines.substring(0, index + 2);
+          result[1] = lines.substring(index + 2);
+      }else if((index = lines.indexOf('\r')) != -1){
+          result[0] = lines.substring(0, index + 1);
+          result[1] = lines.substring(index + 1);
+      }else if((index = lines.indexOf('\n')) != -1){
+          result[0] = lines.substring(0, index + 1);
+          result[1] = lines.substring(index + 1);   
+      }else{   //no line seperators found
+          result[0] = "";
+          result[1] = lines;
+      }
+      return result;
   }
 
 }
