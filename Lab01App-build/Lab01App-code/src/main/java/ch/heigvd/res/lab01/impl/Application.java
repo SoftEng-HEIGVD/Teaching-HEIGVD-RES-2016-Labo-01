@@ -18,10 +18,15 @@ import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 
 /**
+ * CLASS: Get randomly quotes and save them on disk with numbers and tags as identifiers.
+ * Then all these quotes are processed to uppercase and line numbered form.
+ * Each result is save in '.out' file, according to original quote.
  *
  * @author Olivier Liechti
+ * @author Baeriswyl Julien (julien.baeriswyl@heig-vd.ch) [MODIFIED BY, on 2017-03-12]
  */
-public class Application implements IApplication {
+public class Application implements IApplication
+{
 
   /**
    * This constant defines where the quotes will be stored. The path is relative
@@ -31,7 +36,8 @@ public class Application implements IApplication {
   
   private static final Logger LOG = Logger.getLogger(Application.class.getName());
   
-  public static void main(String[] args) {
+  public static void main(String[] args)
+  {
     
     /*
      * I prefer to have LOG output on a single line, it's easier to read. Being able
@@ -42,15 +48,19 @@ public class Application implements IApplication {
     
        
     int numberOfQuotes = 0;
-    try {
+    try
+    {
       numberOfQuotes = Integer.parseInt(args[0]);
-    } catch (Exception e) {
+    }
+    catch (Exception e)
+    {
       System.err.println("The command accepts a single numeric argument (number of quotes to fetch)");
       System.exit(-1);
     }
         
     Application app = new Application();
-    try {
+    try
+    {
       /*
        * Step 1 : clear the output directory
        */
@@ -74,17 +84,21 @@ public class Application implements IApplication {
        */
       app.processQuoteFiles();
       
-    } catch (IOException ex) {
+    }
+    catch (IOException ex)
+    {
       LOG.log(Level.SEVERE, "Could not fetch quotes. {0}", ex.getMessage());
       ex.printStackTrace();
     }
   }
 
   @Override
-  public void fetchAndStoreQuotes(int numberOfQuotes) throws IOException {
+  public void fetchAndStoreQuotes(int numberOfQuotes) throws IOException
+  {
     clearOutputDirectory();
     QuoteClient client = new QuoteClient();
-    for (int i = 0; i < numberOfQuotes; i++) {
+    for (int i = 0; i < numberOfQuotes; i++)
+    {
       Quote quote = client.fetchQuote();
       /* There is a missing piece here!
        * As you can see, this method handles the first part of the lab. It uses the web service
@@ -92,8 +106,12 @@ public class Application implements IApplication {
        * one method provided by this class, which is responsible for storing the content of the
        * quote in a text file (and for generating the directories based on the tags).
        */
+      // JBL: call storeQuote method with current quote numbering (starting from 1)
+      this.storeQuote(quote, String.format("quote-%d.utf8", i + 1));
+
       LOG.info("Received a new joke with " + quote.getTags().size() + " tags.");
-      for (String tag : quote.getTags()) {
+      for (String tag : quote.getTags())
+      {
         LOG.info("> " + tag);
       }
     }
@@ -105,7 +123,8 @@ public class Application implements IApplication {
    * 
    * @throws IOException 
    */
-  void clearOutputDirectory() throws IOException {
+  void clearOutputDirectory() throws IOException
+  {
     FileUtils.deleteDirectory(new File(WORKSPACE_DIRECTORY));    
   }
 
@@ -124,35 +143,69 @@ public class Application implements IApplication {
    * @param filename the name of the file to create and where to store the quote text
    * @throws IOException 
    */
-  void storeQuote(Quote quote, String filename) throws IOException {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+  void storeQuote (Quote quote, String filename) throws IOException
+  {
+    // JBL: new file from computed path
+    File fileQuote = new File(String.join("/", WORKSPACE_DIRECTORY, String.join("/", quote.getTags()), filename));
+
+    // JBL: create directories and empty text file (if not already exist)
+    fileQuote.getParentFile().mkdirs();
+    fileQuote.createNewFile();
+
+    // JBL: create writer (with specified encoding)
+    OutputStreamWriter writerQuote = new OutputStreamWriter(new FileOutputStream(fileQuote), "UTF-8");
+
+    // JBL: get and write quote text
+    String quoteText = quote.getQuote();
+    writerQuote.write(quoteText,0, quoteText.length());
+
+    // JBL: close writer and file
+    writerQuote.close();
   }
   
   /**
    * This method uses a IFileExplorer to explore the file system and prints the name of each
    * encountered file and directory.
    */
-  void printFileNames(final Writer writer) {
+  void printFileNames(final Writer writer)
+  {
     IFileExplorer explorer = new DFSFileExplorer();
-    explorer.explore(new File(WORKSPACE_DIRECTORY), new IFileVisitor() {
-      @Override
-      public void visit(File file) {
-        /*
-         * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
-         * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
-         * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
-         */
+    explorer.explore(new File(WORKSPACE_DIRECTORY), new IFileVisitor()
+      {
+        @Override
+        public void visit (File file)
+        {
+          /*
+           * There is a missing piece here. Notice how we use an anonymous class here. We provide the implementation
+           * of the the IFileVisitor interface inline. You just have to add the body of the visit method, which should
+           * be pretty easy (we want to write the filename, including the path, to the writer passed in argument).
+           */
+          try // JBL: try{...}catch{...} because of IOException
+          {
+            // JBL: print filename in writer
+            writer.write(file.getPath());
+            writer.write(String.format("%n"));
+          }
+          catch (IOException e)
+          {
+            //JBL: notifying problem, but no treatment done
+            LOG.info("printFileNames: failed to write file name - '" + file.getPath() + "'");
+          }
+        }
       }
-    });
+    );
   }
   
   @Override
-  public String getAuthorEmail() {
-    throw new UnsupportedOperationException("The student has not implemented this method yet.");
+  public String getAuthorEmail()
+  {
+    // JBL: return my HEIG email
+    return "julien.baeriswyl@heig-vd.ch";
   }
 
   @Override
-  public void processQuoteFiles() throws IOException {
+  public void processQuoteFiles() throws IOException
+  {
     IFileExplorer explorer = new DFSFileExplorer();
     explorer.explore(new File(WORKSPACE_DIRECTORY), new CompleteFileTransformer());    
   }
